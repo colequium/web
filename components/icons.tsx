@@ -42,6 +42,16 @@ import {
   Inbox,
   Tag,
   ArrowRight,
+  Star,
+  Quote,
+  Mail,
+  Phone,
+  MapPin,
+  GraduationCap,
+  ShieldCheck,
+  Languages,
+  Zap,
+  Smile,
   type LucideIcon,
 } from "lucide-react";
 
@@ -87,6 +97,16 @@ export const ICONS: Record<string, LucideIcon> = {
   Inbox,
   Tag,
   ArrowRight,
+  Star,
+  Quote,
+  Mail,
+  Phone,
+  MapPin,
+  GraduationCap,
+  ShieldCheck,
+  Languages,
+  Zap,
+  Smile,
 };
 
 /** Iconos de portada de los posts (coverIcon → componente). */
