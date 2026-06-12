@@ -9,10 +9,10 @@ export function RightRail() {
   const { t } = useLocale();
 
   const momentos = [
-    { label: "Feria de ciencias", image: "https://loremflickr.com/320/240/science,school?lock=21" },
-    { label: "Día del deporte", image: "https://loremflickr.com/320/240/children,sport?lock=22" },
-    { label: "Muestra de arte", image: "https://loremflickr.com/320/240/art,painting?lock=23" },
-    { label: "Acto escolar", image: "https://loremflickr.com/320/240/school,children?lock=24" },
+    { label: "Feria de ciencias", image: "https://picsum.photos/seed/cq21/320/240" },
+    { label: "Día del deporte", image: "https://picsum.photos/seed/cq22/320/240" },
+    { label: "Muestra de arte", image: "https://picsum.photos/seed/cq23/320/240" },
+    { label: "Acto escolar", image: "https://picsum.photos/seed/cq24/320/240" },
   ];
 
   return (

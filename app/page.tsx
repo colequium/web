@@ -59,7 +59,7 @@ export default function Landing() {
               href="#funciones"
               className="flex items-center justify-center gap-2 rounded-2xl border-2 border-ink/10 bg-white px-7 py-4 text-base font-800 text-ink transition-colors hover:border-brand/40 hover:text-brand"
             >
-              Conocé más
+              Conoce más
             </a>
           </div>
         </div>
@@ -69,7 +69,7 @@ export default function Landing() {
           <div className="overflow-hidden rounded-[2rem] border border-ink/5 bg-white shadow-pop">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="https://loremflickr.com/800/600/classroom,students?lock=51"
+              src="https://picsum.photos/seed/cq51/800/600"
               alt="Comunidad escolar"
               className="aspect-[4/3] w-full object-cover"
             />
@@ -126,7 +126,7 @@ export default function Landing() {
               ¿Tu colegio quiere usar Colequium?
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-white/70">
-              Escribinos y coordinamos una demo. El acceso de familias y
+              Escríbenos y coordinamos una demo. El acceso de familias y
               docentes es por invitación del colegio.
             </p>
             <a

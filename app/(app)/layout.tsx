@@ -12,7 +12,7 @@ export default function AppLayout({
   children: React.ReactNode;
 }) {
   return (
-    <LocaleProvider initial="es-AR">
+    <LocaleProvider initial="es-MX">
       {/* Lienzo claro: sidebar y contenido flotan como paneles dentro del mismo espacio */}
       <div className="flex min-h-dvh lg:gap-4 lg:p-4">
         <Sidebar />

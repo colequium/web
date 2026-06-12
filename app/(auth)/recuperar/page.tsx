@@ -24,10 +24,10 @@ export default function RecuperarPage() {
             <Icon name="Check" className="h-7 w-7" />
           </span>
           <h1 className="font-display text-2xl font-800 text-ink">
-            Revisá tu email
+            Revisa tu correo
           </h1>
           <p className="mt-2 text-sm font-500 text-ink/60">
-            Si ese email tiene una cuenta, te enviamos un enlace para crear una
+            Si ese correo tiene una cuenta, te enviamos un enlace para crear una
             contraseña nueva. Puede tardar unos minutos.
           </p>
           <Link
@@ -35,7 +35,7 @@ export default function RecuperarPage() {
             className="mt-7 inline-flex items-center gap-2 rounded-2xl bg-ink px-5 py-3 text-sm font-800 text-white shadow-card transition-colors hover:bg-navy-deep"
           >
             <Icon name="ChevronLeft" className="h-4 w-4" />
-            Volver a ingresar
+            Volver a entrar
           </Link>
         </div>
       ) : (
@@ -49,10 +49,10 @@ export default function RecuperarPage() {
           </Link>
 
           <h1 className="font-display text-2xl font-800 text-ink">
-            Recuperá tu contraseña
+            Recupera tu contraseña
           </h1>
           <p className="mt-1 text-sm font-500 text-ink/55">
-            Te enviamos un enlace por email para crear una nueva.
+            Te enviamos un enlace por correo para crear una nueva.
           </p>
 
           <form onSubmit={onSubmit} className="mt-7 flex flex-col gap-4">
@@ -61,14 +61,14 @@ export default function RecuperarPage() {
                 htmlFor="email"
                 className="mb-1.5 block text-sm font-700 text-ink"
               >
-                Email
+                Correo
               </label>
               <input
                 id="email"
                 type="email"
                 required
                 autoComplete="email"
-                placeholder="tu@email.com"
+                placeholder="tu@correo.com"
                 className="w-full rounded-2xl border border-ink/10 bg-white px-4 py-3 text-sm font-500 text-ink outline-none placeholder:text-ink/35 focus:border-brand focus:ring-2 focus:ring-brand/30"
               />
             </div>

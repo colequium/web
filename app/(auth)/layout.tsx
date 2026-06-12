@@ -15,7 +15,7 @@ export default function AuthLayout({
       <div className="relative hidden flex-col justify-between overflow-hidden bg-gradient-to-br from-navy to-navy-deep p-10 text-white lg:flex">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="https://loremflickr.com/900/1200/school,children?lock=41"
+          src="https://picsum.photos/seed/cq41/900/1200"
           alt=""
           className="absolute inset-0 h-full w-full object-cover opacity-20"
         />

@@ -63,7 +63,7 @@ export function HomeView() {
       <section className="relative overflow-hidden rounded-[1.75rem] bg-navy p-6 text-white shadow-card sm:p-7">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="https://loremflickr.com/960/320/classroom,school?lock=31"
+          src="https://picsum.photos/seed/cq31/960/320"
           alt=""
           className="absolute inset-0 h-full w-full object-cover"
         />

@@ -113,7 +113,7 @@ export interface TaskItem {
 export const DEMO_SCHOOL: School = {
   name: "Colegio Las Lomas",
   shortName: "Las Lomas",
-  country: "AR",
+  country: "MX",
 };
 
 export const DEMO_USER: CurrentUser = {
@@ -142,7 +142,7 @@ export const DEMO_POSTS: Post[] = [
     publishedAt: "Hace 2 h",
     title: "Jornada de puertas abiertas — Sábado 14 de junio",
     body: "Invitamos a todas las familias a recorrer el colegio, conocer los proyectos del año y compartir una mañana con los equipos docentes. Habrá actividades para los más chicos en el patio central y café para acompañar las charlas por nivel.",
-    image: "https://loremflickr.com/720/360/school,building?lock=11",
+    image: "https://picsum.photos/seed/cq11/720/360",
     cover: "from-brand to-brand-soft",
     coverIcon: "megaphone",
     likes: 48,
@@ -159,7 +159,7 @@ export const DEMO_POSTS: Post[] = [
     publishedAt: "Hace 5 h",
     title: "Salida didáctica al Museo de Ciencias 🔬",
     body: "El próximo jueves visitamos el Museo de Ciencias Naturales. Recuerden enviar la autorización firmada y vestir el equipo de educación física. Salimos 8:30 en punto y volvemos antes del almuerzo.",
-    image: "https://loremflickr.com/720/360/museum,children?lock=12",
+    image: "https://picsum.photos/seed/cq12/720/360",
     cover: "from-brand to-sky",
     coverIcon: "image",
     likes: 21,
@@ -175,7 +175,7 @@ export const DEMO_POSTS: Post[] = [
     publishedAt: "Ayer",
     title: "Resultados de la feria del libro",
     body: "¡Gracias a todas las familias que se sumaron! Entre todos juntamos más de 300 libros para la biblioteca. Compartimos algunas fotos de la jornada y los ganadores del concurso de lectura.",
-    image: "https://loremflickr.com/720/360/library,books?lock=13",
+    image: "https://picsum.photos/seed/cq13/720/360",
     cover: "from-brand to-sky",
     coverIcon: "trophy",
     likes: 64,
@@ -190,8 +190,8 @@ export const DEMO_POSTS: Post[] = [
     audience: { target: "role", label: "Familias con transporte" },
     publishedAt: "Hace 2 días",
     title: "Nuevo recorrido de la ruta 14",
-    body: "A partir del lunes, la ruta 14 incorpora dos paradas nuevas en el barrio Norte. Podés ver el recorrido actualizado y el horario estimado de cada parada desde la sección de Transporte.",
-    image: "https://loremflickr.com/720/360/school,bus?lock=14",
+    body: "A partir del lunes, la ruta 14 incorpora dos paradas nuevas en el barrio Norte. Puedes ver el recorrido actualizado y el horario estimado de cada parada desde la sección de Transporte.",
+    image: "https://picsum.photos/seed/cq14/720/360",
     cover: "from-sky to-brand",
     coverIcon: "bus",
     likes: 9,
@@ -345,11 +345,11 @@ export const DEMO_CONVERSATIONS: Conversation[] = [
     ],
     labels: ["Eventos", "Coordinación"],
     status: "open",
-    preview: "Recordá que ensayamos el lunes en el SUM a las 10.",
+    preview: "Recuerden que ensayamos el lunes en el SUM a las 10.",
     lastAt: "Lun",
     unread: 1,
     messages: [
-      { id: "m1", sender: { name: "Coordinación Primaria", role: "coordinator", color: "sky" }, body: "Equipo, recordá que ensayamos el lunes en el SUM a las 10.", at: "Lun 08:00" },
+      { id: "m1", sender: { name: "Coordinación Primaria", role: "coordinator", color: "sky" }, body: "Equipo, recuerden que ensayamos el lunes en el SUM a las 10.", at: "Lun 08:00" },
     ],
   },
   {

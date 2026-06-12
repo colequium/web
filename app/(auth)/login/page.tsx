@@ -23,10 +23,10 @@ export default function LoginPage() {
       <Wordmark className="mb-8 lg:hidden" />
 
       <h1 className="font-display text-2xl font-800 text-ink">
-        Ingresá a tu cuenta
+        Entra a tu cuenta
       </h1>
       <p className="mt-1 text-sm font-500 text-ink/55">
-        Usá el email con el que te invitó tu colegio.
+        Usa el correo con el que te invitó tu colegio.
       </p>
 
       <form onSubmit={onSubmit} className="mt-7 flex flex-col gap-4">
@@ -35,14 +35,14 @@ export default function LoginPage() {
             htmlFor="email"
             className="mb-1.5 block text-sm font-700 text-ink"
           >
-            Email
+            Correo
           </label>
           <input
             id="email"
             type="email"
             required
             autoComplete="email"
-            placeholder="tu@email.com"
+            placeholder="tu@correo.com"
             className="w-full rounded-2xl border border-ink/10 bg-white px-4 py-3 text-sm font-500 text-ink outline-none placeholder:text-ink/35 focus:border-brand focus:ring-2 focus:ring-brand/30"
           />
         </div>
@@ -92,7 +92,7 @@ export default function LoginPage() {
       <p className="mt-8 text-center text-sm font-500 text-ink/50">
         ¿Tu colegio todavía no usa Colequium?{" "}
         <a href="#" className="font-700 text-brand hover:text-ink">
-          Escribinos
+          Escríbenos
         </a>
       </p>
     </div>
