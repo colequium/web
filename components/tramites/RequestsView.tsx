@@ -45,7 +45,7 @@ export function RequestsView() {
     <div className="flex flex-col gap-6">
       {/* Crear nuevo trámite */}
       <section>
-        <h2 className="mb-3 font-display text-base font-800 text-ink">
+        <h2 className="mb-3 font-display text-base font-700 text-ink">
           {t("req.new")}
         </h2>
         <div className="grid gap-3 sm:grid-cols-3">
@@ -61,7 +61,7 @@ export function RequestsView() {
                 <Icon name={rt.icon} className="h-6 w-6" />
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block text-sm font-800 text-ink">
+                <span className="block text-sm font-700 text-ink">
                   {t(rt.titleKey)}
                 </span>
                 <span className="block text-xs font-600 text-ink/50">
@@ -85,7 +85,7 @@ export function RequestsView() {
               key={f.id}
               type="button"
               onClick={() => setFilter(f.id)}
-              className={`shrink-0 rounded-full px-4 py-2 text-sm font-800 transition-colors ${
+              className={`shrink-0 rounded-full px-4 py-2 text-sm font-700 transition-colors ${
                 filter === f.id
                   ? "bg-ink text-white shadow-card"
                   : "bg-white text-ink/60 hover:text-ink"
@@ -111,7 +111,7 @@ export function RequestsView() {
                   <Icon name={typeMeta.icon} className="h-5 w-5" />
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-800 text-ink">
+                  <p className="truncate text-sm font-700 text-ink">
                     {t(typeMeta.titleKey)} · {r.studentName}
                   </p>
                   <p className="truncate text-xs font-600 text-ink/55">
@@ -123,7 +123,7 @@ export function RequestsView() {
                   </p>
                 </div>
                 <span
-                  className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-800 ${ACCENT_SOFT_BG[status.color]} ${ACCENT_TEXT[status.color]}`}
+                  className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-700 ${ACCENT_SOFT_BG[status.color]} ${ACCENT_TEXT[status.color]}`}
                 >
                   <Icon name={status.icon} className="h-3.5 w-3.5" />
                   {t(status.key)}

@@ -20,7 +20,7 @@ export function RightRail() {
       {/* Momentos (galería de imágenes de la comunidad) */}
       <section className="rounded-[1.75rem] border border-ink/5 bg-white p-5 shadow-card">
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="font-display text-base font-800 text-ink">Momentos</h2>
+          <h2 className="font-display text-base font-700 text-ink">Momentos</h2>
           <button
             type="button"
             className="text-xs font-700 text-brand transition-colors hover:text-ink"
@@ -53,7 +53,7 @@ export function RightRail() {
       {/* Próximos eventos */}
       <section className="rounded-[1.75rem] border border-ink/5 bg-white p-5 shadow-card">
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="font-display text-base font-800 text-ink">
+          <h2 className="font-display text-base font-700 text-ink">
             {t("rail.events")}
           </h2>
           <Icon name="CalendarDays" className="h-5 w-5 text-brand" />
@@ -70,13 +70,13 @@ export function RightRail() {
                     ACCENT_ON[e.accent as AccentColor]
                   }`}
                 >
-                  <span className="font-display text-lg font-800">{e.day}</span>
-                  <span className="text-[9px] font-800 opacity-80">
+                  <span className="font-display text-lg font-700">{e.day}</span>
+                  <span className="text-[9px] font-700 opacity-80">
                     {e.month}
                   </span>
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate text-sm font-800 text-ink">
+                  <span className="block truncate text-sm font-700 text-ink">
                     {e.title}
                   </span>
                   <span className="block text-xs font-600 text-ink/50">
@@ -89,7 +89,7 @@ export function RightRail() {
         </ul>
         <button
           type="button"
-          className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-2xl bg-brand-wash py-2.5 text-sm font-800 text-brand transition-colors hover:bg-cloud"
+          className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-2xl bg-brand-wash py-2.5 text-sm font-700 text-brand transition-colors hover:bg-cloud"
         >
           {t("rail.seeCalendar")}
           <Icon name="ChevronRight" className="h-4 w-4" />
@@ -99,7 +99,7 @@ export function RightRail() {
       {/* Tareas pendientes */}
       <section className="rounded-[1.75rem] border border-ink/5 bg-white p-5 shadow-card">
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="font-display text-base font-800 text-ink">
+          <h2 className="font-display text-base font-700 text-ink">
             {t("rail.tasks")}
           </h2>
           <Icon name="ClipboardList" className="h-5 w-5 text-cta" />

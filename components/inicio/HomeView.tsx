@@ -72,7 +72,7 @@ export function HomeView() {
           <p className="text-sm font-700 text-white/60 first-letter:uppercase">
             {dateLabel}
           </p>
-          <h2 className="mt-1 font-display text-2xl font-800 sm:text-3xl">
+          <h2 className="mt-1 font-display text-2xl font-700 sm:text-3xl">
             {t("home.greeting")}, {DEMO_USER.name.split(" ")[0]} 👋
           </h2>
           <p className="mt-1 max-w-md text-sm font-600 text-white/70">
@@ -95,7 +95,7 @@ export function HomeView() {
               <Icon name={s.icon} className="h-5 w-5" />
             </span>
             <span className="min-w-0">
-              <span className="block font-display text-2xl font-800 leading-none text-ink">
+              <span className="block font-display text-2xl font-700 leading-none text-ink">
                 {s.value}
               </span>
               <span className="mt-1 block text-xs font-700 text-ink/55">
@@ -108,7 +108,7 @@ export function HomeView() {
 
       {/* Accesos rápidos */}
       <section>
-        <h2 className="mb-3 font-display text-base font-800 text-ink">
+        <h2 className="mb-3 font-display text-base font-700 text-ink">
           {t("home.quick")}
         </h2>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
@@ -123,7 +123,7 @@ export function HomeView() {
               >
                 <Icon name={q.icon} className="h-6 w-6" />
               </span>
-              <span className="text-sm font-800 text-ink">{t(q.key)}</span>
+              <span className="text-sm font-700 text-ink">{t(q.key)}</span>
             </Link>
           ))}
         </div>
@@ -132,12 +132,12 @@ export function HomeView() {
       {/* Agenda de hoy */}
       <section className="rounded-[1.75rem] border border-ink/5 bg-white p-5 shadow-card">
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="font-display text-base font-800 text-ink">
+          <h2 className="font-display text-base font-700 text-ink">
             {t("home.todayAgenda")}
           </h2>
           <Link
             href="/calendario"
-            className="flex items-center gap-1 text-sm font-800 text-brand transition-colors hover:text-ink"
+            className="flex items-center gap-1 text-sm font-700 text-brand transition-colors hover:text-ink"
           >
             {t("home.seeAll")}
             <Icon name="ChevronRight" className="h-4 w-4" />
@@ -151,7 +151,7 @@ export function HomeView() {
                 key={e.id}
                 className={`flex items-center gap-3 rounded-2xl border border-l-4 border-ink/5 bg-white p-3 ${ACCENT_BORDER_L[color]}`}
               >
-                <span className="w-14 shrink-0 text-right text-sm font-800 text-ink">
+                <span className="w-14 shrink-0 text-right text-sm font-700 text-ink">
                   {e.allDay ? (
                     <span className="text-[11px] uppercase text-ink/45">
                       {t("cal.allDay")}
@@ -160,11 +160,11 @@ export function HomeView() {
                     e.time
                   )}
                 </span>
-                <span className="min-w-0 flex-1 text-sm font-800 text-ink">
+                <span className="min-w-0 flex-1 text-sm font-700 text-ink">
                   {e.title}
                 </span>
                 <span
-                  className={`hidden shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-800 sm:inline-flex ${ACCENT_SOFT_BG[color]} ${ACCENT_TEXT[color]}`}
+                  className={`hidden shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-700 sm:inline-flex ${ACCENT_SOFT_BG[color]} ${ACCENT_TEXT[color]}`}
                 >
                   {e.audienceLabel}
                 </span>

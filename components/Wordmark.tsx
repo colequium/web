@@ -14,7 +14,7 @@ export function Wordmark({
       <span className="grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br from-brand to-sky text-white shadow-soft">
         <Icon name="Sparkles" className="h-5 w-5" />
       </span>
-      <span className={`font-display text-xl font-800 tracking-tight ${text}`}>
+      <span className={`font-display text-xl font-700 tracking-tight ${text}`}>
         Colequium
       </span>
     </span>

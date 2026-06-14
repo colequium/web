@@ -43,7 +43,7 @@ export function PostCard({ post, index = 0 }: { post: Post; index?: number }) {
         <div className="absolute inset-0 bg-gradient-to-t from-ink/55 via-ink/5 to-ink/15" />
 
         {/* Audiencia (a quién va dirigido) */}
-        <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1 text-xs font-800 text-ink shadow-sm backdrop-blur">
+        <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1 text-xs font-700 text-ink shadow-sm backdrop-blur">
           <Icon name="Users" className="h-3.5 w-3.5 text-brand" />
           {post.audience.label}
         </span>
@@ -55,7 +55,7 @@ export function PostCard({ post, index = 0 }: { post: Post; index?: number }) {
             </span>
           ) : null}
           {post.unread ? (
-            <span className="rounded-full bg-cta px-2.5 py-1 text-[11px] font-800 uppercase tracking-wide text-white shadow-sm">
+            <span className="rounded-full bg-cta px-2.5 py-1 text-[11px] font-700 uppercase tracking-wide text-white shadow-sm">
               {t("wall.unread")}
             </span>
           ) : null}
@@ -67,7 +67,7 @@ export function PostCard({ post, index = 0 }: { post: Post; index?: number }) {
         <div className="flex items-center gap-3">
           <Avatar name={post.author.name} color={post.author.color as AccentColor} />
           <div className="min-w-0 flex-1 leading-tight">
-            <p className="truncate text-sm font-800 text-ink">
+            <p className="truncate text-sm font-700 text-ink">
               {post.author.name}
             </p>
             <p className="truncate text-xs font-600 text-ink/50">
@@ -84,7 +84,7 @@ export function PostCard({ post, index = 0 }: { post: Post; index?: number }) {
         </div>
 
         {/* Contenido */}
-        <h3 className="mt-4 font-display text-lg font-800 leading-snug text-ink">
+        <h3 className="mt-4 font-display text-lg font-700 leading-snug text-ink">
           {post.title}
         </h3>
         <p
@@ -98,7 +98,7 @@ export function PostCard({ post, index = 0 }: { post: Post; index?: number }) {
           <button
             type="button"
             onClick={() => setExpanded(true)}
-            className="mt-1 text-sm font-800 text-brand transition-colors hover:text-ink"
+            className="mt-1 text-sm font-700 text-brand transition-colors hover:text-ink"
           >
             {t("wall.seeMore")}
           </button>
@@ -109,7 +109,7 @@ export function PostCard({ post, index = 0 }: { post: Post; index?: number }) {
           <button
             type="button"
             onClick={() => setLiked((v) => !v)}
-            className={`flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-800 transition-colors ${
+            className={`flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-700 transition-colors ${
               liked
                 ? "bg-cta/10 text-cta"
                 : "text-ink/55 hover:bg-mist hover:text-ink"
@@ -125,7 +125,7 @@ export function PostCard({ post, index = 0 }: { post: Post; index?: number }) {
 
           <button
             type="button"
-            className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-800 text-ink/55 transition-colors hover:bg-mist hover:text-ink"
+            className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-700 text-ink/55 transition-colors hover:bg-mist hover:text-ink"
           >
             <Icon name="MessageCircle" className="h-[18px] w-[18px]" />
             {post.comments}

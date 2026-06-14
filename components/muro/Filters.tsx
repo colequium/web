@@ -20,7 +20,7 @@ export function Filters() {
           key={f.id}
           type="button"
           onClick={() => setActive(f.id)}
-          className={`shrink-0 rounded-full px-4 py-2 text-sm font-800 transition-colors ${
+          className={`shrink-0 rounded-full px-4 py-2 text-sm font-700 transition-colors ${
             active === f.id
               ? "bg-ink text-white shadow-card"
               : "bg-white text-ink/60 hover:text-ink"

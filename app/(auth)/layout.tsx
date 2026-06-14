@@ -24,12 +24,12 @@ export default function AuthLayout({
         <Wordmark theme="dark" className="relative" />
 
         <div className="relative max-w-md">
-          <h2 className="font-display text-3xl font-800 leading-tight">
+          <h2 className="font-display text-3xl font-700 leading-tight">
             La comunidad escolar, conectada en un solo lugar.
           </h2>
           <p className="mt-3 text-white/70">
             Avisos, calendario, mensajes y trámites entre el colegio, las
-            familias y los docentes — claro, ordenado y en tu idioma.
+            familias y los docentes. Claro, ordenado y en tu idioma.
           </p>
         </div>
 

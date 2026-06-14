@@ -26,14 +26,14 @@ export function Topbar({
           <span className="grid h-9 w-9 place-items-center rounded-2xl bg-gradient-to-br from-navy to-navy-deep text-white shadow-card">
             <Icon name="Sparkles" className="h-4 w-4" />
           </span>
-          <span className="font-display text-base font-800 text-ink">
+          <span className="font-display text-base font-700 text-ink">
             {DEMO_SCHOOL.shortName}
           </span>
         </div>
 
         {/* Título de la página (oculto en móvil para dar lugar) */}
         <div className="hidden min-w-0 lg:block">
-          <h1 className="font-display text-2xl font-800 leading-none text-ink">
+          <h1 className="font-display text-2xl font-700 leading-none text-ink">
             {title}
           </h1>
           {subtitle ? (

@@ -44,7 +44,7 @@ export function MonthGrid({
         {headers.map((h, i) => (
           <div
             key={i}
-            className="py-1 text-center text-[11px] font-800 uppercase tracking-wide text-ink/40"
+            className="py-1 text-center text-[11px] font-700 uppercase tracking-wide text-ink/40"
           >
             {h}
           </div>
@@ -75,7 +75,7 @@ export function MonthGrid({
               }`}
             >
               <span
-                className={`grid h-7 w-7 place-items-center rounded-full text-sm font-800 ${
+                className={`grid h-7 w-7 place-items-center rounded-full text-sm font-700 ${
                   isToday
                     ? "bg-cta text-white shadow-soft"
                     : isSelected

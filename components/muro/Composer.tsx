@@ -29,7 +29,7 @@ export function Composer() {
         </button>
         <button
           type="button"
-          className="hidden items-center gap-1.5 rounded-2xl bg-cta px-4 py-3 text-sm font-800 text-white shadow-soft transition-colors hover:bg-cta-deep sm:flex"
+          className="hidden items-center gap-1.5 rounded-2xl bg-cta px-4 py-3 text-sm font-700 text-white shadow-soft transition-colors hover:bg-cta-deep sm:flex"
         >
           <Icon name="Send" className="h-4 w-4" />
           Publicar

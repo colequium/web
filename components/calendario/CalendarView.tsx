@@ -72,14 +72,14 @@ export function CalendarView() {
       {/* Calendario mes */}
       <div className="rounded-[1.75rem] border border-ink/5 bg-white p-4 shadow-card sm:p-5">
         <div className="mb-4 flex items-center justify-between gap-2">
-          <h2 className="font-display text-xl font-800 text-ink first-letter:uppercase">
+          <h2 className="font-display text-xl font-700 text-ink first-letter:uppercase">
             {monthLabel}
           </h2>
           <div className="flex items-center gap-1.5">
             <button
               type="button"
               onClick={goToday}
-              className="rounded-xl bg-mist px-3 py-2 text-sm font-800 text-ink transition-colors hover:bg-cloud"
+              className="rounded-xl bg-mist px-3 py-2 text-sm font-700 text-ink transition-colors hover:bg-cloud"
             >
               {t("cal.today")}
             </button>

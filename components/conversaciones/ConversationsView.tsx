@@ -39,7 +39,7 @@ export function ConversationsView() {
               key={f.id}
               type="button"
               onClick={() => setFilter(f.id)}
-              className={`flex-1 rounded-full px-3 py-2 text-sm font-800 transition-colors ${
+              className={`flex-1 rounded-full px-3 py-2 text-sm font-700 transition-colors ${
                 filter === f.id
                   ? "bg-ink text-white"
                   : "text-ink/55 hover:bg-mist"
@@ -106,7 +106,7 @@ function ConversationRow({
       <Avatar name={other.name} color={other.color as AccentColor} />
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
-          <p className="min-w-0 flex-1 truncate text-sm font-800 text-ink">
+          <p className="min-w-0 flex-1 truncate text-sm font-700 text-ink">
             {c.subject}
           </p>
           <span className="shrink-0 text-[11px] font-700 text-ink/40">
@@ -115,7 +115,7 @@ function ConversationRow({
         </div>
         <p className="truncate text-xs font-600 text-ink/55">{c.preview}</p>
         <div className="mt-1 flex items-center gap-1.5">
-          <span className="rounded-full bg-navy/10 px-2 py-0.5 text-[10px] font-800 text-navy">
+          <span className="rounded-full bg-navy/10 px-2 py-0.5 text-[10px] font-700 text-navy">
             {c.scopeLabel}
           </span>
           {c.labels.slice(0, 1).map((l) => (
@@ -127,7 +127,7 @@ function ConversationRow({
             </span>
           ))}
           {c.unread > 0 ? (
-            <span className="ml-auto grid h-5 min-w-5 place-items-center rounded-full bg-cta px-1.5 text-[11px] font-800 text-white">
+            <span className="ml-auto grid h-5 min-w-5 place-items-center rounded-full bg-cta px-1.5 text-[11px] font-700 text-white">
               {c.unread}
             </span>
           ) : null}
@@ -159,14 +159,14 @@ function Thread({
           <Icon name="ChevronLeft" className="h-5 w-5" />
         </button>
         <div className="min-w-0 flex-1">
-          <h2 className="truncate font-display text-lg font-800 text-ink">
+          <h2 className="truncate font-display text-lg font-700 text-ink">
             {c.subject}
           </h2>
           <p className="truncate text-xs font-600 text-ink/55">
             {c.participants.map((p) => p.name).join(", ")}
           </p>
         </div>
-        <span className="shrink-0 rounded-full bg-navy/10 px-2.5 py-1 text-[11px] font-800 text-navy">
+        <span className="shrink-0 rounded-full bg-navy/10 px-2.5 py-1 text-[11px] font-700 text-navy">
           {c.scopeLabel}
         </span>
       </div>
@@ -237,7 +237,7 @@ function MessageBubble({
       />
       <div className="max-w-[78%]">
         <div className="rounded-3xl rounded-tl-md bg-white px-4 py-2.5 text-sm font-600 text-ink shadow-sm ring-1 ring-ink/5">
-          <p className="mb-0.5 text-[11px] font-800 text-ink/45">
+          <p className="mb-0.5 text-[11px] font-700 text-ink/45">
             {message.sender.name}
           </p>
           {message.body}

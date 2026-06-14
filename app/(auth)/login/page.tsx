@@ -22,7 +22,7 @@ export default function LoginPage() {
     <div>
       <Wordmark className="mb-8 lg:hidden" />
 
-      <h1 className="font-display text-2xl font-800 text-ink">
+      <h1 className="font-display text-2xl font-700 text-ink">
         Entra a tu cuenta
       </h1>
       <p className="mt-1 text-sm font-500 text-ink/55">
@@ -43,7 +43,7 @@ export default function LoginPage() {
             required
             autoComplete="email"
             placeholder="tu@correo.com"
-            className="w-full rounded-2xl border border-ink/10 bg-white px-4 py-3 text-sm font-500 text-ink outline-none placeholder:text-ink/35 focus:border-brand focus:ring-2 focus:ring-brand/30"
+            className="w-full rounded-full border border-ink/10 bg-white px-4 py-3 text-sm font-500 text-ink outline-none placeholder:text-ink/35 focus:border-brand focus:ring-2 focus:ring-brand/30"
           />
         </div>
 
@@ -66,7 +66,7 @@ export default function LoginPage() {
               required
               autoComplete="current-password"
               placeholder="••••••••"
-              className="w-full rounded-2xl border border-ink/10 bg-white px-4 py-3 pr-11 text-sm font-500 text-ink outline-none placeholder:text-ink/35 focus:border-brand focus:ring-2 focus:ring-brand/30"
+              className="w-full rounded-full border border-ink/10 bg-white px-4 py-3 pr-11 text-sm font-500 text-ink outline-none placeholder:text-ink/35 focus:border-brand focus:ring-2 focus:ring-brand/30"
             />
             <button
               type="button"
@@ -82,7 +82,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={loading}
-          className="mt-2 flex items-center justify-center gap-2 rounded-2xl bg-ink py-3.5 text-sm font-800 text-white shadow-card transition-colors hover:bg-navy-deep disabled:opacity-60"
+          className="mt-2 flex items-center justify-center gap-2 rounded-full bg-ink py-3.5 text-sm font-700 text-white shadow-card transition-colors hover:bg-navy-deep disabled:opacity-60"
         >
           {loading ? "Ingresando…" : "Ingresar"}
           {!loading ? <Icon name="ArrowRight" className="h-4 w-4" /> : null}

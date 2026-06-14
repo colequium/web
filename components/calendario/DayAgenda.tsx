@@ -32,7 +32,7 @@ export function DayAgenda({
     <section className="rounded-[1.75rem] border border-ink/5 bg-white p-5 shadow-card">
       <div className="mb-4 flex items-center justify-between gap-2">
         <div className="min-w-0">
-          <h2 className="font-display text-base font-800 text-ink">
+          <h2 className="font-display text-base font-700 text-ink">
             {t("cal.agenda")}
           </h2>
           <p className="truncate text-sm font-600 text-ink/55 first-letter:uppercase">
@@ -83,12 +83,12 @@ export function DayAgenda({
                 ) : (
                   <div className="w-14 shrink-0 text-right">
                     {e.allDay ? (
-                      <span className="text-[11px] font-800 uppercase leading-tight text-ink/45">
+                      <span className="text-[11px] font-700 uppercase leading-tight text-ink/45">
                         {t("cal.allDay")}
                       </span>
                     ) : (
                       <>
-                        <span className="block text-sm font-800 text-ink">
+                        <span className="block text-sm font-700 text-ink">
                           {e.time}
                         </span>
                         {e.endTime ? (
@@ -105,7 +105,7 @@ export function DayAgenda({
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-1.5">
                     <p
-                      className={`text-sm font-800 ${
+                      className={`text-sm font-700 ${
                         isTask && done ? "text-ink/40 line-through" : "text-ink"
                       }`}
                     >
@@ -117,7 +117,7 @@ export function DayAgenda({
                   </div>
                   <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
                     <span
-                      className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-800 ${ACCENT_SOFT_BG[color]} ${ACCENT_TEXT[color]}`}
+                      className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-700 ${ACCENT_SOFT_BG[color]} ${ACCENT_TEXT[color]}`}
                     >
                       {calendarName(e.calendarId)}
                     </span>
@@ -126,7 +126,7 @@ export function DayAgenda({
                       {e.audienceLabel}
                     </span>
                     {isTask ? (
-                      <span className="text-[11px] font-800 uppercase text-ink/35">
+                      <span className="text-[11px] font-700 uppercase text-ink/35">
                         · {t("cal.task")}
                       </span>
                     ) : null}

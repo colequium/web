@@ -16,7 +16,7 @@ export function CalendarsFilter({
 
   return (
     <section className="rounded-[1.75rem] border border-ink/5 bg-white p-5 shadow-card">
-      <h2 className="mb-3 font-display text-base font-800 text-ink">
+      <h2 className="mb-3 font-display text-base font-700 text-ink">
         {t("cal.calendars")}
       </h2>
       <ul className="flex flex-col gap-1">

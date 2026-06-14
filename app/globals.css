@@ -36,9 +36,9 @@
   --color-cta-soft: #ffa424;
   --color-cta-deep: #ec8800;
 
-  /* Bloques de sección cálidos (versión "naranja" del amarillo de la referencia) */
-  --color-warm: #ffb84d;
-  --color-warm-soft: #ffe6c2;
+  /* Bloques de sección cálidos (naranja suave, para que no pese de fondo) */
+  --color-warm: #ffd9a8;
+  --color-warm-soft: #fff0db;
 
   /* Radios y sombras (suaves, para look flotante) */
   --radius-4xl: 1.75rem;

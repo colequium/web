@@ -24,7 +24,7 @@ export function Sidebar() {
           <Icon name="Sparkles" className="h-5 w-5 text-white" />
         </span>
         <span className="leading-tight">
-          <span className="block font-display text-lg font-800 tracking-tight">
+          <span className="block font-display text-lg font-700 tracking-tight">
             {DEMO_SCHOOL.shortName}
           </span>
           <span className="block text-xs font-600 text-white/55">
@@ -55,7 +55,7 @@ export function Sidebar() {
               <span className="flex-1">{t(item.key)}</span>
               {item.badge ? (
                 <span
-                  className={`grid h-5 min-w-5 place-items-center rounded-full px-1.5 text-[11px] font-800 ${
+                  className={`grid h-5 min-w-5 place-items-center rounded-full px-1.5 text-[11px] font-700 ${
                     active ? "bg-cta text-white" : "bg-cta text-white"
                   }`}
                 >
@@ -72,7 +72,7 @@ export function Sidebar() {
         <div className="flex items-center gap-3">
           <Avatar name={DEMO_USER.name} color="brand" ring />
           <div className="min-w-0 flex-1 leading-tight">
-            <p className="truncate text-sm font-800">{DEMO_USER.name}</p>
+            <p className="truncate text-sm font-700">{DEMO_USER.name}</p>
             <p className="truncate text-xs font-600 text-white/55">
               {DEMO_USER.roleScope || ROLE_LABELS[DEMO_USER.role]}
             </p>

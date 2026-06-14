@@ -38,7 +38,7 @@ export function BottomNav() {
                   ) : null}
                 </span>
                 <span
-                  className={`text-[10px] font-800 ${
+                  className={`text-[10px] font-700 ${
                     active ? "text-ink" : "text-ink/50"
                   }`}
                 >
