@@ -13,13 +13,9 @@ export default function AuthLayout({
     <div className="grid min-h-dvh lg:grid-cols-2">
       {/* Panel de marca */}
       <div className="relative hidden flex-col justify-between overflow-hidden bg-gradient-to-br from-navy to-navy-deep p-10 text-white lg:flex">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="https://picsum.photos/seed/cq41/900/1200"
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover opacity-20"
-        />
-        <div className="absolute inset-0 bg-gradient-to-br from-navy/80 to-navy-deep/95" />
+        <div className="absolute inset-0 opacity-[0.10] [background:radial-gradient(circle_at_1px_1px,white_1px,transparent_0)] [background-size:22px_22px]" />
+        <div className="absolute -right-20 top-24 h-72 w-72 rounded-full bg-brand/30 blur-3xl" />
+        <div className="absolute -left-16 bottom-10 h-64 w-64 rounded-full bg-cta/15 blur-3xl" />
 
         <Wordmark theme="dark" className="relative" />
 

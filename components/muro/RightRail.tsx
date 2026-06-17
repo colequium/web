@@ -9,10 +9,10 @@ export function RightRail() {
   const { t } = useLocale();
 
   const momentos = [
-    { label: "Feria de ciencias", image: "https://picsum.photos/seed/cq21/320/240" },
-    { label: "Día del deporte", image: "https://picsum.photos/seed/cq22/320/240" },
-    { label: "Muestra de arte", image: "https://picsum.photos/seed/cq23/320/240" },
-    { label: "Acto escolar", image: "https://picsum.photos/seed/cq24/320/240" },
+    { label: "Feria de ciencias", cover: "from-brand to-sky" },
+    { label: "Día del deporte", cover: "from-navy to-brand" },
+    { label: "Muestra de arte", cover: "from-sky to-brand" },
+    { label: "Acto escolar", cover: "from-ink to-navy" },
   ];
 
   return (
@@ -35,13 +35,9 @@ export function RightRail() {
               type="button"
               className="group relative aspect-[4/3] overflow-hidden rounded-2xl text-left"
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={m.image}
-                alt={m.label}
-                className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-              />
-              <span className="absolute inset-0 bg-gradient-to-t from-ink/70 to-transparent" />
+              <span className={`absolute inset-0 bg-gradient-to-br ${m.cover} transition-transform duration-300 group-hover:scale-105`} />
+              <span className="absolute inset-0 opacity-[0.12] [background:radial-gradient(circle_at_1px_1px,white_1px,transparent_0)] [background-size:12px_12px]" />
+              <span className="absolute inset-0 bg-gradient-to-t from-ink/60 to-transparent" />
               <span className="absolute inset-x-2 bottom-2 truncate text-[11px] font-700 text-white">
                 {m.label}
               </span>

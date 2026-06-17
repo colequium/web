@@ -59,15 +59,10 @@ export function HomeView() {
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Banner de saludo (con foto del colegio de fondo) */}
-      <section className="relative overflow-hidden rounded-[1.75rem] bg-navy p-6 text-white shadow-card sm:p-7">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="https://picsum.photos/seed/cq31/960/320"
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-navy via-navy/90 to-navy/40" />
+      {/* Banner de saludo */}
+      <section className="relative overflow-hidden rounded-[1.75rem] bg-gradient-to-br from-navy to-navy-deep p-6 text-white shadow-card sm:p-7">
+        <div className="absolute inset-0 opacity-[0.10] [background:radial-gradient(circle_at_1px_1px,white_1px,transparent_0)] [background-size:20px_20px]" />
+        <div className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-brand/30 blur-3xl" />
         <div className="relative">
           <p className="text-sm font-700 text-white/60 first-letter:uppercase">
             {dateLabel}
