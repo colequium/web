@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { rethrowNextControl } from "@/lib/supabase/safe";
 import {
   ROLE_LABELS,
   type Post,
@@ -73,9 +74,17 @@ export async function getFeed(): Promise<Post[]> {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     return []; // sin env → muro vacío en vez de romper
   }
-  const supabase = await createClient();
-  const { data, error } = await supabase.rpc("feed");
-  if (error || !data) return [];
+  let data: unknown;
+  try {
+    const supabase = await createClient();
+    const res = await supabase.rpc("feed");
+    if (res.error || !res.data) return [];
+    data = res.data;
+  } catch (e) {
+    rethrowNextControl(e);
+    console.error("[getFeed] error, devuelvo []:", e);
+    return [];
+  }
 
   return (data as FeedRow[]).map((r) => {
     const target = (r.audience_target ?? "community") as AudienceTarget;

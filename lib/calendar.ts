@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { rethrowNextControl } from "@/lib/supabase/safe";
 import type { CalEvent } from "@/lib/domain";
 
 interface CalRow {
@@ -18,9 +19,17 @@ export async function getCalendar(): Promise<CalEvent[]> {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     return [];
   }
-  const supabase = await createClient();
-  const { data, error } = await supabase.rpc("calendar_feed");
-  if (error || !data) return [];
+  let data: unknown;
+  try {
+    const supabase = await createClient();
+    const res = await supabase.rpc("calendar_feed");
+    if (res.error || !res.data) return [];
+    data = res.data;
+  } catch (e) {
+    rethrowNextControl(e);
+    console.error("[getCalendar] error, devuelvo []:", e);
+    return [];
+  }
 
   return (data as CalRow[]).map((r) => ({
     id: r.id,

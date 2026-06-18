@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { rethrowNextControl } from "@/lib/supabase/safe";
 import type { RequestItem, RequestType, RequestStatus } from "@/lib/domain";
 
 interface RequestRow {
@@ -29,9 +30,17 @@ export async function getRequests(): Promise<RequestItem[]> {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     return [];
   }
-  const supabase = await createClient();
-  const { data, error } = await supabase.rpc("requests_feed");
-  if (error || !data) return [];
+  let data: unknown;
+  try {
+    const supabase = await createClient();
+    const res = await supabase.rpc("requests_feed");
+    if (res.error || !res.data) return [];
+    data = res.data;
+  } catch (e) {
+    rethrowNextControl(e);
+    console.error("[getRequests] error, devuelvo []:", e);
+    return [];
+  }
 
   return (data as RequestRow[]).map((r) => ({
     id: r.id,

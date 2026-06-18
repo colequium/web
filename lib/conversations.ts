@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { rethrowNextControl } from "@/lib/supabase/safe";
 import { ROLE_COLOR } from "@/lib/posts";
 import type { Conversation, Author, ChatMessage, RoleKey } from "@/lib/domain";
 
@@ -30,9 +31,17 @@ export async function getConversations(): Promise<Conversation[]> {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     return [];
   }
-  const supabase = await createClient();
-  const { data, error } = await supabase.rpc("conversations_feed");
-  if (error || !data) return [];
+  let data: unknown;
+  try {
+    const supabase = await createClient();
+    const res = await supabase.rpc("conversations_feed");
+    if (res.error || !res.data) return [];
+    data = res.data;
+  } catch (e) {
+    rethrowNextControl(e);
+    console.error("[getConversations] error, devuelvo []:", e);
+    return [];
+  }
 
   return (data as ConvRow[]).map((c) => {
     const messages: ChatMessage[] = (c.messages ?? []).map((m) => ({

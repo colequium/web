@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { rethrowNextControl } from "@/lib/supabase/safe";
 import { ROLE_LABELS, type RoleKey } from "@/lib/domain";
 
 /** Identidad del usuario logueado, resuelta desde Supabase (perfil + rol + colegio). */
@@ -22,6 +23,7 @@ export async function getIdentity(): Promise<Identity | null> {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     return null; // sin env → modo demo (fallback al mock)
   }
+  try {
   const supabase = await createClient();
   const {
     data: { user },
@@ -70,4 +72,9 @@ export async function getIdentity(): Promise<Identity | null> {
     schoolName: community?.name ?? "Colegio",
     schoolShort: community?.short_name ?? "Colegio",
   };
+  } catch (e) {
+    rethrowNextControl(e);
+    console.error("[getIdentity] error, devuelvo null (modo demo):", e);
+    return null;
+  }
 }
