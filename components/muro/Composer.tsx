@@ -3,6 +3,7 @@
 import { Icon } from "../icons";
 import { Avatar } from "../Avatar";
 import { useLocale } from "../locale-context";
+import { useIdentity } from "../identity-context";
 import { DEMO_USER } from "@/lib/domain";
 
 /**
@@ -11,6 +12,7 @@ import { DEMO_USER } from "@/lib/domain";
  */
 export function Composer() {
   const { t } = useLocale();
+  const me = useIdentity();
   const actions = [
     { icon: "ImageIcon", label: "Foto", color: "text-brand" },
     { icon: "Paperclip", label: "Adjunto", color: "text-requests" },
@@ -20,7 +22,7 @@ export function Composer() {
   return (
     <div className="rounded-[1.75rem] border border-ink/5 bg-white p-4 shadow-card">
       <div className="flex items-center gap-3">
-        <Avatar name={DEMO_USER.name} color="brand" />
+        <Avatar name={me?.name ?? DEMO_USER.name} color="brand" />
         <button
           type="button"
           className="flex-1 rounded-2xl bg-mist px-4 py-3 text-left text-sm font-600 text-ink/45 transition-colors hover:bg-cloud"
