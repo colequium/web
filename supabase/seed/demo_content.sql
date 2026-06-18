@@ -114,4 +114,47 @@ from memberships ms join users u on u.id = ms.user_id
 where u.email = 'familia@laslomas.demo' and ms.community_id = :COMM::uuid
 on conflict (id) do nothing;
 
+-- ════════════════════════════════════════════════════════════════════════
+-- CALENDARIO: sub-calendarios + eventos (con audiencias) + tareas (6°B)
+-- ════════════════════════════════════════════════════════════════════════
+insert into calendars (id, community_id, name, color) values
+  ('77777777-0000-0000-0000-000000000001'::uuid, :COMM::uuid, 'Institucional', 'navy'),
+  ('77777777-0000-0000-0000-000000000002'::uuid, :COMM::uuid, 'Primaria',      'brand'),
+  ('77777777-0000-0000-0000-000000000003'::uuid, :COMM::uuid, '6°B',           'sky'),
+  ('77777777-0000-0000-0000-000000000004'::uuid, :COMM::uuid, 'Evaluaciones',  'news'),
+  ('77777777-0000-0000-0000-000000000005'::uuid, :COMM::uuid, 'Transporte',    'transport')
+on conflict (id) do nothing;
+
+-- Eventos (junio 2026, horas en UTC para que se muestren tal cual)
+insert into events (id, community_id, calendar_id, title, starts_at, ends_at, all_day) values
+  ('88888888-0000-0000-0000-000000000001'::uuid, :COMM::uuid, '77777777-0000-0000-0000-000000000001'::uuid, 'Coffee Morning de familias', '2026-06-05 09:00:00+00', '2026-06-05 10:30:00+00', false),
+  ('88888888-0000-0000-0000-000000000002'::uuid, :COMM::uuid, '77777777-0000-0000-0000-000000000003'::uuid, 'Salida al Museo de Ciencias', '2026-06-09 08:30:00+00', '2026-06-09 12:00:00+00', false),
+  ('88888888-0000-0000-0000-000000000003'::uuid, :COMM::uuid, '77777777-0000-0000-0000-000000000004'::uuid, 'Evaluación 2º trimestre', '2026-06-12 00:00:00+00', '2026-06-12 23:59:00+00', true),
+  ('88888888-0000-0000-0000-000000000004'::uuid, :COMM::uuid, '77777777-0000-0000-0000-000000000001'::uuid, 'Jornada de puertas abiertas', '2026-06-14 09:00:00+00', '2026-06-14 12:00:00+00', false),
+  ('88888888-0000-0000-0000-000000000005'::uuid, :COMM::uuid, '77777777-0000-0000-0000-000000000002'::uuid, 'Acto del Día de la Bandera', '2026-06-17 10:00:00+00', '2026-06-17 11:00:00+00', false),
+  ('88888888-0000-0000-0000-000000000006'::uuid, :COMM::uuid, '77777777-0000-0000-0000-000000000003'::uuid, 'Reunión de padres 6°B', '2026-06-19 18:30:00+00', '2026-06-19 20:00:00+00', false),
+  ('88888888-0000-0000-0000-000000000007'::uuid, :COMM::uuid, '77777777-0000-0000-0000-000000000001'::uuid, 'Inicio receso de invierno', '2026-06-21 00:00:00+00', '2026-06-21 23:59:00+00', true),
+  ('88888888-0000-0000-0000-000000000008'::uuid, :COMM::uuid, '77777777-0000-0000-0000-000000000005'::uuid, 'Nuevo recorrido ruta 14', '2026-06-15 00:00:00+00', '2026-06-15 23:59:00+00', true)
+on conflict (id) do nothing;
+
+-- Audiencias de los eventos (reset + insert)
+delete from audiences where content_type = 'event' and content_id::text like '88888888-%';
+insert into audiences (community_id, content_type, content_id, target_type, target_id) values
+  (:COMM::uuid, 'event', '88888888-0000-0000-0000-000000000001'::uuid, 'community', :COMM::uuid),
+  (:COMM::uuid, 'event', '88888888-0000-0000-0000-000000000002'::uuid, 'group',     :GROUP6B::uuid),
+  (:COMM::uuid, 'event', '88888888-0000-0000-0000-000000000003'::uuid, 'level',     :LVLPRIM::uuid),
+  (:COMM::uuid, 'event', '88888888-0000-0000-0000-000000000004'::uuid, 'community', :COMM::uuid),
+  (:COMM::uuid, 'event', '88888888-0000-0000-0000-000000000005'::uuid, 'level',     :LVLPRIM::uuid),
+  (:COMM::uuid, 'event', '88888888-0000-0000-0000-000000000006'::uuid, 'group',     :GROUP6B::uuid),
+  (:COMM::uuid, 'event', '88888888-0000-0000-0000-000000000007'::uuid, 'community', :COMM::uuid),
+  (:COMM::uuid, 'event', '88888888-0000-0000-0000-000000000008'::uuid, 'role',
+    (select id from roles where community_id = :COMM::uuid and key = 'guardian'));
+
+-- Tareas de 6°B (todo el día, vencimiento)
+insert into tasks (id, community_id, group_id, title, due_at) values
+  ('99999999-0000-0000-0000-000000000001'::uuid, :COMM::uuid, :GROUP6B::uuid, 'Entregar autorización del museo', '2026-06-09 00:00:00+00'),
+  ('99999999-0000-0000-0000-000000000002'::uuid, :COMM::uuid, :GROUP6B::uuid, 'Firmar boletín del trimestre', '2026-06-18 00:00:00+00')
+on conflict (id) do nothing;
+
 select 'posts: ' || count(*) from posts where community_id = :COMM::uuid;
+select 'events: ' || count(*) from events where community_id = :COMM::uuid;

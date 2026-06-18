@@ -3,14 +3,15 @@
 import { useMemo, useState } from "react";
 import { Icon } from "../icons";
 import { useLocale } from "../locale-context";
-import { DEMO_CAL_EVENTS, DEMO_TODAY } from "@/lib/domain";
+import { DEMO_CAL_EVENTS, DEMO_TODAY, type CalEvent } from "@/lib/domain";
 import { MonthGrid } from "./MonthGrid";
 import { DayAgenda } from "./DayAgenda";
 import { CalendarsFilter } from "./CalendarsFilter";
 import { sortDayEvents } from "./utils";
 
-export function CalendarView() {
+export function CalendarView({ events }: { events?: CalEvent[] }) {
   const { t, locale } = useLocale();
+  const calEvents = events ?? DEMO_CAL_EVENTS;
   const [viewYear, setViewYear] = useState(DEMO_TODAY.year);
   const [viewMonth, setViewMonth] = useState(DEMO_TODAY.month); // 0-based
   const [selectedDay, setSelectedDay] = useState<number>(DEMO_TODAY.day);
@@ -23,11 +24,11 @@ export function CalendarView() {
   const eventsByDay = useMemo(
     () => (day: number) =>
       inDemoMonth
-        ? DEMO_CAL_EVENTS.filter(
+        ? calEvents.filter(
             (e) => e.day === day && !hidden.has(e.calendarId),
           )
         : [],
-    [inDemoMonth, hidden],
+    [inDemoMonth, hidden, calEvents],
   );
 
   const monthLabel = new Date(viewYear, viewMonth, 1).toLocaleDateString(
@@ -68,6 +69,11 @@ export function CalendarView() {
   }
 
   return (
+    <>
+    <div className="mb-5">
+      <h1 className="font-display text-2xl font-700 text-ink">{t("cal.title")}</h1>
+      <p className="text-sm font-500 text-ink/55">{t("cal.subtitle")}</p>
+    </div>
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
       {/* Calendario mes */}
       <div className="rounded-[1.75rem] border border-ink/5 bg-white p-4 shadow-card sm:p-5">
@@ -126,5 +132,6 @@ export function CalendarView() {
         />
       </div>
     </div>
+    </>
   );
 }
