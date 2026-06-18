@@ -20,10 +20,11 @@ export async function updateSession(request: NextRequest) {
   // pasar todo en modo demo, sin sesión. Así la landing y la app igual cargan.
   if (!url || !key) return response;
 
-  const supabase = createServerClient(
-    url,
-    key,
-    {
+  // BLINDAJE: cualquier error (valor de env malformado, problema de red/Edge,
+  // etc.) NUNCA debe tirar 500 en todo el sitio. Si algo falla, seguimos sin
+  // sesión (la ruta protegida la cubre igual el server component al leer null).
+  try {
+    const supabase = createServerClient(url, key, {
       cookies: {
         getAll() {
           return request.cookies.getAll();
@@ -36,16 +37,18 @@ export async function updateSession(request: NextRequest) {
           );
         },
       },
-    },
-  );
+    });
 
-  const { data: { user } } = await supabase.auth.getUser();
-  const path = request.nextUrl.pathname;
+    const { data: { user } } = await supabase.auth.getUser();
+    const path = request.nextUrl.pathname;
 
-  if (!user && PROTECTED.some((p) => path === p || path.startsWith(p + "/"))) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    return NextResponse.redirect(url);
+    if (!user && PROTECTED.some((p) => path === p || path.startsWith(p + "/"))) {
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = "/login";
+      return NextResponse.redirect(redirectUrl);
+    }
+  } catch (e) {
+    console.error("[proxy] updateSession falló, sigo sin sesión:", e);
   }
 
   return response;
