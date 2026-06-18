@@ -1,18 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState } from "react";
 import Link from "next/link";
 import { Wordmark } from "@/components/Wordmark";
 import { Icon } from "@/components/icons";
+import { requestReset, type ResetState } from "./actions";
 
 export default function RecuperarPage() {
-  const [sent, setSent] = useState(false);
-
-  function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    // TODO: Supabase Auth resetPasswordForEmail. Demo: muestra confirmación.
-    setSent(true);
-  }
+  const [state, formAction, pending] = useActionState<ResetState, FormData>(
+    requestReset,
+    { sent: false },
+  );
+  const sent = state.sent;
 
   return (
     <div>
@@ -55,7 +54,7 @@ export default function RecuperarPage() {
             Te enviamos un enlace por correo para crear una nueva.
           </p>
 
-          <form onSubmit={onSubmit} className="mt-7 flex flex-col gap-4">
+          <form action={formAction} className="mt-7 flex flex-col gap-4">
             <div>
               <label
                 htmlFor="email"
@@ -65,6 +64,7 @@ export default function RecuperarPage() {
               </label>
               <input
                 id="email"
+                name="email"
                 type="email"
                 required
                 autoComplete="email"
@@ -75,10 +75,11 @@ export default function RecuperarPage() {
 
             <button
               type="submit"
-              className="mt-2 flex items-center justify-center gap-2 rounded-full bg-ink py-3.5 text-sm font-700 text-white shadow-card transition-colors hover:bg-navy-deep"
+              disabled={pending}
+              className="mt-2 flex items-center justify-center gap-2 rounded-full bg-ink py-3.5 text-sm font-700 text-white shadow-card transition-colors hover:bg-navy-deep disabled:opacity-60"
             >
-              Enviarme el enlace
-              <Icon name="Send" className="h-4 w-4" />
+              {pending ? "Enviando…" : "Enviarme el enlace"}
+              {!pending ? <Icon name="Send" className="h-4 w-4" /> : null}
             </button>
           </form>
         </>

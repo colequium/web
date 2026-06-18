@@ -1,22 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useActionState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Wordmark } from "@/components/Wordmark";
 import { Icon } from "@/components/icons";
+import { login, type LoginState } from "./actions";
 
 export default function LoginPage() {
-  const router = useRouter();
   const [showPass, setShowPass] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    // TODO: reemplazar por Supabase Auth (signInWithPassword). Demo: entra directo.
-    setLoading(true);
-    setTimeout(() => router.push("/inicio"), 500);
-  }
+  const [state, formAction, pending] = useActionState<LoginState, FormData>(
+    login,
+    null,
+  );
 
   return (
     <div>
@@ -29,7 +24,7 @@ export default function LoginPage() {
         Usa el correo con el que te invitó tu colegio.
       </p>
 
-      <form onSubmit={onSubmit} className="mt-7 flex flex-col gap-4">
+      <form action={formAction} className="mt-7 flex flex-col gap-4">
         <div>
           <label
             htmlFor="email"
@@ -39,6 +34,7 @@ export default function LoginPage() {
           </label>
           <input
             id="email"
+            name="email"
             type="email"
             required
             autoComplete="email"
@@ -62,6 +58,7 @@ export default function LoginPage() {
           <div className="relative">
             <input
               id="password"
+              name="password"
               type={showPass ? "text" : "password"}
               required
               autoComplete="current-password"
@@ -79,13 +76,22 @@ export default function LoginPage() {
           </div>
         </div>
 
+        {state?.error ? (
+          <p
+            role="alert"
+            className="rounded-xl bg-rose/10 px-4 py-2.5 text-sm font-600 text-rose"
+          >
+            {state.error}
+          </p>
+        ) : null}
+
         <button
           type="submit"
-          disabled={loading}
+          disabled={pending}
           className="mt-2 flex items-center justify-center gap-2 rounded-full bg-ink py-3.5 text-sm font-700 text-white shadow-card transition-colors hover:bg-navy-deep disabled:opacity-60"
         >
-          {loading ? "Ingresando…" : "Ingresar"}
-          {!loading ? <Icon name="ArrowRight" className="h-4 w-4" /> : null}
+          {pending ? "Ingresando…" : "Ingresar"}
+          {!pending ? <Icon name="ArrowRight" className="h-4 w-4" /> : null}
         </button>
       </form>
 

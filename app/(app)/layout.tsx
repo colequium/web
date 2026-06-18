@@ -1,10 +1,12 @@
 import { LocaleProvider } from "@/components/locale-context";
-import { Sidebar } from "@/components/Sidebar";
-import { BottomNav } from "@/components/BottomNav";
+import { RailSidebar } from "@/components/shell/RailSidebar";
+import { AppTopbar } from "@/components/shell/AppTopbar";
+import { MobileNav } from "@/components/shell/MobileNav";
 
 /**
- * Shell de la app (usuario logueado): sidebar navy a la izquierda con el perfil
- * abajo, contenido al centro, y bottom-nav en móvil. Responsive desde 375px.
+ * Shell interno (estilo intranet Alliance): rail slim de íconos a la izquierda,
+ * topbar compartida (buscador + idioma + notif + perfil) y bottom-nav en móvil.
+ * Las páginas NO renderizan su propia topbar; van directo con su contenido.
  */
 export default function AppLayout({
   children,
@@ -13,12 +15,12 @@ export default function AppLayout({
 }) {
   return (
     <LocaleProvider initial="es-MX">
-      {/* Lienzo claro: sidebar y contenido flotan como paneles dentro del mismo espacio */}
-      <div className="flex min-h-dvh lg:gap-4 lg:p-4">
-        <Sidebar />
+      <div className="flex min-h-dvh bg-[#f1f5fa]">
+        <RailSidebar />
         <div className="flex min-w-0 flex-1 flex-col">
-          {children}
-          <BottomNav />
+          <AppTopbar />
+          <div className="flex-1">{children}</div>
+          <MobileNav />
         </div>
       </div>
     </LocaleProvider>
