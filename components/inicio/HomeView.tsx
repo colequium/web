@@ -34,9 +34,11 @@ const QUICK = [
 export function HomeView({
   unreadPosts: unreadPostsReal,
   events: eventsReal,
+  unreadMessages: unreadMessagesReal,
 }: {
   unreadPosts?: number;
   events?: import("@/lib/domain").CalEvent[];
+  unreadMessages?: number;
 }) {
   const { t, locale } = useLocale();
   const me = useIdentity();
@@ -54,7 +56,8 @@ export function HomeView({
     (e) => e.kind === "event" && e.day >= 8 && e.day <= 14,
   ).length;
   const pendingRequests = DEMO_REQUESTS.filter((r) => r.status === "submitted").length;
-  const unreadMessages = DEMO_CONVERSATIONS.reduce((s, c) => s + c.unread, 0);
+  const unreadMessages =
+    unreadMessagesReal ?? DEMO_CONVERSATIONS.reduce((s, c) => s + c.unread, 0);
 
   const summary = [
     { label: t("home.summary.unread"), value: unreadPosts, icon: "Megaphone", color: "news" as AccentColor, href: "/muro" },
