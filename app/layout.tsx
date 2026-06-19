@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Outfit, Caveat } from "next/font/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
+
+// ID de Google Analytics (configurable por env; default al de Colequium).
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID || "G-HR68KHV4PH";
 
 // Fuente global: Outfit (limpia, geométrica). Una sola familia para títulos y texto.
 const outfit = Outfit({
@@ -30,6 +34,7 @@ export default function RootLayout({
   return (
     <html lang="es" className={`${outfit.variable} ${caveat.variable} h-full`}>
       <body className="min-h-full">{children}</body>
+      {process.env.NODE_ENV === "production" ? <GoogleAnalytics gaId={GA_ID} /> : null}
     </html>
   );
 }
