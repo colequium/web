@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Icon } from "@/components/icons";
 import { Reveal } from "@/components/landing/Reveal";
 import { HeroMessages } from "@/components/landing/HeroMessages";
+import { MobileMenu } from "@/components/landing/MobileMenu";
 import { Wordmark } from "@/components/Wordmark";
 
 /* ── Marca (manzana naranja + wordmark cursivo) ── */
@@ -96,10 +97,11 @@ export default function LabHome() {
             <li><a href="#recursos" className="transition-colors hover:text-brand">Recursos</a></li>
             <li><a href="#contacto" className="transition-colors hover:text-brand">Contacto</a></li>
           </ul>
-          <div className="flex items-center gap-3">
-            <Link href="/login" className="hidden text-sm font-700 text-ink transition-colors hover:text-brand sm:block">Ingresar</Link>
+          <div className="hidden items-center gap-3 md:flex">
+            <Link href="/login" className="text-sm font-700 text-ink transition-colors hover:text-brand">Ingresar</Link>
             <PillCTA href="#contacto">Solicitar demo</PillCTA>
           </div>
+          <MobileMenu />
         </nav>
       </header>
 

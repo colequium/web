@@ -27,7 +27,7 @@ export function HeroMessages() {
           key={m.src}
           src={m.src}
           alt=""
-          className={`absolute ${m.pos} h-12 w-auto max-w-none rounded-2xl bg-white shadow-pop ring-1 ring-ink/5 transition-all duration-700 ease-out sm:h-[3.5rem] ${
+          className={`absolute ${m.pos} h-[4.5rem] w-auto max-w-none rounded-2xl bg-white shadow-pop ring-1 ring-ink/5 transition-all duration-700 ease-out sm:h-[5.5rem] ${
             idx === i ? "scale-100 opacity-100" : "scale-95 opacity-0"
           }`}
         />
