@@ -12,7 +12,7 @@ export default async function AceptarPage() {
 
   return (
     <div>
-      <Wordmark className="mb-8 lg:hidden" />
+      <Wordmark href="/" className="mb-8 lg:hidden" />
       {user ? (
         <>
           <h1 className="font-display text-2xl font-700 text-ink">Activá tu cuenta</h1>

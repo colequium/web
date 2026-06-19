@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Icon } from "./icons";
 
 /**
@@ -21,17 +22,20 @@ export function BrandIcon({
   );
 }
 
-/** Lockup de marca Colequium: manzana naranja + wordmark cursivo. */
+/** Lockup de marca Colequium: manzana naranja + wordmark cursivo. Si se pasa
+ *  `href`, todo el lockup es un link (ej. volver al inicio desde el login). */
 export function Wordmark({
   theme = "light",
   className = "",
+  href,
 }: {
   theme?: "light" | "dark";
   className?: string;
+  href?: string;
 }) {
   const src = theme === "dark" ? "/logo-colequium-white.webp" : "/logo-colequium.webp";
-  return (
-    <span className={`inline-flex items-center gap-2.5 ${className}`}>
+  const content = (
+    <>
       <BrandIcon />
       <Image
         src={src}
@@ -41,6 +45,21 @@ export function Wordmark({
         priority
         className="h-9 w-auto"
       />
-    </span>
+    </>
+  );
+
+  if (href) {
+    return (
+      <Link
+        href={href}
+        aria-label="Colequium — ir al inicio"
+        className={`inline-flex items-center gap-2.5 ${className}`}
+      >
+        {content}
+      </Link>
+    );
+  }
+  return (
+    <span className={`inline-flex items-center gap-2.5 ${className}`}>{content}</span>
   );
 }

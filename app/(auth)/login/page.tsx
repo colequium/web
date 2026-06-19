@@ -15,7 +15,7 @@ export default function LoginPage() {
 
   return (
     <div>
-      <Wordmark className="mb-8 lg:hidden" />
+      <Wordmark href="/" className="mb-8 lg:hidden" />
 
       <h1 className="font-display text-2xl font-700 text-ink">
         Entra a tu cuenta

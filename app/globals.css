@@ -67,6 +67,20 @@
   scrollbar-color: rgba(12, 74, 110, 0.18) transparent;
 }
 
+/* Cursor correcto en todo lo clickeable (Tailwind v4 quitó el pointer por
+   defecto en los botones). Links <a> ya muestran la manito del navegador. */
+button:not(:disabled),
+[role="button"]:not(:disabled),
+label[for],
+summary,
+select {
+  cursor: pointer;
+}
+button:disabled,
+[role="button"][aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
 html {
   scroll-behavior: smooth;
 }

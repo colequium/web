@@ -28,8 +28,8 @@ export function AppTopbar() {
         <span className="text-base font-700 text-ink">{schoolShort}</span>
       </div>
 
-      {/* Buscador */}
-      <div className="relative ml-auto hidden max-w-md flex-1 md:block lg:ml-0">
+      {/* Buscador (alineado a la izquierda) */}
+      <div className="relative hidden max-w-md flex-1 md:block">
         <Icon name="Search" className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-ink/35" />
         <input
           type="search"
@@ -38,8 +38,11 @@ export function AppTopbar() {
         />
       </div>
 
+      {/* Grupo derecho: idioma + notificaciones + perfil (pegado a la derecha) */}
+      <div className="ml-auto flex items-center gap-3">
+
       {/* Idioma */}
-      <div className="relative ml-auto md:ml-0">
+      <div className="relative">
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
@@ -88,6 +91,8 @@ export function AppTopbar() {
           <p className="text-sm font-700 text-ink">{userName}</p>
           <p className="text-xs font-500 text-ink/50">{roleText}</p>
         </div>
+      </div>
+
       </div>
     </header>
   );

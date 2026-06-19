@@ -17,7 +17,7 @@ export default function AuthLayout({
         <div className="absolute -right-20 top-24 h-72 w-72 rounded-full bg-brand/30 blur-3xl" />
         <div className="absolute -left-16 bottom-10 h-64 w-64 rounded-full bg-cta/15 blur-3xl" />
 
-        <Wordmark theme="dark" className="relative" />
+        <Wordmark theme="dark" href="/" className="relative" />
 
         <div className="relative max-w-md">
           <h2 className="font-display text-3xl font-700 leading-tight">
