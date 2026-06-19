@@ -6,6 +6,7 @@ import { Icon } from "../icons";
 import { Avatar } from "../Avatar";
 import { useLocale } from "../locale-context";
 import { useIdentity } from "../identity-context";
+import { BrandIcon } from "../Wordmark";
 import { NAV_ITEMS, DEMO_USER } from "@/lib/domain";
 import { logout } from "@/app/(auth)/login/actions";
 
@@ -18,8 +19,8 @@ export function RailSidebar() {
 
   return (
     <aside className="sticky top-0 hidden h-dvh w-[84px] shrink-0 flex-col items-center border-r border-ink/8 bg-white py-5 lg:flex">
-      <Link href="/inicio" className="grid h-11 w-11 place-items-center rounded-2xl bg-gradient-to-br from-brand to-sky text-white shadow-soft">
-        <Icon name="Sparkles" className="h-5 w-5" />
+      <Link href="/inicio" title="Inicio">
+        <BrandIcon className="h-11 w-11" />
       </Link>
 
       <nav className="mt-7 flex flex-1 flex-col items-center gap-2">

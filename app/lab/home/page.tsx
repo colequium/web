@@ -1,19 +1,11 @@
 import Link from "next/link";
 import { Icon } from "@/components/icons";
 import { Reveal } from "@/components/landing/Reveal";
+import { Wordmark } from "@/components/Wordmark";
 
-/* ── Marca (Outfit heredada del layout del lab) ── */
+/* ── Marca (manzana naranja + wordmark cursivo) ── */
 function Brand({ dark = false }: { dark?: boolean }) {
-  return (
-    <span className="inline-flex items-center gap-2.5">
-      <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-brand to-sky text-white shadow-soft">
-        <Icon name="Sparkles" className="h-5 w-5" />
-      </span>
-      <span className={`text-xl font-700 tracking-tight ${dark ? "text-white" : "text-ink"}`}>
-        Colequium
-      </span>
-    </span>
-  );
+  return <Wordmark theme={dark ? "dark" : "light"} />;
 }
 
 /* ── Placeholder de imagen 100% local (gradiente + patrón + icono). ── */

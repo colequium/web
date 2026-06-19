@@ -5,6 +5,7 @@ import { Icon } from "../icons";
 import { Avatar } from "../Avatar";
 import { useLocale } from "../locale-context";
 import { useIdentity } from "../identity-context";
+import { BrandIcon } from "../Wordmark";
 import { LOCALES } from "@/lib/i18n";
 import { DEMO_USER, DEMO_SCHOOL, ROLE_LABELS } from "@/lib/domain";
 
@@ -23,9 +24,7 @@ export function AppTopbar() {
     <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-ink/8 bg-white px-4 py-3 sm:px-5">
       {/* Marca compacta en móvil (el rail está oculto) */}
       <div className="flex items-center gap-2 lg:hidden">
-        <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-brand to-sky text-white shadow-soft">
-          <Icon name="Sparkles" className="h-4 w-4" />
-        </span>
+        <BrandIcon className="h-9 w-9" iconClassName="h-4 w-4" />
         <span className="text-base font-700 text-ink">{schoolShort}</span>
       </div>
 

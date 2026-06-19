@@ -52,10 +52,12 @@ import {
   Languages,
   Zap,
   Smile,
+  Apple,
   type LucideIcon,
 } from "lucide-react";
 
 export const ICONS: Record<string, LucideIcon> = {
+  Apple,
   LayoutGrid,
   Megaphone,
   CalendarDays,
