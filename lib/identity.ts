@@ -41,12 +41,24 @@ export async function getIdentity(): Promise<Identity | null> {
     .eq("id", user.id)
     .maybeSingle();
 
-  const { data: membership } = await supabase
+  let { data: membership } = await supabase
     .from("memberships")
     .select("id, communities(name, short_name)")
     .eq("user_id", user.id)
     .limit(1)
     .maybeSingle();
+
+  // Sin comunidad pero con sesión: puede haber invitaciones pendientes sin reclamar.
+  if (!membership) {
+    await supabase.rpc("claim_invitations");
+    const reload = await supabase
+      .from("memberships")
+      .select("id, communities(name, short_name)")
+      .eq("user_id", user.id)
+      .limit(1)
+      .maybeSingle();
+    membership = reload.data;
+  }
 
   let roleKey: RoleKey | null = null;
   if (membership?.id) {
