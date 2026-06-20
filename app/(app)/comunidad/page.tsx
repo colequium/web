@@ -1,6 +1,6 @@
 import { Avatar } from "@/components/Avatar";
 import { Icon } from "@/components/icons";
-import { getPeople, type Person } from "@/lib/people";
+import { getPeople, personSubtitle, type Person } from "@/lib/people";
 import { ROLE_COLOR } from "@/lib/posts";
 import { blockStudents } from "@/lib/identity";
 import type { RoleKey } from "@/lib/domain";
@@ -75,7 +75,7 @@ function PersonCard({ person }: { person: Person }) {
       <Avatar name={person.name} color={color} />
       <div className="min-w-0">
         <p className="truncate text-sm font-700 text-ink">{person.name}</p>
-        <p className="truncate text-xs font-600 text-ink/50">{person.roleLabel}</p>
+        <p className="truncate text-xs font-600 text-ink/50">{personSubtitle(person)}</p>
       </div>
     </div>
   );

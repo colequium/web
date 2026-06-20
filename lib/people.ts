@@ -3,15 +3,27 @@ import { rethrowNextControl } from "@/lib/supabase/safe";
 import { ROLE_LABELS, type RoleKey } from "@/lib/domain";
 
 export interface Person {
+  membershipId: string | null;
   name: string;
   roleKey: RoleKey | null;
   roleLabel: string;
+  /** Línea de contexto: "Mamá de Tomás" (familia) o "6°B" (alcance del staff). */
+  context: string | null;
 }
 
 interface PersonRow {
+  membership_id: string | null;
   name: string;
   role_key: string | null;
   role_kind: string | null;
+  context: string | null;
+}
+
+/** Subtítulo a mostrar bajo el nombre: de quién es (familia) o cargo + alcance. */
+export function personSubtitle(p: Person): string {
+  if (p.roleKey === "guardian" && p.context) return p.context;
+  if (p.context) return `${p.roleLabel} · ${p.context}`;
+  return p.roleLabel;
 }
 
 /** Personas de la comunidad visibles para el usuario (según su rol). */
@@ -34,9 +46,11 @@ export async function getPeople(): Promise<Person[]> {
   return (data as PersonRow[]).map((r) => {
     const key = (r.role_key ?? null) as RoleKey | null;
     return {
+      membershipId: r.membership_id,
       name: r.name,
       roleKey: key,
       roleLabel: key ? ROLE_LABELS[key] : "Miembro",
+      context: r.context,
     };
   });
 }
