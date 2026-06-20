@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { sendExpoPush } from "@/lib/push";
 
 type Supa = Awaited<ReturnType<typeof createClient>>;
 
@@ -102,6 +103,14 @@ export async function createPost(
     target_type: targetType,
     target_id: targetId,
   });
+
+  // Push notifications a los dispositivos de la comunidad (si hay tokens).
+  const { data: tokens } = await supabase.rpc("recipient_tokens", { p_post: post.id });
+  await sendExpoPush(
+    ((tokens as { token: string }[]) ?? []).map((t) => t.token),
+    title || "Nuevo aviso",
+    body.slice(0, 140),
+  );
 
   revalidatePath("/muro");
   revalidatePath("/inicio");
