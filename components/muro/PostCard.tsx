@@ -143,22 +143,32 @@ export function PostCard({ post, index = 0 }: { post: Post; index?: number }) {
             {likes}
           </button>
 
-          <button
-            type="button"
-            onClick={() => {
-              const next = !showComments;
-              setShowComments(next);
-              if (next && comments === null) loadComments();
-              if (next) read();
-            }}
-            className={`flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-700 transition-colors ${
-              showComments ? "bg-brand/10 text-brand" : "text-ink/55 hover:bg-mist hover:text-ink"
-            }`}
-            aria-expanded={showComments}
-          >
-            <Icon name="MessageCircle" className="h-[18px] w-[18px]" />
-            {post.comments}
-          </button>
+          {post.commentsEnabled === false ? (
+            <span
+              className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-700 text-ink/35"
+              title="El colegio desactivó los comentarios en este aviso"
+            >
+              <Icon name="MessageCircleOff" className="h-[18px] w-[18px]" />
+              <span className="hidden sm:inline text-xs">Comentarios desactivados</span>
+            </span>
+          ) : (
+            <button
+              type="button"
+              onClick={() => {
+                const next = !showComments;
+                setShowComments(next);
+                if (next && comments === null) loadComments();
+                if (next) read();
+              }}
+              className={`flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-700 transition-colors ${
+                showComments ? "bg-brand/10 text-brand" : "text-ink/55 hover:bg-mist hover:text-ink"
+              }`}
+              aria-expanded={showComments}
+            >
+              <Icon name="MessageCircle" className="h-[18px] w-[18px]" />
+              {post.comments}
+            </button>
+          )}
 
           <button
             type="button"

@@ -64,6 +64,7 @@ export interface Post {
   cover: string; // gradiente de portada (fallback cuando no hay foto)
   coverIcon: "calendar" | "megaphone" | "image" | "trophy" | "bus" | "heart";
   kind?: "announcement" | "poll";
+  commentsEnabled?: boolean; // el colegio puede desactivar comentarios por aviso
   likes: number;
   comments: number;
   liked: boolean;

@@ -66,6 +66,8 @@ export async function createPost(
     .map((o) => String(o).trim())
     .filter(Boolean);
   const isPoll = String(formData.get("isPoll") || "") === "1" && options.length >= 2;
+  // Por defecto los comentarios están habilitados; el autor puede apagarlos.
+  const commentsEnabled = String(formData.get("commentsEnabled") || "1") !== "0";
 
   const { data: post, error } = await supabase
     .from("posts")
@@ -75,6 +77,7 @@ export async function createPost(
       title: title || null,
       body,
       type: isPoll ? "poll" : "announcement",
+      comments_enabled: commentsEnabled,
       published_at: new Date().toISOString(),
     })
     .select("id")

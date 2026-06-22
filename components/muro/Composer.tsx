@@ -23,6 +23,7 @@ export function Composer({
   const formRef = useRef<HTMLFormElement>(null);
   const [pollMode, setPollMode] = useState(false);
   const [optionCount, setOptionCount] = useState(2);
+  const [commentsOff, setCommentsOff] = useState(false);
   const [state, formAction, pending] = useActionState<CreatePostState, FormData>(
     createPost,
     null,
@@ -33,6 +34,7 @@ export function Composer({
       formRef.current?.reset();
       setPollMode(false);
       setOptionCount(2);
+      setCommentsOff(false);
     }
   }, [state]);
 
@@ -84,6 +86,7 @@ export function Composer({
       </div>
 
       <input type="hidden" name="isPoll" value={pollMode ? "1" : "0"} />
+      <input type="hidden" name="commentsEnabled" value={commentsOff ? "0" : "1"} />
 
       {state?.error ? (
         <p role="alert" className="mt-2 pl-[52px] text-xs font-700 text-rose">
@@ -103,6 +106,18 @@ export function Composer({
         >
           <Icon name="ClipboardList" className="h-[16px] w-[16px]" />
           <span className="hidden sm:inline">Encuesta</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setCommentsOff((v) => !v)}
+          aria-pressed={commentsOff}
+          title={commentsOff ? "Comentarios desactivados" : "Comentarios activados"}
+          className={`flex items-center gap-1.5 rounded-xl px-2.5 py-2 text-xs font-700 transition-colors ${
+            commentsOff ? "bg-rose/10 text-rose" : "text-ink/45 hover:bg-mist hover:text-ink"
+          }`}
+        >
+          <Icon name={commentsOff ? "MessageCircleOff" : "MessageCircle"} className="h-[16px] w-[16px]" />
+          <span className="hidden sm:inline">{commentsOff ? "Sin comentarios" : "Comentarios"}</span>
         </button>
         <select
           name="audience"
