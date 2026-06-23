@@ -5,6 +5,7 @@ import { Reveal } from "@/components/landing/Reveal";
 import { HeroMessages } from "@/components/landing/HeroMessages";
 import { MobileMenu } from "@/components/landing/MobileMenu";
 import { Wordmark } from "@/components/Wordmark";
+import { BLOG_POSTS } from "@/lib/blog";
 
 /* ── Marca (manzana naranja + wordmark cursivo) ── */
 function Brand({ dark = false }: { dark?: boolean }) {
@@ -72,26 +73,7 @@ const PLANES = [
   { name: "Escuela", price: "$1", per: "por alumno / mes", feats: ["Salones ilimitados", "Mensajes y trámites", "Multi-idioma", "Soporte prioritario"], best: true },
   { name: "Institución", price: "A medida", per: "varios colegios", feats: ["Todo lo de Escuela", "Transporte en vivo", "Integraciones", "Gestor dedicado"] },
 ];
-const POSTS = [
-  {
-    tag: "Comunidad",
-    title: "5 ideas para que las familias lean (de verdad) tus avisos",
-    excerpt: "Títulos claros, un solo canal y el mensaje correcto a la familia correcta. Pequeños cambios que suben muchísimo la lectura.",
-    date: "10 jun 2026",
-  },
-  {
-    tag: "Gestión",
-    title: "Cómo armar el calendario del trimestre sin estrés",
-    excerpt: "Exámenes, actos y salidas en un solo calendario compartido, para que nadie se entere tarde de una fecha importante.",
-    date: "03 jun 2026",
-  },
-  {
-    tag: "Tecnología",
-    title: "Adiós a los grupos de WhatsApp del colegio",
-    excerpt: "Por qué el chat informal genera ruido y desigualdad, y cómo un canal oficial ordena la comunicación y cuida la privacidad.",
-    date: "28 may 2026",
-  },
-];
+const POSTS = BLOG_POSTS;
 
 export default function LabHome() {
   return (
@@ -297,20 +279,20 @@ export default function LabHome() {
               <span className="rounded-full bg-white px-4 py-1.5 text-sm font-700 text-brand">Recursos</span>
               <h2 className="mt-4 text-3xl font-700 tracking-tight text-ink sm:text-4xl">Ideas para tu comunidad</h2>
             </div>
-            <a href="#" className="rounded-full border border-ink/15 bg-white px-5 py-2.5 text-sm font-700 text-ink transition-colors hover:border-brand/40 hover:text-brand">Ver todo</a>
+            <Link href="/blog" className="rounded-full border border-ink/15 bg-white px-5 py-2.5 text-sm font-700 text-ink transition-colors hover:border-brand/40 hover:text-brand">Ver todo</Link>
           </Reveal>
           <div className="mt-12 grid gap-6 sm:grid-cols-3">
             {POSTS.map((p, i) => (
-              <Reveal key={p.title} delay={i * 80}>
-                <article className="group overflow-hidden rounded-3xl border border-ink/8 bg-white transition-all hover:shadow-pop">
+              <Reveal key={p.slug} delay={i * 80}>
+                <Link href={`/blog/${p.slug}`} className="group block h-full overflow-hidden rounded-3xl border border-ink/8 bg-white transition-all hover:shadow-pop">
                   <Ph className="aspect-[16/10] w-full" v={i + 1} icon="Sparkles" rounded="rounded-none" />
                   <div className="p-6">
                     <span className="text-xs font-700 text-cta">{p.tag}</span>
-                    <h3 className="mt-2 text-lg font-700 leading-snug text-ink">{p.title}</h3>
+                    <h3 className="mt-2 text-lg font-700 leading-snug text-ink group-hover:text-brand">{p.title}</h3>
                     <p className="mt-2 text-sm font-400 leading-relaxed text-ink/60">{p.excerpt}</p>
-                    <p className="mt-3 text-xs font-500 text-ink/45">{p.date}</p>
+                    <p className="mt-3 text-xs font-500 text-ink/45">{p.date} · {p.readMins} min</p>
                   </div>
-                </article>
+                </Link>
               </Reveal>
             ))}
           </div>
