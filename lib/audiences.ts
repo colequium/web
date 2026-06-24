@@ -19,8 +19,8 @@ const AUDIENCE_ROLES: RoleKey[] = ["guardian", "teacher", "student", "driver"];
 
 /**
  * Opciones de "a quién va dirigido" un aviso, para el publicador.
- * El docente queda acotado a SUS grupos (y sus grados/niveles): no puede
- * elegir "toda la comunidad" ni roles globales.
+ * El docente queda acotado a SUS salones asignados: no puede dirigirse al grado
+ * o nivel completo, ni a "toda la comunidad", ni a roles globales.
  */
 export async function getAudienceOptions(roleKey: RoleKey | null = null): Promise<AudienceOptions> {
   const empty: AudienceOptions = { community: null, levels: [], grades: [], groups: [], roles: [] };
@@ -63,7 +63,8 @@ export async function getAudienceOptions(roleKey: RoleKey | null = null): Promis
       label: ROLE_LABELS[k],
     }));
 
-    // Docente: solo sus salones (y sus grados/niveles), sin comunidad ni roles.
+    // Docente: SOLO sus salones asignados. Sin grado/nivel (no puede dirigirse
+    // a todo 6° ni a toda Primaria), sin comunidad ni roles globales.
     if (roleKey === "teacher") {
       const { data: gidsRaw } = await supabase.rpc("my_group_ids");
       const gids = new Set(
@@ -72,10 +73,8 @@ export async function getAudienceOptions(roleKey: RoleKey | null = null): Promis
         ),
       );
       grp = grp.filter((g) => gids.has(g.id));
-      const gradeIds = new Set(grp.map((g) => g.grade_id).filter(Boolean));
-      grd = grd.filter((g) => gradeIds.has(g.id));
-      const levelIds = new Set(grd.map((g) => g.level_id).filter(Boolean));
-      lvl = lvl.filter((l) => levelIds.has(l.id));
+      grd = [];
+      lvl = [];
       community = null;
       roleOpts = [];
     }
