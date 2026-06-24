@@ -84,19 +84,28 @@ export function Composer({
       <div className="flex items-start gap-3">
         <Avatar name={me?.name ?? DEMO_USER.name} color="brand" />
         <div className="min-w-0 flex-1">
-          {!pollMode ? (
-            <div className="mb-2 flex flex-wrap gap-1.5">
-              {[
-                { v: "comunicado", l: "Comunicado", icon: "Megaphone" },
-                { v: "invitacion", l: "Invitación", icon: "CalendarDays" },
-                { v: "tarea", l: "Tarea", icon: "ClipboardList" },
-              ].map((o) => (
+          <div className="mb-2 flex flex-wrap gap-1.5">
+            {[
+              { v: "comunicado", l: "Comunicado", icon: "Megaphone" },
+              { v: "invitacion", l: "Invitación", icon: "CalendarDays" },
+              { v: "tarea", l: "Tarea", icon: "ClipboardList" },
+              { v: "encuesta", l: "Encuesta", icon: "BarChart3" },
+            ].map((o) => {
+              const active = o.v === "encuesta" ? pollMode : !pollMode && postType === o.v;
+              return (
                 <button
                   key={o.v}
                   type="button"
-                  onClick={() => setPostType(o.v as typeof postType)}
+                  onClick={() => {
+                    if (o.v === "encuesta") {
+                      setPollMode(true);
+                    } else {
+                      setPollMode(false);
+                      setPostType(o.v as typeof postType);
+                    }
+                  }}
                   className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-700 ring-1 transition-colors ${
-                    postType === o.v
+                    active
                       ? "bg-ink text-white ring-ink"
                       : "bg-white text-ink/55 ring-ink/10 hover:text-ink"
                   }`}
@@ -104,9 +113,9 @@ export function Composer({
                   <Icon name={o.icon} className="h-3.5 w-3.5" />
                   {o.l}
                 </button>
-              ))}
-            </div>
-          ) : null}
+              );
+            })}
+          </div>
 
           <input
             name="title"
@@ -313,18 +322,6 @@ export function Composer({
         >
           <Icon name="Paperclip" className="h-[16px] w-[16px]" />
           <span className="hidden sm:inline">Adjuntar</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => setPollMode((v) => !v)}
-          aria-pressed={pollMode}
-          title="Encuesta"
-          className={`flex items-center gap-1.5 rounded-xl px-2.5 py-2 text-xs font-700 transition-colors ${
-            pollMode ? "bg-brand/10 text-brand" : "text-ink/45 hover:bg-mist hover:text-ink"
-          }`}
-        >
-          <Icon name="ClipboardList" className="h-[16px] w-[16px]" />
-          <span className="hidden sm:inline">Encuesta</span>
         </button>
         <button
           type="button"
