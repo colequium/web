@@ -5,8 +5,15 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendExpoPush } from "@/lib/push";
 import { geminiTranslate, type Translated } from "@/lib/translate";
+import { getFeed, FEED_PAGE_SIZE } from "@/lib/posts";
+import type { Post } from "@/lib/domain";
 
 type Supa = Awaited<ReturnType<typeof createClient>>;
+
+/** Trae la siguiente página del muro (para "Ver más novedades"). */
+export async function getMorePosts(offset: number): Promise<Post[]> {
+  return getFeed(FEED_PAGE_SIZE, offset);
+}
 
 /** Membresía activa del usuario actual (id + comunidad). */
 async function myMembership(supabase: Supa) {

@@ -137,7 +137,15 @@ export function PostCard({ post, index = 0 }: { post: Post; index?: number }) {
               className="h-28 w-28 shrink-0 rounded-2xl object-cover sm:h-32 sm:w-32"
             />
           ) : null}
-          <div className="min-w-0 flex-1">
+          <div
+            className={`min-w-0 flex-1 ${expanded ? "" : "cursor-pointer"}`}
+            onClick={() => {
+              if (!expanded) {
+                setExpanded(true);
+                read();
+              }
+            }}
+          >
             <h3 className="font-display text-lg font-700 leading-snug text-ink">{shownTitle}</h3>
             <p className={`mt-1.5 text-[15px] leading-relaxed text-ink/70 ${expanded ? "" : "line-clamp-2"}`}>
               {shownBody}
@@ -276,6 +284,14 @@ export function PostCard({ post, index = 0 }: { post: Post; index?: number }) {
               {post.comments}
             </button>
           )}
+
+          <span
+            className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-700 text-ink/45"
+            title={`${post.views ?? 0} ${(post.views ?? 0) === 1 ? "persona vio" : "personas vieron"} esta novedad`}
+          >
+            <Icon name="Eye" className="h-[18px] w-[18px]" />
+            {post.views ?? 0}
+          </span>
 
           <button
             type="button"

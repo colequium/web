@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { Composer } from "@/components/muro/Composer";
 import { Filters, type WallFilter } from "@/components/muro/Filters";
 import { PostCard } from "@/components/muro/PostCard";
@@ -9,9 +9,12 @@ import { Icon } from "@/components/icons";
 import { useLocale } from "@/components/locale-context";
 import type { Post } from "@/lib/domain";
 import type { AudienceOptions } from "@/lib/audiences";
+import { getMorePosts } from "@/app/(app)/muro/actions";
+
+const PAGE_SIZE = 8;
 
 export function MuroView({
-  posts,
+  posts: initialPosts,
   canPublish = false,
   audiences,
 }: {
@@ -21,6 +24,21 @@ export function MuroView({
 }) {
   const { t } = useLocale();
   const [filter, setFilter] = useState<WallFilter>("all");
+  // Paginación: arrancamos con la primera página y vamos sumando con "Ver más".
+  const [posts, setPosts] = useState<Post[]>(initialPosts);
+  const [done, setDone] = useState(initialPosts.length < PAGE_SIZE);
+  const [loadingMore, startMore] = useTransition();
+
+  function loadMore() {
+    startMore(async () => {
+      const next = await getMorePosts(posts.length);
+      setPosts((prev) => {
+        const seen = new Set(prev.map((p) => p.id));
+        return [...prev, ...next.filter((p) => !seen.has(p.id))];
+      });
+      if (next.length < PAGE_SIZE) setDone(true);
+    });
+  }
 
   const shown = posts.filter((p) =>
     filter === "unread" ? p.unread : filter === "saved" ? p.bookmarked : true,
@@ -86,6 +104,24 @@ export function MuroView({
               </p>
             </div>
           )}
+
+          {!done && posts.length > 0 ? (
+            <button
+              type="button"
+              onClick={loadMore}
+              disabled={loadingMore}
+              className="mx-auto flex items-center gap-2 rounded-full border border-ink/10 bg-white px-5 py-2.5 text-sm font-700 text-ink/70 shadow-card transition-colors hover:text-ink disabled:opacity-60"
+            >
+              {loadingMore ? (
+                "Cargando…"
+              ) : (
+                <>
+                  <Icon name="ChevronDown" className="h-4 w-4" />
+                  Ver más novedades
+                </>
+              )}
+            </button>
+          ) : null}
         </div>
 
         {/* Rail derecho (desktop) */}

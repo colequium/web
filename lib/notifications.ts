@@ -25,7 +25,7 @@ export async function getNotifications(): Promise<NotificationsResult> {
   try {
     const supabase = await createClient();
     const [{ data: feed }, { data: cal }] = await Promise.all([
-      supabase.rpc("feed"),
+      supabase.rpc("feed", { p_limit: 100, p_offset: 0 }),
       supabase.rpc("calendar_feed"),
     ]);
 
@@ -79,7 +79,7 @@ export async function markAllRead() {
       .limit(1)
       .maybeSingle();
     if (!m) return;
-    const { data: feed } = await supabase.rpc("feed");
+    const { data: feed } = await supabase.rpc("feed", { p_limit: 100, p_offset: 0 });
     const unread = (feed ?? []).filter((p: { unread: boolean }) => p.unread);
     if (unread.length === 0) return;
     await supabase

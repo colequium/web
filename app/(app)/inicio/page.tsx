@@ -6,7 +6,7 @@ import { getRequests } from "@/lib/requests";
 
 export default async function InicioPage() {
   const [posts, events, conversations, requests] = await Promise.all([
-    getFeed(),
+    getFeed(50),
     getCalendar(),
     getConversations(),
     getRequests(),

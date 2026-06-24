@@ -74,6 +74,7 @@ export interface Post {
   commentsEnabled?: boolean; // el colegio puede desactivar comentarios por aviso
   likes: number;
   comments: number;
+  views?: number; // cuántas personas la abrieron/leyeron
   liked: boolean;
   bookmarked: boolean;
   unread: boolean;

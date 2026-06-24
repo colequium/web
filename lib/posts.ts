@@ -30,6 +30,7 @@ interface FeedRow {
   task_action: string | null;
   task_due: string | null;
   task_done: boolean;
+  reads: number;
 }
 
 export const ROLE_COLOR: Record<string, AccentColor> = {
@@ -77,15 +78,21 @@ function audienceLabel(target: string | null, raw: string | null): string {
   return raw ?? "";
 }
 
+/** Cuántas novedades se cargan por página en el muro. */
+export const FEED_PAGE_SIZE = 8;
+
 /** Muro del usuario logueado (ya filtrado por audiencia/rol en la DB). */
-export async function getFeed(): Promise<Post[]> {
+export async function getFeed(
+  limit: number = FEED_PAGE_SIZE,
+  offset: number = 0,
+): Promise<Post[]> {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     return []; // sin env → muro vacío en vez de romper
   }
   let data: unknown;
   try {
     const supabase = await createClient();
-    const res = await supabase.rpc("feed");
+    const res = await supabase.rpc("feed", { p_limit: limit, p_offset: offset });
     if (res.error || !res.data) return [];
     data = res.data;
   } catch (e) {
@@ -127,6 +134,7 @@ export async function getFeed(): Promise<Post[]> {
       commentsEnabled: r.comments_enabled,
       likes: r.likes,
       comments: r.comments,
+      views: r.reads,
       liked: r.liked,
       bookmarked: r.bookmarked,
       unread: r.unread,
