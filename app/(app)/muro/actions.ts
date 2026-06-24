@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendExpoPush } from "@/lib/push";
-import { geminiTranslate, type Translated } from "@/lib/translate";
+import { translateNotice, type Translated } from "@/lib/translate";
 import { getFeed, FEED_PAGE_SIZE } from "@/lib/posts";
 import type { Post } from "@/lib/domain";
 
@@ -33,7 +33,7 @@ async function myMembership(supabase: Supa) {
 
 /**
  * Traduce un aviso al idioma destino (read-through cache).
- * 1ª vez: llama a Gemini y guarda en `translations`. Luego: lee de la base.
+ * 1ª vez: llama al traductor y guarda en `translations`. Luego: lee de la base.
  */
 export async function translatePost(
   postId: string,
@@ -64,9 +64,9 @@ export async function translatePost(
   if (!post) return null;
 
   // 3) Traducir y cachear.
-  const result = await geminiTranslate(post.title ?? "", post.body ?? "", targetLang);
+  const result = await translateNotice(post.title ?? "", post.body ?? "", targetLang);
   if (!result) {
-    // Fallback demo: si la API falla (p. ej. quota de la key), usar las
+    // Fallback demo: si la API falla, usar las
     // traducciones hechas a mano de los avisos sembrados (no se cachean).
     const { getTranslation } = await import("@/lib/translations");
     return getTranslation(postId, targetLang);
@@ -80,7 +80,7 @@ export async function translatePost(
         source_lang: "es",
         title: result.title,
         body: result.body,
-        provider: "gemini",
+        provider: "mymemory",
       },
       { onConflict: "content_type,content_id,target_lang" },
     );
