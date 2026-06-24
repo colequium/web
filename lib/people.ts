@@ -9,6 +9,8 @@ export interface Person {
   roleLabel: string;
   /** Línea de contexto: "Mamá de Tomás" (familia) o "6°B" (alcance del staff). */
   context: string | null;
+  /** Cursos asociados (para filtrar por salón): staff o familia. */
+  groups: string[];
 }
 
 interface PersonRow {
@@ -17,6 +19,7 @@ interface PersonRow {
   role_key: string | null;
   role_kind: string | null;
   context: string | null;
+  groups: string[] | null;
 }
 
 /** Subtítulo a mostrar bajo el nombre: de quién es (familia) o cargo + alcance. */
@@ -51,6 +54,7 @@ export async function getPeople(): Promise<Person[]> {
       roleKey: key,
       roleLabel: key ? ROLE_LABELS[key] : "Miembro",
       context: r.context,
+      groups: r.groups ?? [],
     };
   });
 }

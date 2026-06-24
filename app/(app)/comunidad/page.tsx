@@ -1,27 +1,37 @@
-import { Avatar } from "@/components/Avatar";
 import { Icon } from "@/components/icons";
-import { getPeople, personSubtitle, type Person } from "@/lib/people";
+import { getPeople, personSubtitle } from "@/lib/people";
 import { ROLE_COLOR } from "@/lib/posts";
 import { blockStudents } from "@/lib/identity";
 import type { RoleKey } from "@/lib/domain";
+import { ComunidadView, type DirSection } from "@/components/comunidad/ComunidadView";
 
 /** Secciones del directorio, en orden de jerarquía. */
-const GROUPS: { title: string; roles: RoleKey[] }[] = [
-  { title: "Dirección y coordinación", roles: ["board", "manager", "principal", "department_head", "coordinator"] },
-  { title: "Docentes", roles: ["teacher"] },
-  { title: "Administración y servicios", roles: ["support_staff", "service_inbox"] },
-  { title: "Familias", roles: ["guardian"] },
-  { title: "Alumnos", roles: ["student"] },
-  { title: "Transporte", roles: ["driver"] },
+const GROUPS: { key: string; title: string; icon: string; roles: RoleKey[]; filterable?: boolean }[] = [
+  { key: "direccion", title: "Dirección y coordinación", icon: "ShieldCheck", roles: ["board", "manager", "principal", "department_head", "coordinator"] },
+  { key: "docentes", title: "Docentes", icon: "GraduationCap", roles: ["teacher"], filterable: true },
+  { key: "servicios", title: "Administración y servicios", icon: "Settings", roles: ["support_staff", "service_inbox"] },
+  { key: "familias", title: "Familias", icon: "Users", roles: ["guardian"], filterable: true },
+  { key: "alumnos", title: "Alumnos", icon: "Smile", roles: ["student"], filterable: true },
+  { key: "transporte", title: "Transporte", icon: "Bus", roles: ["driver"] },
 ];
 
 export default async function ComunidadPage() {
   await blockStudents();
   const people = await getPeople();
 
-  const sections = GROUPS.map((g) => ({
+  const sections: DirSection[] = GROUPS.map((g) => ({
+    key: g.key,
     title: g.title,
-    people: people.filter((p) => p.roleKey && g.roles.includes(p.roleKey)),
+    icon: g.icon,
+    filterable: !!g.filterable,
+    people: people
+      .filter((p) => p.roleKey && g.roles.includes(p.roleKey))
+      .map((p) => ({
+        name: p.name,
+        subtitle: personSubtitle(p),
+        color: (p.roleKey ? ROLE_COLOR[p.roleKey] ?? "brand" : "brand") as string,
+        groups: p.groups,
+      })),
   })).filter((s) => s.people.length > 0);
 
   return (
@@ -46,37 +56,8 @@ export default async function ComunidadPage() {
           </p>
         </div>
       ) : (
-        <div className="flex flex-col gap-6">
-          {sections.map((s) => (
-            <section key={s.title}>
-              <div className="mb-3 flex items-center gap-2">
-                <h2 className="font-display text-base font-700 text-ink">{s.title}</h2>
-                <span className="rounded-full bg-mist px-2 py-0.5 text-xs font-700 text-ink/50">
-                  {s.people.length}
-                </span>
-              </div>
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {s.people.map((p, i) => (
-                  <PersonCard key={`${p.name}-${i}`} person={p} />
-                ))}
-              </div>
-            </section>
-          ))}
-        </div>
+        <ComunidadView sections={sections} />
       )}
     </main>
-  );
-}
-
-function PersonCard({ person }: { person: Person }) {
-  const color = person.roleKey ? ROLE_COLOR[person.roleKey] ?? "brand" : "brand";
-  return (
-    <div className="flex items-center gap-3 rounded-[1.25rem] border border-ink/5 bg-white p-3 shadow-card">
-      <Avatar name={person.name} color={color} />
-      <div className="min-w-0">
-        <p className="truncate text-sm font-700 text-ink">{person.name}</p>
-        <p className="truncate text-xs font-600 text-ink/50">{personSubtitle(person)}</p>
-      </div>
-    </div>
   );
 }
