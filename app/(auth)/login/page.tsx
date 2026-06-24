@@ -8,6 +8,9 @@ import { login, type LoginState } from "./actions";
 
 export default function LoginPage() {
   const [showPass, setShowPass] = useState(false);
+  // Controlados para que un error del servidor no borre lo escrito.
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [state, formAction, pending] = useActionState<LoginState, FormData>(
     login,
     null,
@@ -37,6 +40,8 @@ export default function LoginPage() {
             name="email"
             type="email"
             required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             autoComplete="email"
             placeholder="tu@correo.com"
             className="w-full rounded-full border border-ink/10 bg-white px-4 py-3 text-sm font-500 text-ink outline-none placeholder:text-ink/35 focus:border-brand focus:ring-2 focus:ring-brand/30"
@@ -61,6 +66,8 @@ export default function LoginPage() {
               name="password"
               type={showPass ? "text" : "password"}
               required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
               placeholder="••••••••"
               className="w-full rounded-full border border-ink/10 bg-white px-4 py-3 pr-11 text-sm font-500 text-ink outline-none placeholder:text-ink/35 focus:border-brand focus:ring-2 focus:ring-brand/30"

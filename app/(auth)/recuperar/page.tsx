@@ -1,12 +1,13 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import Link from "next/link";
 import { Wordmark } from "@/components/Wordmark";
 import { Icon } from "@/components/icons";
 import { requestReset, type ResetState } from "./actions";
 
 export default function RecuperarPage() {
+  const [email, setEmail] = useState("");
   const [state, formAction, pending] = useActionState<ResetState, FormData>(
     requestReset,
     { sent: false },
@@ -67,6 +68,8 @@ export default function RecuperarPage() {
                 name="email"
                 type="email"
                 required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 autoComplete="email"
                 placeholder="tu@correo.com"
                 className="w-full rounded-full border border-ink/10 bg-white px-4 py-3 text-sm font-500 text-ink outline-none placeholder:text-ink/35 focus:border-brand focus:ring-2 focus:ring-brand/30"

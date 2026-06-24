@@ -24,6 +24,9 @@ export function Composer({
   const [pollMode, setPollMode] = useState(false);
   const [optionCount, setOptionCount] = useState(2);
   const [commentsOff, setCommentsOff] = useState(false);
+  // Controlados: un error (p. ej. sin permiso) no borra lo escrito.
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
   const [state, formAction, pending] = useActionState<CreatePostState, FormData>(
     createPost,
     null,
@@ -32,6 +35,8 @@ export function Composer({
   useEffect(() => {
     if (state?.ok) {
       formRef.current?.reset();
+      setTitle("");
+      setBody("");
       setPollMode(false);
       setOptionCount(2);
       setCommentsOff(false);
@@ -51,12 +56,16 @@ export function Composer({
         <div className="min-w-0 flex-1">
           <input
             name="title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
             placeholder="Título del aviso (opcional)"
             className="w-full rounded-xl bg-mist px-4 py-2.5 text-sm font-700 text-ink outline-none placeholder:font-600 placeholder:text-ink/45 focus:ring-2 focus:ring-brand/30"
           />
           <textarea
             name="body"
             rows={2}
+            value={body}
+            onChange={(e) => setBody(e.target.value)}
             placeholder={pollMode ? "Escribe la pregunta de la encuesta…" : "Comparte un aviso con la comunidad…"}
             className="mt-2 w-full resize-none rounded-xl bg-mist px-4 py-2.5 text-sm font-600 text-ink outline-none placeholder:text-ink/45 focus:ring-2 focus:ring-brand/30"
           />

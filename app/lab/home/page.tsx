@@ -69,8 +69,8 @@ const FEATURES = [
   { img: "/features/6-documentos.webp", title: "Documentos", text: "Circulares, reglamentos y archivos del colegio, ordenados y a un clic." },
 ];
 const UPCOMING = [
-  { icon: "Bus", title: "Transporte en vivo", text: "Sigue el transporte escolar en el mapa y recibe avisos de subida y bajada." },
-  { icon: "Languages", title: "Traducción automática", text: "Cada familia lee los avisos en su idioma, con un solo toque." },
+  { img: "/features/7-transporte.webp", title: "Transporte en vivo", text: "Sigue el transporte escolar en el mapa y recibe avisos de subida y bajada." },
+  { img: "/features/8-traduccion.webp", title: "Traducción automática", text: "Cada familia lee los avisos en su idioma, con un solo toque." },
 ];
 const PLANES = [
   { name: "Demo", price: "$0", per: "para probar", feats: ["Hasta 1 salón", "Novedades y calendario", "Soporte por correo"] },
@@ -164,10 +164,10 @@ export default function LabHome() {
           <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {FEATURES.map((f, i) => (
               <Reveal key={f.title} delay={i * 70}>
-                <div className="group h-full overflow-hidden rounded-3xl border border-ink/8 bg-white transition-all hover:border-brand/30 hover:shadow-pop">
-                  <div className="aspect-[4/3] w-full overflow-hidden bg-mist">
+                <div className="h-full overflow-hidden rounded-3xl border border-ink/10 bg-white shadow-card transition-all hover:border-brand/30 hover:shadow-pop">
+                  <div className="aspect-[4/3] w-full overflow-hidden border-b border-ink/10 bg-mist">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={f.img} alt={`Pantalla de ${f.title}`} className="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-105" />
+                    <img src={f.img} alt={`Pantalla de ${f.title}`} className="h-full w-full object-cover object-top" />
                   </div>
                   <div className="p-6">
                     <h3 className="text-lg font-700 text-ink">{f.title}</h3>
@@ -181,18 +181,17 @@ export default function LabHome() {
           {/* Muy pronto: transporte + traducción */}
           <Reveal className="mt-12">
             <p className="text-center text-sm font-700 uppercase tracking-wide text-ink/40">Muy pronto</p>
-            <div className="mx-auto mt-5 grid max-w-3xl gap-5 sm:grid-cols-2">
+            <div className="mx-auto mt-5 grid max-w-4xl gap-5 sm:grid-cols-2">
               {UPCOMING.map((u) => (
-                <div key={u.title} className="flex items-start gap-4 rounded-3xl border border-dashed border-ink/15 bg-mist/40 p-6">
-                  <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-ink/5 text-ink/60">
-                    <Icon name={u.icon} className="h-6 w-6" />
-                  </span>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-base font-700 text-ink">{u.title}</h3>
-                      <span className="rounded-full bg-cta/10 px-2 py-0.5 text-[10px] font-700 text-cta">Pronto</span>
-                    </div>
-                    <p className="mt-1 text-sm font-400 leading-relaxed text-ink/55">{u.text}</p>
+                <div key={u.title} className="h-full overflow-hidden rounded-3xl border border-ink/10 bg-white shadow-card">
+                  <div className="relative aspect-[4/3] w-full overflow-hidden border-b border-ink/10 bg-mist">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={u.img} alt={`Pantalla de ${u.title}`} className="h-full w-full object-cover object-top" />
+                    <span className="absolute right-3 top-3 rounded-full bg-cta px-2.5 py-1 text-[10px] font-700 uppercase tracking-wide text-white shadow-sm">Pronto</span>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-lg font-700 text-ink">{u.title}</h3>
+                    <p className="mt-2 text-sm font-400 leading-relaxed text-ink/60">{u.text}</p>
                   </div>
                 </div>
               ))}

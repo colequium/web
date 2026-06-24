@@ -6,6 +6,7 @@ import { setNewPassword, type NewPasswordState } from "./actions";
 
 export function NuevaForm() {
   const [show, setShow] = useState(false);
+  const [password, setPassword] = useState("");
   const [state, formAction, pending] = useActionState<NewPasswordState, FormData>(
     setNewPassword,
     null,
@@ -24,6 +25,8 @@ export function NuevaForm() {
             type={show ? "text" : "password"}
             required
             minLength={8}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             autoComplete="new-password"
             placeholder="Mínimo 8 caracteres"
             className="w-full rounded-full border border-ink/10 bg-white px-4 py-3 pr-11 text-sm font-500 text-ink outline-none placeholder:text-ink/35 focus:border-brand focus:ring-2 focus:ring-brand/30"

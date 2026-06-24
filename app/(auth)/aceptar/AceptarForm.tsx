@@ -6,6 +6,7 @@ import { setPassword, type AceptarState } from "./actions";
 
 export function AceptarForm({ email }: { email: string }) {
   const [show, setShow] = useState(false);
+  const [pass, setPass] = useState("");
   const [state, formAction, pending] = useActionState<AceptarState, FormData>(
     setPassword,
     null,
@@ -32,6 +33,8 @@ export function AceptarForm({ email }: { email: string }) {
             type={show ? "text" : "password"}
             required
             minLength={8}
+            value={pass}
+            onChange={(e) => setPass(e.target.value)}
             autoComplete="new-password"
             placeholder="Mínimo 8 caracteres"
             className="w-full rounded-full border border-ink/10 bg-white px-4 py-3 pr-11 text-sm font-500 text-ink outline-none placeholder:text-ink/35 focus:border-brand focus:ring-2 focus:ring-brand/30"
