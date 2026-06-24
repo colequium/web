@@ -53,6 +53,13 @@ export interface Author {
   color: string; // color del avatar (token tailwind, ej. "brand")
 }
 
+export interface PostAttachment {
+  name: string;
+  url: string; // URL firmada temporal
+  mime: string | null;
+  isImage: boolean;
+}
+
 export interface Post {
   id: string;
   author: Author;
@@ -73,6 +80,7 @@ export interface Post {
   taskAction?: "sign" | "submit" | "complete";
   taskDue?: string; // ISO, opcional
   taskDone?: boolean;
+  attachments?: PostAttachment[]; // adjuntos (PDF/imagen/documento)
   commentsEnabled?: boolean; // el colegio puede desactivar comentarios por aviso
   likes: number;
   comments: number;

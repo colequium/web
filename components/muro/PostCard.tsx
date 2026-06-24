@@ -282,6 +282,51 @@ export function PostCard({ post, index = 0 }: { post: Post; index?: number }) {
           </div>
         ) : null}
 
+        {/* Adjuntos: imágenes en miniatura + archivos descargables */}
+        {post.attachments && post.attachments.length > 0 ? (
+          <div className="mt-3 flex flex-col gap-2">
+            {post.attachments.some((a) => a.isImage) ? (
+              <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
+                {post.attachments
+                  .filter((a) => a.isImage)
+                  .map((a, i) => (
+                    <a
+                      key={i}
+                      href={a.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group relative aspect-square overflow-hidden rounded-xl"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={a.url}
+                        alt={a.name}
+                        className="absolute inset-0 h-full w-full object-cover transition-transform group-hover:scale-105"
+                      />
+                    </a>
+                  ))}
+              </div>
+            ) : null}
+            {post.attachments
+              .filter((a) => !a.isImage)
+              .map((a, i) => (
+                <a
+                  key={i}
+                  href={a.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2.5 rounded-xl border border-ink/8 bg-mist/50 px-3 py-2 transition-colors hover:bg-mist"
+                >
+                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-white text-brand">
+                    <Icon name="FileText" className="h-4 w-4" />
+                  </span>
+                  <span className="min-w-0 flex-1 truncate text-sm font-700 text-ink">{a.name}</span>
+                  <Icon name="ArrowRight" className="h-4 w-4 shrink-0 text-ink/30" />
+                </a>
+              ))}
+          </div>
+        ) : null}
+
         {post.kind === "poll" ? <PollView postId={post.id} /> : null}
 
         {/* Acciones */}

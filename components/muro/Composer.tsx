@@ -25,6 +25,8 @@ export function Composer({
   const [postType, setPostType] = useState<"comunicado" | "invitacion" | "tarea">("comunicado");
   const [optionCount, setOptionCount] = useState(2);
   const [commentsOff, setCommentsOff] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [fileNames, setFileNames] = useState<string[]>([]);
   const [audOpen, setAudOpen] = useState(false);
   const [audCount, setAudCount] = useState(0);
   const [audError, setAudError] = useState("");
@@ -55,6 +57,8 @@ export function Composer({
       setPostType("comunicado");
       setOptionCount(2);
       setCommentsOff(false);
+      setFileNames([]);
+      if (fileRef.current) fileRef.current.value = "";
       setAudOpen(false);
       setAudCount(0);
     }
@@ -263,7 +267,53 @@ export function Composer({
         </div>
       ) : null}
 
+      {/* Input de archivos (oculto) + chips de seleccionados */}
+      <input
+        ref={fileRef}
+        type="file"
+        name="attachment"
+        multiple
+        accept="image/*,application/pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx"
+        className="hidden"
+        onChange={(e) => setFileNames(Array.from(e.target.files ?? []).map((f) => f.name))}
+      />
+      {fileNames.length > 0 ? (
+        <div className="mt-2 flex flex-wrap gap-1.5">
+          {fileNames.map((n, i) => (
+            <span
+              key={i}
+              className="inline-flex items-center gap-1.5 rounded-full bg-mist px-2.5 py-1 text-xs font-600 text-ink/70"
+            >
+              <Icon name="Paperclip" className="h-3.5 w-3.5 text-ink/40" />
+              <span className="max-w-[160px] truncate">{n}</span>
+            </span>
+          ))}
+          <button
+            type="button"
+            onClick={() => {
+              setFileNames([]);
+              if (fileRef.current) fileRef.current.value = "";
+            }}
+            className="text-xs font-700 text-ink/40 hover:text-rose"
+          >
+            Quitar
+          </button>
+        </div>
+      ) : null}
+
       <div className="mt-3 flex items-center gap-2 border-t border-ink/5 pt-3">
+        <button
+          type="button"
+          onClick={() => fileRef.current?.click()}
+          aria-pressed={fileNames.length > 0}
+          title="Adjuntar archivo"
+          className={`flex items-center gap-1.5 rounded-xl px-2.5 py-2 text-xs font-700 transition-colors ${
+            fileNames.length > 0 ? "bg-brand/10 text-brand" : "text-ink/45 hover:bg-mist hover:text-ink"
+          }`}
+        >
+          <Icon name="Paperclip" className="h-[16px] w-[16px]" />
+          <span className="hidden sm:inline">Adjuntar</span>
+        </button>
         <button
           type="button"
           onClick={() => setPollMode((v) => !v)}

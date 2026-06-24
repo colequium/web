@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { rethrowNextControl } from "@/lib/supabase/safe";
 import {
   ROLE_LABELS,
@@ -103,7 +104,7 @@ export async function getFeed(
     return [];
   }
 
-  return (data as FeedRow[]).map((r) => {
+  const posts = (data as FeedRow[]).map((r) => {
     const target = (r.audience_target ?? "community") as AudienceTarget;
     const look = COVER[target] ?? COVER.community;
     return {
@@ -144,4 +145,34 @@ export async function getFeed(
       unread: r.unread,
     } satisfies Post;
   });
+
+  await attachFiles(posts);
+  return posts;
+}
+
+/** Carga los adjuntos (firmando URLs temporales) y los pega a cada post. */
+async function attachFiles(posts: Post[]): Promise<void> {
+  if (posts.length === 0) return;
+  const admin = createAdminClient();
+  if (!admin) return;
+  const ids = posts.map((p) => p.id);
+  const { data: rows } = await admin
+    .from("post_attachments")
+    .select("post_id, name, path, mime")
+    .in("post_id", ids);
+  if (!rows || rows.length === 0) return;
+
+  const byPost = new Map<string, Post["attachments"]>();
+  for (const a of rows as { post_id: string; name: string; path: string; mime: string | null }[]) {
+    const signed = await admin.storage.from("attachments").createSignedUrl(a.path, 3600);
+    const url = signed.data?.signedUrl;
+    if (!url) continue;
+    const list = byPost.get(a.post_id) ?? [];
+    list!.push({ name: a.name, url, mime: a.mime, isImage: (a.mime ?? "").startsWith("image/") });
+    byPost.set(a.post_id, list);
+  }
+  for (const p of posts) {
+    const list = byPost.get(p.id);
+    if (list && list.length) p.attachments = list;
+  }
 }

@@ -232,6 +232,41 @@ export async function createPost(
     return { error: "Solo puedes publicar a los grados o salones que tienes asignados." };
   }
 
+  // Adjuntos (PDFs / imágenes / documentos): subir al bucket privado y registrar.
+  const files = formData
+    .getAll("attachment")
+    .filter((f): f is File => f instanceof File && f.size > 0);
+  if (files.length) {
+    const admin = createAdminClient();
+    if (admin) {
+      const MAX = 10 * 1024 * 1024; // 10 MB por archivo
+      let idx = 0;
+      for (const file of files.slice(0, 6)) {
+        if (file.size > MAX) {
+          idx++;
+          continue;
+        }
+        const safe = file.name.replace(/[^\w.\-]+/g, "_").slice(-80) || `archivo-${idx}`;
+        const path = `${m.community_id}/${post.id}/${idx}-${safe}`;
+        const buf = Buffer.from(await file.arrayBuffer());
+        const up = await admin.storage
+          .from("attachments")
+          .upload(path, buf, { contentType: file.type || "application/octet-stream", upsert: false });
+        if (!up.error) {
+          await admin.from("post_attachments").insert({
+            post_id: post.id,
+            community_id: m.community_id,
+            name: file.name,
+            path,
+            mime: file.type || null,
+            size: file.size,
+          });
+        }
+        idx++;
+      }
+    }
+  }
+
   // Push notifications a los dispositivos de la comunidad (si hay tokens).
   const { data: tokens } = await supabase.rpc("recipient_tokens", { p_post: post.id });
   await sendExpoPush(
