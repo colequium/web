@@ -13,6 +13,6 @@ const PUBLISHERS: RoleKey[] = [
 export default async function MuroPage() {
   const [posts, me] = await Promise.all([getFeed(), getIdentity()]);
   const canPublish = !!me?.roleKey && PUBLISHERS.includes(me.roleKey);
-  const audiences = canPublish ? await getAudienceOptions() : undefined;
+  const audiences = canPublish ? await getAudienceOptions(me?.roleKey ?? null) : undefined;
   return <MuroView posts={posts} canPublish={canPublish} audiences={audiences} />;
 }

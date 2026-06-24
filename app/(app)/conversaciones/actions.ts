@@ -86,6 +86,18 @@ export async function startConversation(
   return { conversationId: data as string };
 }
 
+/** Archiva o reactiva una conversación (la mueve a/desde "Archivados"). */
+export async function archiveConversation(conversationId: string, archived: boolean) {
+  if (!conversationId) return;
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("set_conversation_status", {
+    p_conv: conversationId,
+    p_status: archived ? "closed" : "open",
+  });
+  if (error) console.error("[archiveConversation] rpc error:", error.message);
+  revalidatePath("/conversaciones");
+}
+
 /** Responde en una conversación existente. */
 export async function sendMessage(conversationId: string, body: string) {
   const text = body.trim();

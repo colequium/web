@@ -10,6 +10,7 @@ import { type AccentColor } from "../colors";
 import {
   startConversation,
   sendMessage,
+  archiveConversation,
   type RecipientGroup,
   type Recipient,
   type StartState,
@@ -217,6 +218,14 @@ function Thread({
     });
   }
 
+  const archived = c.status === "closed";
+  function toggleArchive() {
+    startTransition(async () => {
+      await archiveConversation(c.id, !archived);
+      router.refresh();
+    });
+  }
+
   return (
     <>
       {/* Cabecera del hilo */}
@@ -240,6 +249,16 @@ function Thread({
         <span className="shrink-0 rounded-full bg-navy/10 px-2.5 py-1 text-[11px] font-700 text-navy">
           {c.scopeLabel}
         </span>
+        <button
+          type="button"
+          onClick={toggleArchive}
+          disabled={pending}
+          title={archived ? "Desarchivar" : "Archivar"}
+          aria-label={archived ? "Desarchivar conversación" : "Archivar conversación"}
+          className="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-ink/50 transition-colors hover:bg-mist hover:text-ink disabled:opacity-50"
+        >
+          <Icon name={archived ? "ArchiveRestore" : "Archive"} className="h-5 w-5" />
+        </button>
       </div>
 
       {/* Mensajes */}

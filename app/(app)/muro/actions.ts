@@ -180,7 +180,7 @@ export async function createPost(
       return true;
     });
 
-  await supabase.from("audiences").insert(
+  const { error: audErr } = await supabase.from("audiences").insert(
     rows.map((x) => ({
       community_id: m.community_id,
       content_type: "post",
@@ -189,6 +189,12 @@ export async function createPost(
       target_id: x.id,
     })),
   );
+  // El docente solo publica a sus grupos: si el destino quedó fuera de su
+  // alcance, RLS rechaza la audiencia. Evitamos un aviso huérfano (sin público).
+  if (audErr) {
+    await supabase.from("posts").delete().eq("id", post.id);
+    return { error: "Solo puedes publicar a los grados o salones que tienes asignados." };
+  }
 
   // Push notifications a los dispositivos de la comunidad (si hay tokens).
   const { data: tokens } = await supabase.rpc("recipient_tokens", { p_post: post.id });

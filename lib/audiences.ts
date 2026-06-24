@@ -17,8 +17,12 @@ export interface AudienceOptions {
 /** Roles que tiene sentido elegir como audiencia de un aviso. */
 const AUDIENCE_ROLES: RoleKey[] = ["guardian", "teacher", "student", "driver"];
 
-/** Opciones de "a quién va dirigido" un aviso, para el publicador. */
-export async function getAudienceOptions(): Promise<AudienceOptions> {
+/**
+ * Opciones de "a quién va dirigido" un aviso, para el publicador.
+ * El docente queda acotado a SUS grupos (y sus grados/niveles): no puede
+ * elegir "toda la comunidad" ni roles globales.
+ */
+export async function getAudienceOptions(roleKey: RoleKey | null = null): Promise<AudienceOptions> {
   const empty: AudienceOptions = { community: null, levels: [], grades: [], groups: [], roles: [] };
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     return empty;
@@ -44,22 +48,44 @@ export async function getAudienceOptions(): Promise<AudienceOptions> {
     const [{ data: levels }, { data: grades }, { data: groups }, { data: roles }] =
       await Promise.all([
         supabase.from("levels").select("id, name, position").order("position"),
-        supabase.from("grades").select("id, name, position").order("position"),
-        supabase.from("groups").select("id, name, position").order("position"),
+        supabase.from("grades").select("id, name, position, level_id").order("position"),
+        supabase.from("groups").select("id, name, position, grade_id").order("position"),
         supabase.from("roles").select("id, key"),
       ]);
 
+    let lvl = (levels ?? []) as { id: string; name: string; level_id?: string }[];
+    let grd = (grades ?? []) as { id: string; name: string; level_id: string | null }[];
+    let grp = (groups ?? []) as { id: string; name: string; grade_id: string | null }[];
     const roleById = new Map((roles ?? []).map((r) => [r.key as string, r.id as string]));
+    let community: AudienceOption | null = { value: `community:${cid}`, label: `Toda la comunidad (${short})` };
+    let roleOpts: AudienceOption[] = AUDIENCE_ROLES.filter((k) => roleById.has(k)).map((k) => ({
+      value: `role:${roleById.get(k)}`,
+      label: ROLE_LABELS[k],
+    }));
+
+    // Docente: solo sus salones (y sus grados/niveles), sin comunidad ni roles.
+    if (roleKey === "teacher") {
+      const { data: gidsRaw } = await supabase.rpc("my_group_ids");
+      const gids = new Set(
+        ((gidsRaw as unknown[]) ?? []).map((x) =>
+          typeof x === "string" ? x : (Object.values(x as object)[0] as string),
+        ),
+      );
+      grp = grp.filter((g) => gids.has(g.id));
+      const gradeIds = new Set(grp.map((g) => g.grade_id).filter(Boolean));
+      grd = grd.filter((g) => gradeIds.has(g.id));
+      const levelIds = new Set(grd.map((g) => g.level_id).filter(Boolean));
+      lvl = lvl.filter((l) => levelIds.has(l.id));
+      community = null;
+      roleOpts = [];
+    }
 
     return {
-      community: { value: `community:${cid}`, label: `Toda la comunidad (${short})` },
-      levels: (levels ?? []).map((l) => ({ value: `level:${l.id}`, label: l.name as string })),
-      grades: (grades ?? []).map((g) => ({ value: `grade:${g.id}`, label: g.name as string })),
-      groups: (groups ?? []).map((g) => ({ value: `group:${g.id}`, label: g.name as string })),
-      roles: AUDIENCE_ROLES.filter((k) => roleById.has(k)).map((k) => ({
-        value: `role:${roleById.get(k)}`,
-        label: ROLE_LABELS[k],
-      })),
+      community,
+      levels: lvl.map((l) => ({ value: `level:${l.id}`, label: l.name })),
+      grades: grd.map((g) => ({ value: `grade:${g.id}`, label: g.name })),
+      groups: grp.map((g) => ({ value: `group:${g.id}`, label: g.name })),
+      roles: roleOpts,
     };
   } catch (e) {
     rethrowNextControl(e);

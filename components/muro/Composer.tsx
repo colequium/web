@@ -26,12 +26,19 @@ export function Composer({
   const [commentsOff, setCommentsOff] = useState(false);
   const [audOpen, setAudOpen] = useState(false);
   const [audCount, setAudCount] = useState(0);
+  const [audError, setAudError] = useState("");
+  // El docente no puede dirigir a toda la comunidad: solo a sus grupos.
+  const canCommunity = !!audiences?.community;
   // Controlados: un error (p. ej. sin permiso) no borra lo escrito.
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
 
   function refreshAud(form: HTMLFormElement | null) {
-    if (form) setAudCount(form.querySelectorAll('input[name="audience"]:checked').length);
+    if (form) {
+      const n = form.querySelectorAll('input[name="audience"]:checked').length;
+      setAudCount(n);
+      if (n > 0) setAudError("");
+    }
   }
   const [state, formAction, pending] = useActionState<CreatePostState, FormData>(
     createPost,
@@ -57,6 +64,13 @@ export function Composer({
     <form
       ref={formRef}
       action={formAction}
+      onSubmit={(e) => {
+        if (!canCommunity && audCount === 0) {
+          e.preventDefault();
+          setAudError("Elige al menos un salón o grado para publicar.");
+          setAudOpen(true);
+        }
+      }}
       className="rounded-[1.75rem] border border-ink/5 bg-white p-4 shadow-card"
     >
       <div className="flex items-start gap-3">
@@ -131,8 +145,16 @@ export function Composer({
           </div>
 
           <p className="mb-1.5 mt-3 text-[11px] font-700 uppercase tracking-wide text-ink/40">
-            Destinos <span className="font-500 normal-case text-ink/35">· vacío = toda la comunidad</span>
+            Destinos{" "}
+            <span className="font-500 normal-case text-ink/35">
+              · {canCommunity ? "vacío = toda la comunidad" : "elige al menos un salón o grado"}
+            </span>
           </p>
+          {audError ? (
+            <p role="alert" className="mb-1.5 text-xs font-700 text-rose">
+              {audError}
+            </p>
+          ) : null}
           <div className="flex max-h-56 flex-col gap-2.5 overflow-y-auto pr-1">
             {audiences?.community ? (
               <label className="flex items-center gap-2 text-xs font-700 text-ink/75">
@@ -195,7 +217,7 @@ export function Composer({
           className="flex min-w-0 flex-1 items-center gap-1.5 rounded-xl bg-mist px-3 py-2 text-xs font-700 text-ink outline-none focus:ring-2 focus:ring-brand/30 sm:max-w-xs"
         >
           <Icon name="Users" className="h-[15px] w-[15px] text-ink/50" />
-          <span className="truncate">{audCount > 0 ? `${audCount} destino${audCount > 1 ? "s" : ""}` : "Toda la comunidad"}</span>
+          <span className="truncate">{audCount > 0 ? `${audCount} destino${audCount > 1 ? "s" : ""}` : canCommunity ? "Toda la comunidad" : "Elige destinos"}</span>
           <Icon name="ChevronDown" className="ml-auto h-4 w-4 text-ink/40" />
         </button>
         <button
