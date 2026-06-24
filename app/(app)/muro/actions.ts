@@ -284,6 +284,14 @@ export async function markRead(postId: string) {
   revalidatePath("/inicio");
 }
 
+/** Responde a una invitación (RSVP): "yes" | "no" | "maybe" | "none" (quita). */
+export async function setRsvp(postId: string, response: "yes" | "no" | "maybe" | "none") {
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("set_rsvp", { p_post: postId, p_response: response });
+  if (error) console.error("[setRsvp] rpc error:", error.message);
+  revalidatePath("/muro");
+}
+
 /** Marca/desmarca una tarea como hecha. Al marcarla, sale de "mis pendientes". */
 export async function toggleTask(postId: string, done: boolean) {
   const supabase = await createClient();

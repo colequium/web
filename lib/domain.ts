@@ -64,9 +64,11 @@ export interface Post {
   cover: string; // gradiente de portada (fallback cuando no hay foto)
   coverIcon: "calendar" | "megaphone" | "image" | "trophy" | "bus" | "heart";
   kind?: "announcement" | "poll" | "event" | "task";
-  // Invitación (kind="event"): lugar + fecha del evento.
+  // Invitación (kind="event"): lugar + fecha del evento + RSVP.
   eventLocation?: string;
   eventAt?: string; // ISO
+  myRsvp?: "yes" | "no" | "maybe" | null;
+  rsvpYes?: number;
   // Tarea (kind="task"): acción requerida + si ya la completé.
   taskAction?: "sign" | "submit" | "complete";
   taskDue?: string; // ISO, opcional

@@ -15,6 +15,7 @@ import {
   addComment,
   translatePost,
   toggleTask,
+  setRsvp,
   type PostComment,
   type CommentState,
 } from "@/app/(app)/muro/actions";
@@ -66,6 +67,18 @@ export function PostCard({ post, index = 0 }: { post: Post; index?: number }) {
     const next = !taskDone;
     setTaskDone(next);
     startTask(() => toggleTask(post.id, next));
+  }
+
+  // Invitación: RSVP (Voy / Tal vez / No voy) con conteo de confirmados.
+  const [rsvp, setRsvpState] = useState<Post["myRsvp"]>(post.myRsvp ?? null);
+  const [yesCount, setYesCount] = useState(post.rsvpYes ?? 0);
+  const [, startRsvp] = useTransition();
+  function onRsvp(next: "yes" | "no" | "maybe") {
+    const value = rsvp === next ? "none" : next;
+    // Ajuste optimista del contador de "Voy".
+    setYesCount((c) => c + (next === "yes" && value !== "none" ? 1 : 0) - (rsvp === "yes" ? 1 : 0));
+    setRsvpState(value === "none" ? null : next);
+    startRsvp(() => setRsvp(post.id, value));
   }
 
   const likes = post.likes + (liked && !post.liked ? 1 : 0) - (!liked && post.liked ? 1 : 0);
@@ -203,6 +216,36 @@ export function PostCard({ post, index = 0 }: { post: Post; index?: number }) {
                 {post.eventLocation}
               </span>
             ) : null}
+
+            {/* RSVP: confirmación de asistencia */}
+            <div className="mt-1 flex w-full flex-wrap items-center gap-1.5 border-t border-brand/10 pt-2.5">
+              {([
+                { v: "yes", l: "Voy", icon: "Check" },
+                { v: "maybe", l: "Tal vez", icon: "CircleCheck" },
+                { v: "no", l: "No voy", icon: "X" },
+              ] as const).map((o) => (
+                <button
+                  key={o.v}
+                  type="button"
+                  onClick={() => onRsvp(o.v)}
+                  className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-700 transition-colors ${
+                    rsvp === o.v
+                      ? o.v === "no"
+                        ? "bg-rose text-white"
+                        : "bg-brand text-white"
+                      : "bg-white text-ink/55 ring-1 ring-ink/10 hover:text-ink"
+                  }`}
+                >
+                  <Icon name={o.icon} className="h-3.5 w-3.5" />
+                  {o.l}
+                </button>
+              ))}
+              {yesCount > 0 ? (
+                <span className="ml-auto text-xs font-700 text-ink/45">
+                  {yesCount} {yesCount === 1 ? "confirmado" : "confirmados"}
+                </span>
+              ) : null}
+            </div>
           </div>
         ) : null}
 
