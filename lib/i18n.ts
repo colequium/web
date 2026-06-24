@@ -32,6 +32,7 @@ const es: Dict = {
   "nav.conversations": "Mensajes",
   "nav.requests": "Trámites",
   "nav.documents": "Documentos",
+  "nav.payments": "Pagos",
   "nav.transport": "Transporte",
   "nav.people": "Comunidad",
   // Novedades (ex-Muro)
@@ -132,6 +133,7 @@ const ptBR: Dict = {
   "nav.conversations": "Mensagens",
   "nav.requests": "Solicitações",
   "nav.documents": "Documentos",
+  "nav.payments": "Pagamentos",
   "nav.transport": "Transporte",
   "nav.people": "Comunidade",
   "wall.title": "Novidades",
@@ -207,6 +209,7 @@ const en: Dict = {
   "nav.conversations": "Messages",
   "nav.requests": "Requests",
   "nav.documents": "Documents",
+  "nav.payments": "Payments",
   "nav.transport": "Transport",
   "nav.people": "Community",
   "wall.title": "News",

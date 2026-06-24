@@ -60,22 +60,21 @@ function PillCTA({ href, children, tone = "cta" }: { href: string; children: Rea
   );
 }
 
-const FEATURES = [
+const FEATURES: { img?: string; icon?: string; title: string; text: string }[] = [
   { img: "/features/1-inicio.webp", title: "Inicio", text: "Un resumen de todo: avisos sin leer, eventos de la semana y trámites pendientes, apenas entras." },
   { img: "/features/2-comunicados.webp", title: "Novedades", text: "Avisos del colegio con foto, me gusta y comentarios, segmentados por curso." },
   { img: "/features/3-calendario.webp", title: "Calendario", text: "Exámenes, eventos y salidas en un calendario claro y compartido." },
   { img: "/features/4-mensajes.webp", title: "Mensajes", text: "Conversaciones entre familias y docentes, siempre dentro de cada salón." },
   { img: "/features/5-tramites.webp", title: "Trámites", text: "Inasistencias, autorizaciones y comprobantes, sin papeles." },
   { img: "/features/6-documentos.webp", title: "Documentos", text: "Circulares, reglamentos y archivos del colegio, ordenados y a un clic." },
-];
-const UPCOMING = [
-  { img: "/features/7-transporte.webp", title: "Transporte en vivo", text: "Sigue el transporte escolar en el mapa y recibe avisos de subida y bajada." },
-  { img: "/features/8-traduccion.webp", title: "Traducción automática", text: "Cada familia lee los avisos en su idioma, con un solo toque." },
+  { img: "/features/7-transporte.webp", title: "Transporte", text: "Sigue el transporte escolar en el mapa, con avisos de subida y bajada." },
+  { img: "/features/8-traduccion.webp", title: "Traducción", text: "Cada familia lee los avisos en su idioma, con un solo toque." },
+  { icon: "CreditCard", title: "Pagos", text: "El comprobante de la cuota de cada mes, y las familias suben su pago." },
 ];
 const PLANES = [
   { name: "Demo", price: "$0", per: "para probar", feats: ["Hasta 1 salón", "Novedades y calendario", "Soporte por correo"] },
-  { name: "Escuela", price: "$1", per: "por alumno / mes", feats: ["Salones ilimitados", "Mensajes y trámites", "Multi-idioma", "Soporte prioritario"], best: true },
-  { name: "Institución", price: "A medida", per: "varios colegios", feats: ["Todo lo de Escuela", "Transporte en vivo", "Integraciones", "Gestor dedicado"] },
+  { name: "Escuela", price: "$1", per: "por alumno / mes", feats: ["Salones ilimitados", "Mensajes y trámites", "Traducción automática", "Soporte prioritario"], best: true },
+  { name: "Institución", price: "A medida", per: "varios colegios", feats: ["Todo lo de Escuela", "Transporte en vivo", "Pagos y comprobantes", "Gestor dedicado"] },
 ];
 const POSTS = BLOG_POSTS;
 
@@ -166,8 +165,15 @@ export default function LabHome() {
               <Reveal key={f.title} delay={i * 70}>
                 <div className="h-full overflow-hidden rounded-3xl border border-ink/10 bg-white shadow-card transition-all hover:border-brand/30 hover:shadow-pop">
                   <div className="aspect-[4/3] w-full overflow-hidden border-b border-ink/10 bg-mist">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={f.img} alt={`Pantalla de ${f.title}`} className="h-full w-full object-cover object-top" />
+                    {f.img ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={f.img} alt={`Pantalla de ${f.title}`} className="h-full w-full object-cover object-top" />
+                    ) : (
+                      <div className="relative grid h-full w-full place-items-center bg-gradient-to-br from-navy via-ink to-brand">
+                        <Icon name={f.icon ?? "Sparkles"} className="h-12 w-12 text-white/30" />
+                        <span className="absolute bottom-3 right-3 rounded-full bg-white/15 px-2.5 py-1 text-[10px] font-700 text-white/80 backdrop-blur">Foto</span>
+                      </div>
+                    )}
                   </div>
                   <div className="p-6">
                     <h3 className="text-lg font-700 text-ink">{f.title}</h3>
@@ -177,26 +183,6 @@ export default function LabHome() {
               </Reveal>
             ))}
           </div>
-
-          {/* Muy pronto: transporte + traducción */}
-          <Reveal className="mt-12">
-            <p className="text-center text-sm font-700 uppercase tracking-wide text-ink/40">Muy pronto</p>
-            <div className="mx-auto mt-5 grid max-w-4xl gap-5 sm:grid-cols-2">
-              {UPCOMING.map((u) => (
-                <div key={u.title} className="h-full overflow-hidden rounded-3xl border border-ink/10 bg-white shadow-card">
-                  <div className="relative aspect-[4/3] w-full overflow-hidden border-b border-ink/10 bg-mist">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={u.img} alt={`Pantalla de ${u.title}`} className="h-full w-full object-cover object-top" />
-                    <span className="absolute right-3 top-3 rounded-full bg-cta px-2.5 py-1 text-[10px] font-700 uppercase tracking-wide text-white shadow-sm">Pronto</span>
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-lg font-700 text-ink">{u.title}</h3>
-                    <p className="mt-2 text-sm font-400 leading-relaxed text-ink/60">{u.text}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Reveal>
         </div>
       </section>
 
@@ -206,7 +192,7 @@ export default function LabHome() {
           <Reveal className="relative order-2 lg:order-1">
             <div className="aspect-[6/5] w-full overflow-hidden rounded-[2.5rem] shadow-card">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/momentos/muestra-arte.webp" alt="Estudiantes y docente de la comunidad escolar" className="h-full w-full object-cover" />
+              <img src="/comunidad.webp" alt="Estudiantes de la comunidad escolar" className="h-full w-full object-cover" />
             </div>
             <div className="absolute -right-4 -top-4 rounded-2xl bg-cta px-5 py-4 text-white shadow-pop">
               <p className="text-2xl font-700">+30 años</p>
@@ -238,7 +224,7 @@ export default function LabHome() {
           <Reveal className="mx-auto max-w-2xl text-center">
             <span className="rounded-full bg-white px-4 py-1.5 text-sm font-700 text-brand">Planes</span>
             <h2 className="mt-4 text-3xl font-700 tracking-tight text-ink sm:text-4xl">El plan ideal para tu colegio</h2>
-            <p className="mt-3 font-400 text-ink/60">Precios en dólares americanos (USD).</p>
+            <p className="mt-3 font-400 text-ink/60">El plan se ajusta al tamaño de tu colegio.</p>
           </Reveal>
           <div className="mt-14 grid items-start gap-6 lg:grid-cols-3">
             {PLANES.map((p, i) => (
@@ -252,6 +238,9 @@ export default function LabHome() {
                     <span className={`text-4xl font-700 ${p.best ? "text-white" : "text-ink"}`}>{p.price}</span>
                     <span className={`mb-1 text-sm font-500 ${p.best ? "text-white/60" : "text-ink/45"}`}>/ {p.per}</span>
                   </div>
+                  {p.best ? (
+                    <p className="mt-1.5 text-xs font-500 text-white/55">Precios en dólares americanos (USD)</p>
+                  ) : null}
                   <ul className="mt-7 flex flex-col gap-3.5">
                     {p.feats.map((f) => (
                       <li key={f} className={`flex items-center gap-3 text-sm font-500 ${p.best ? "text-white/85" : "text-ink/70"}`}>

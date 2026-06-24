@@ -85,6 +85,7 @@ export const BLOG_POSTS: BlogPost[] = [
     date: "03 jun 2026",
     readMins: 5,
     cover: "/blog/armar-el-calendario-del-trimestre.webp",
+    hasCover: true,
     coverAlt: "Calendario escolar con eventos del trimestre",
     lead: "El calendario es el corazón de la organización escolar, pero suele armarse a las apuradas y vivir en una planilla que pocos miran. Con un poco de método deja de ser una fuente de sorpresas de último momento.",
     sections: [
