@@ -4,9 +4,9 @@ import { getIdentity } from "@/lib/identity";
 import { getAudienceOptions } from "@/lib/audiences";
 import type { RoleKey } from "@/lib/domain";
 
-/** Roles de gestión que pueden publicar avisos (coincide con la RLS de 0012). */
+/** Roles que pueden publicar avisos (coincide con la RLS de 0022). */
 const PUBLISHERS: RoleKey[] = [
-  "principal", "coordinator", "support_staff", "board", "manager", "department_head",
+  "principal", "coordinator", "support_staff", "board", "manager", "department_head", "teacher",
 ];
 
 /** Muro: feed real filtrado por audiencia/rol del usuario logueado. */

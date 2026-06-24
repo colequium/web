@@ -29,6 +29,7 @@ USERS=(
   "coord@laslomas.demo|Carlos Vega|coordinator"
   "docente@laslomas.demo|Valentina Ríos|teacher"
   "familia@laslomas.demo|Marina López|guardian"
+  "familia6a@laslomas.demo|Sofía Fernández|guardian"
   "alumno@laslomas.demo|Tomás Méndez|student"
   "chofer@laslomas.demo|Raúl Gómez|driver"
   "admin@laslomas.demo|Equipo Administración|support_staff"
