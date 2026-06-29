@@ -242,7 +242,7 @@ export function PostCard({
             {post.eventAt ? (
               <span className="inline-flex items-center gap-2 text-sm font-700 text-ink">
                 <Icon name="CalendarDays" className="h-4 w-4 text-brand" />
-                {formatEventDate(post.eventAt)}
+                {formatEventDate(post.eventAt, locale)}
               </span>
             ) : null}
             {post.eventLocation ? (
@@ -542,11 +542,12 @@ export function PostCard({
   );
 }
 
-/** Fecha del evento: "mié 9 jul · 18:30". */
-function formatEventDate(iso: string): string {
+/** Fecha del evento: "mié 9 jul · 18:30". UTC para coincidir con el calendario
+ *  (que usa la hora "de pared" guardada) y no correr el día/hora por zona horaria. */
+function formatEventDate(iso: string, locale: string): string {
   const d = new Date(iso);
-  const day = d.toLocaleDateString("es-MX", { weekday: "short", day: "numeric", month: "short" });
-  const time = d.toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit" });
+  const day = d.toLocaleDateString(locale, { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" });
+  const time = d.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit", timeZone: "UTC" });
   return `${day} · ${time}`;
 }
 
