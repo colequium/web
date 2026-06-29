@@ -15,6 +15,7 @@ interface CalRow {
   group_id: string | null;
   done: boolean;
   is_post: boolean;
+  on_date: string | null; // YYYY-MM-DD (fecha real del evento/tarea)
 }
 
 /** Eventos + tareas del calendario visibles para el usuario (filtrados por rol). */
@@ -34,10 +35,15 @@ export async function getCalendar(): Promise<CalEvent[]> {
     return [];
   }
 
-  return (data as CalRow[]).map((r) => ({
+  return (data as CalRow[]).map((r) => {
+    // on_date es la fecha real; derivamos día/mes/año para ubicarla en su mes.
+    const d = r.on_date ? new Date(`${r.on_date}T00:00:00`) : null;
+    return {
     id: r.id,
     calendarId: r.calendar_key,
-    day: r.day,
+    day: d ? d.getDate() : r.day,
+    month: d ? d.getMonth() : new Date().getMonth(),
+    year: d ? d.getFullYear() : new Date().getFullYear(),
     allDay: r.all_day,
     time: r.start_time ?? undefined,
     endTime: r.end_time ?? undefined,
@@ -47,7 +53,8 @@ export async function getCalendar(): Promise<CalEvent[]> {
     groupId: r.group_id ?? undefined,
     done: r.done,
     isPost: r.is_post,
-  }));
+    };
+  });
 }
 
 /** Cursos del usuario (hijos+salón para familias; salones asignados para docentes). */

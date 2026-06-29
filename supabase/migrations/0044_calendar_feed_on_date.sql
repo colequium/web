@@ -1,0 +1,125 @@
+-- ════════════════════════════════════════════════════════════════════════
+-- Colequium — calendar_feed devuelve la FECHA completa (on_date), no solo el
+-- día del mes. Así el calendario deja de asumir "todo es junio 2026": cada
+-- evento/tarea cae en su mes real y el botón "Hoy" puede ir al día real.
+-- (Se mantiene `day` por compatibilidad; el cliente ya usa on_date.)
+-- ════════════════════════════════════════════════════════════════════════
+drop function if exists public.calendar_feed();
+create function public.calendar_feed()
+returns table(
+  id uuid, calendar_key text, day integer, all_day boolean, start_time text,
+  end_time text, title text, audience_label text, kind text, group_id uuid,
+  done boolean, is_post boolean, on_date date
+)
+language sql stable security definer set search_path = public as $$
+  with me as (
+    select id as membership_id, community_id
+    from memberships where user_id = auth.uid() and status = 'active' limit 1
+  ),
+  vis_posts as (
+    select p.*
+    from posts p
+    where p.community_id = (select community_id from me)
+      and p.type in ('event', 'task')
+      and (
+        p.author_membership_id = (select membership_id from me)
+        or (
+          exists (
+            select 1 from audiences a
+            where a.content_type = 'post' and a.content_id = p.id
+              and (a.target_type, a.target_id) in (
+                select target_type, target_id from public.my_audience_scopes())
+          )
+          and (
+            p.audience_roles is null
+            or exists (
+              select 1 from membership_roles mr join roles r on r.id = mr.role_id
+              where mr.membership_id = (select membership_id from me)
+                and r.key = any(p.audience_roles))
+          )
+        )
+      )
+  )
+  select e.id,
+    case c.name
+      when 'Institucional' then 'inst' when 'Primaria' then 'primaria'
+      when '6°B' then '6b' when 'Evaluaciones' then 'exams'
+      when 'Transporte' then 'transport' else 'inst' end,
+    extract(day from e.starts_at)::int,
+    coalesce(e.all_day, false),
+    case when coalesce(e.all_day,false) then null else to_char(e.starts_at,'HH24:MI') end,
+    case when coalesce(e.all_day,false) then null else to_char(e.ends_at,  'HH24:MI') end,
+    e.title,
+    case aud.target_type
+      when 'community' then 'Toda la comunidad'
+      when 'level' then (select name from levels where id = aud.target_id)
+      when 'grade' then (select name from grades where id = aud.target_id)
+      when 'group' then (select name from groups where id = aud.target_id)
+      when 'role'  then 'Familias con transporte' else 'Comunidad' end,
+    'event',
+    case when aud.target_type = 'group' then aud.target_id else null end,
+    false, false, e.starts_at::date
+  from events e
+  left join calendars c on c.id = e.calendar_id
+  left join lateral (
+    select a.target_type, a.target_id from audiences a
+    where a.content_type = 'event' and a.content_id = e.id
+    order by case a.target_type when 'group' then 1 when 'grade' then 2 when 'level' then 3
+      when 'role' then 4 when 'community' then 5 else 6 end limit 1
+  ) aud on true
+  where e.community_id = (select community_id from me)
+    and exists (
+      select 1 from audiences a
+      where a.content_type = 'event' and a.content_id = e.id
+        and (a.target_type, a.target_id) in (select target_type, target_id from public.my_audience_scopes()))
+
+  union all
+  select t.id, '6b', extract(day from t.due_at)::int, true, null, null,
+    t.title, g.name, 'task', t.group_id, false, false, t.due_at::date
+  from tasks t join groups g on g.id = t.group_id
+  where t.community_id = (select community_id from me)
+    and t.group_id in (select public.my_group_ids())
+
+  union all
+  select p.id, 'inst', extract(day from p.event_at)::int, false,
+    to_char(p.event_at,'HH24:MI'), null, p.title,
+    case aud.target_type
+      when 'community' then 'Toda la comunidad'
+      when 'level' then (select name from levels where id = aud.target_id)
+      when 'grade' then (select name from grades where id = aud.target_id)
+      when 'group' then (select name from groups where id = aud.target_id)
+      else 'Comunidad' end,
+    'event',
+    case when aud.target_type = 'group' then aud.target_id else null end,
+    false, true, p.event_at::date
+  from vis_posts p
+  left join lateral (
+    select a.target_type, a.target_id from audiences a
+    where a.content_type = 'post' and a.content_id = p.id
+    order by case a.target_type when 'group' then 1 when 'grade' then 2 when 'level' then 3
+      when 'role' then 4 when 'community' then 5 else 6 end limit 1
+  ) aud on true
+  where p.type = 'event' and p.event_at is not null
+
+  union all
+  select p.id, '6b', extract(day from p.task_due)::int, true, null, null, p.title,
+    case aud.target_type
+      when 'community' then 'Toda la comunidad'
+      when 'level' then (select name from levels where id = aud.target_id)
+      when 'grade' then (select name from grades where id = aud.target_id)
+      when 'group' then (select name from groups where id = aud.target_id)
+      else 'Comunidad' end,
+    'task',
+    case when aud.target_type = 'group' then aud.target_id else null end,
+    exists (select 1 from post_task_completions tc
+            where tc.post_id = p.id and tc.membership_id = (select membership_id from me)),
+    true, p.task_due::date
+  from vis_posts p
+  left join lateral (
+    select a.target_type, a.target_id from audiences a
+    where a.content_type = 'post' and a.content_id = p.id
+    order by case a.target_type when 'group' then 1 when 'grade' then 2 when 'level' then 3
+      when 'role' then 4 when 'community' then 5 else 6 end limit 1
+  ) aud on true
+  where p.type = 'task' and p.task_due is not null;
+$$;

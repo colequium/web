@@ -272,7 +272,9 @@ export const DEMO_CALENDARS: DemoCalendar[] = [
 export interface CalEvent {
   id: string;
   calendarId: string;
-  day: number; // día de junio 2026
+  day: number; // día del mes (1–31)
+  month: number; // mes 0-based (enero = 0), para ubicar el evento en su mes real
+  year: number;
   allDay: boolean;
   time?: string; // "09:00" si tiene hora
   endTime?: string;
@@ -292,24 +294,30 @@ export interface MyCourse {
   personName: string | null; // nombre del hijo (familias)
 }
 
-/** "Hoy" para la demo (coincide con currentDate del proyecto). Junio = mes 5 (0-based). */
-export const DEMO_TODAY = { year: 2026, month: 5, day: 9 };
+/** "Hoy" real: el calendario abre y el botón "Hoy" llevan al día de hoy.
+ *  (month es 0-based, igual que Date.getMonth(), para comparar con CalEvent.month.) */
+const _now = new Date();
+export const DEMO_TODAY = {
+  year: _now.getFullYear(),
+  month: _now.getMonth(),
+  day: _now.getDate(),
+};
 
 export const DEMO_CAL_EVENTS: CalEvent[] = [
-  { id: "c1", calendarId: "inst", day: 5, allDay: false, time: "09:00", endTime: "10:30", title: "Coffee Morning de familias", audienceLabel: "Toda la comunidad", kind: "event" },
-  { id: "c2", calendarId: "6b", day: 9, allDay: false, time: "08:30", endTime: "12:00", title: "Salida al Museo de Ciencias", audienceLabel: "6°B", kind: "event", unread: true },
-  { id: "c3", calendarId: "6b", day: 9, allDay: true, title: "Entregar autorización del museo", audienceLabel: "6°B", kind: "task", unread: true },
-  { id: "c4", calendarId: "exams", day: 12, allDay: true, title: "Evaluación 2º trimestre", audienceLabel: "Primaria", kind: "event", unread: true },
-  { id: "c5", calendarId: "exams", day: 13, allDay: true, title: "Evaluación 2º trimestre", audienceLabel: "Primaria", kind: "event" },
-  { id: "c6", calendarId: "inst", day: 14, allDay: false, time: "09:00", endTime: "12:00", title: "Jornada de puertas abiertas", audienceLabel: "Toda la comunidad", kind: "event", unread: true },
-  { id: "c7", calendarId: "transport", day: 15, allDay: true, title: "Nuevo recorrido ruta 14", audienceLabel: "Familias con transporte", kind: "event" },
-  { id: "c8", calendarId: "primaria", day: 17, allDay: false, time: "10:00", endTime: "11:00", title: "Acto del Día de la Bandera", audienceLabel: "Primaria", kind: "event" },
-  { id: "c9", calendarId: "6b", day: 18, allDay: true, title: "Firmar boletín del trimestre", audienceLabel: "6°B", kind: "task" },
-  { id: "c10", calendarId: "6b", day: 19, allDay: false, time: "18:30", endTime: "20:00", title: "Reunión de padres 6°B", audienceLabel: "Familias de 6°B", kind: "event", unread: true },
-  { id: "c11", calendarId: "primaria", day: 20, allDay: false, time: "09:00", endTime: "13:00", title: "Feria de ciencias", audienceLabel: "Primaria", kind: "event" },
-  { id: "c12", calendarId: "inst", day: 21, allDay: true, title: "Inicio receso de invierno", audienceLabel: "Toda la comunidad", kind: "event" },
-  { id: "c13", calendarId: "6b", day: 25, allDay: false, time: "08:00", endTime: "12:00", title: "Taller de arte y reciclaje", audienceLabel: "6°B", kind: "event" },
-  { id: "c14", calendarId: "exams", day: 26, allDay: true, title: "Entrega de boletines", audienceLabel: "Primaria", kind: "event" },
+  { id: "c1", calendarId: "inst", day: 5, month: 5, year: 2026, allDay: false, time: "09:00", endTime: "10:30", title: "Coffee Morning de familias", audienceLabel: "Toda la comunidad", kind: "event" },
+  { id: "c2", calendarId: "6b", day: 9, month: 5, year: 2026, allDay: false, time: "08:30", endTime: "12:00", title: "Salida al Museo de Ciencias", audienceLabel: "6°B", kind: "event", unread: true },
+  { id: "c3", calendarId: "6b", day: 9, month: 5, year: 2026, allDay: true, title: "Entregar autorización del museo", audienceLabel: "6°B", kind: "task", unread: true },
+  { id: "c4", calendarId: "exams", day: 12, month: 5, year: 2026, allDay: true, title: "Evaluación 2º trimestre", audienceLabel: "Primaria", kind: "event", unread: true },
+  { id: "c5", calendarId: "exams", day: 13, month: 5, year: 2026, allDay: true, title: "Evaluación 2º trimestre", audienceLabel: "Primaria", kind: "event" },
+  { id: "c6", calendarId: "inst", day: 14, month: 5, year: 2026, allDay: false, time: "09:00", endTime: "12:00", title: "Jornada de puertas abiertas", audienceLabel: "Toda la comunidad", kind: "event", unread: true },
+  { id: "c7", calendarId: "transport", day: 15, month: 5, year: 2026, allDay: true, title: "Nuevo recorrido ruta 14", audienceLabel: "Familias con transporte", kind: "event" },
+  { id: "c8", calendarId: "primaria", day: 17, month: 5, year: 2026, allDay: false, time: "10:00", endTime: "11:00", title: "Acto del Día de la Bandera", audienceLabel: "Primaria", kind: "event" },
+  { id: "c9", calendarId: "6b", day: 18, month: 5, year: 2026, allDay: true, title: "Firmar boletín del trimestre", audienceLabel: "6°B", kind: "task" },
+  { id: "c10", calendarId: "6b", day: 19, month: 5, year: 2026, allDay: false, time: "18:30", endTime: "20:00", title: "Reunión de padres 6°B", audienceLabel: "Familias de 6°B", kind: "event", unread: true },
+  { id: "c11", calendarId: "primaria", day: 20, month: 5, year: 2026, allDay: false, time: "09:00", endTime: "13:00", title: "Feria de ciencias", audienceLabel: "Primaria", kind: "event" },
+  { id: "c12", calendarId: "inst", day: 21, month: 5, year: 2026, allDay: true, title: "Inicio receso de invierno", audienceLabel: "Toda la comunidad", kind: "event" },
+  { id: "c13", calendarId: "6b", day: 25, month: 5, year: 2026, allDay: false, time: "08:00", endTime: "12:00", title: "Taller de arte y reciclaje", audienceLabel: "6°B", kind: "event" },
+  { id: "c14", calendarId: "exams", day: 26, month: 5, year: 2026, allDay: true, title: "Entrega de boletines", audienceLabel: "Primaria", kind: "event" },
 ];
 
 /* ========================= CONVERSACIONES =========================

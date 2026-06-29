@@ -61,9 +61,15 @@ export function HomeView({
 
   const calEvents = eventsReal ?? DEMO_CAL_EVENTS;
   const unreadPosts = unreadPostsReal ?? DEMO_POSTS.filter((p) => p.unread).length;
-  const eventsThisWeek = calEvents.filter(
-    (e) => e.kind === "event" && e.day >= 8 && e.day <= 14,
-  ).length;
+  // Fecha real de cada evento (year/month/day) para comparar contra hoy.
+  const todayMid = new Date(DEMO_TODAY.year, DEMO_TODAY.month, DEMO_TODAY.day).getTime();
+  const eventDate = (e: { year: number; month: number; day: number }) =>
+    new Date(e.year, e.month, e.day).getTime();
+  const eventsThisWeek = calEvents.filter((e) => {
+    if (e.kind !== "event") return false;
+    const diff = (eventDate(e) - todayMid) / 86400000;
+    return diff >= 0 && diff < 7;
+  }).length;
   const unreadMessages =
     unreadMessagesReal ?? DEMO_CONVERSATIONS.reduce((s, c) => s + c.unread, 0);
   const pendingTasks = pendingTasksReal ?? 0;
@@ -75,18 +81,18 @@ export function HomeView({
     { label: t("home.summary.messages"), value: unreadMessages, icon: "MessagesSquare", color: "sky" as AccentColor, href: "/messages" },
   ].filter((s) => !(me?.isStudent && STUDENT_HIDDEN.includes(s.href)));
 
-  // Próximos eventos: de hoy en adelante, ordenados por fecha, hasta 5.
+  // Próximos eventos: de hoy en adelante (por fecha real), ordenados, hasta 5.
   const upcomingEvents = calEvents
-    .filter((e) => e.kind === "event" && e.day >= DEMO_TODAY.day)
+    .filter((e) => e.kind === "event" && eventDate(e) >= todayMid)
     .sort(
       (a, b) =>
-        a.day - b.day ||
+        eventDate(a) - eventDate(b) ||
         (a.allDay ? 0 : 1) - (b.allDay ? 0 : 1) ||
         (a.time ?? "").localeCompare(b.time ?? ""),
     )
     .slice(0, 5);
-  const monthAbbr = (day: number) =>
-    new Date(DEMO_TODAY.year, DEMO_TODAY.month, day)
+  const monthAbbr = (e: { year: number; month: number; day: number }) =>
+    new Date(e.year, e.month, e.day)
       .toLocaleDateString(locale, { month: "short" })
       .replace(".", "");
 
@@ -162,7 +168,7 @@ export function HomeView({
                   <span className="flex w-11 shrink-0 flex-col items-center leading-none">
                     <span className="font-display text-lg font-700 text-ink">{e.day}</span>
                     <span className="text-[10px] font-700 uppercase text-ink/45">
-                      {monthAbbr(e.day)}
+                      {monthAbbr(e)}
                     </span>
                   </span>
                   <span className="min-w-0 flex-1">

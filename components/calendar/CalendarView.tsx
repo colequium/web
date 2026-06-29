@@ -28,18 +28,19 @@ export function CalendarView({
     () => new Set(calEvents.filter((e) => e.done).map((e) => e.id)),
   );
 
-  // Los eventos demo viven en junio 2026; otros meses quedan vacíos.
-  const inDemoMonth = viewYear === DEMO_TODAY.year && viewMonth === DEMO_TODAY.month;
-
+  // Cada evento cae en su mes real (year/month). Mostramos los del mes que se
+  // está viendo y el día pedido; los de otros meses no aparecen en esta grilla.
   const eventsByDay = useMemo(
     () => (day: number) =>
-      inDemoMonth
-        ? calEvents.filter(
-            // Se ve si es de toda la escuela (sin curso) o si su curso no está oculto.
-            (e) => e.day === day && (!e.groupId || !hidden.has(e.groupId)),
-          )
-        : [],
-    [inDemoMonth, hidden, calEvents],
+      calEvents.filter(
+        (e) =>
+          e.year === viewYear &&
+          e.month === viewMonth &&
+          e.day === day &&
+          // Se ve si es de toda la escuela (sin curso) o si su curso no está oculto.
+          (!e.groupId || !hidden.has(e.groupId)),
+      ),
+    [viewYear, viewMonth, hidden, calEvents],
   );
 
   const monthLabel = new Date(viewYear, viewMonth, 1).toLocaleDateString(
