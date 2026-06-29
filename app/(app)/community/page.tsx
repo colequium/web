@@ -20,14 +20,23 @@ const GROUPS: { key: string; titleKey: string; icon: string; roles: RoleKey[]; f
 export default async function ComunidadPage() {
   await blockStudents();
   const [people, t, me] = await Promise.all([getPeople(), getServerT(), getIdentity()]);
-  const isAdmin = !!me?.isAdmin;
+  // Admin total o coordinador → puede gestionar a alguien (los iconos se muestran
+  // por persona según can_manage; el coordinador solo ve los de su sección).
+  const canManageAny = !!me?.isAdmin || me?.roleKey === "coordinator";
 
-  // Para el editor (solo admin): lista de salones del colegio.
+  // Salones para el editor: solo los que el usuario puede administrar.
   let allGroups: { id: string; name: string }[] = [];
-  if (isAdmin) {
+  if (canManageAny) {
     const supabase = await createClient();
     const { data } = await supabase.from("groups").select("id, name").order("name");
-    allGroups = (data ?? []) as { id: string; name: string }[];
+    let rows = (data ?? []) as { id: string; name: string }[];
+    if (!me?.isAdmin) {
+      // Coordinador: limitar a los salones de su alcance.
+      const { data: adminGids } = await supabase.rpc("my_admin_group_ids");
+      const allowed = new Set(((adminGids as string[] | null) ?? []).map(String));
+      rows = rows.filter((g) => allowed.has(g.id));
+    }
+    allGroups = rows;
   }
 
   const sections: DirSection[] = GROUPS.map((g) => ({
@@ -44,6 +53,7 @@ export default async function ComunidadPage() {
         subtitle: personSubtitle(p),
         color: (p.roleKey ? ROLE_COLOR[p.roleKey] ?? "brand" : "brand") as string,
         groups: p.groups,
+        canManage: p.canManage,
       })),
   })).filter((s) => s.people.length > 0);
 
@@ -69,7 +79,7 @@ export default async function ComunidadPage() {
           </p>
         </div>
       ) : (
-        <ComunidadView sections={sections} isAdmin={isAdmin} groups={allGroups} />
+        <ComunidadView sections={sections} groups={allGroups} />
       )}
     </main>
   );

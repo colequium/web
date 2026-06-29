@@ -13,6 +13,8 @@ export interface Person {
   groups: string[];
   /** Materia del docente, si tiene ("Música" → "Docente de Música"). */
   subject: string | null;
+  /** ¿El usuario actual puede editar/quitar a esta persona? (admin o coordinador en alcance) */
+  canManage: boolean;
 }
 
 interface PersonRow {
@@ -23,6 +25,7 @@ interface PersonRow {
   context: string | null;
   groups: string[] | null;
   subject: string | null;
+  can_manage: boolean | null;
 }
 
 /** Subtítulo a mostrar bajo el nombre: de quién es (familia) o cargo + alcance. */
@@ -62,6 +65,7 @@ export async function getPeople(): Promise<Person[]> {
       context: r.context,
       groups: r.groups ?? [],
       subject: r.subject ?? null,
+      canManage: !!r.can_manage,
     };
   });
 }

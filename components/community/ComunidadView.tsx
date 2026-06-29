@@ -18,6 +18,8 @@ export interface DirPerson {
   subtitle: string;
   color: string;
   groups: string[];
+  /** ¿El usuario actual puede editar/quitar a esta persona? */
+  canManage?: boolean;
 }
 export interface DirSection {
   key: string;
@@ -43,11 +45,9 @@ const ASSIGNABLE_ROLES = [
 /** Directorio de la comunidad: secciones por rol, desplegables, con filtro por curso. */
 export function ComunidadView({
   sections,
-  isAdmin = false,
   groups = [],
 }: {
   sections: DirSection[];
-  isAdmin?: boolean;
   groups?: { id: string; name: string }[];
 }) {
   // La primera sección arranca abierta; el resto, plegadas.
@@ -65,7 +65,6 @@ export function ComunidadView({
           section={s}
           open={!!open[s.key]}
           onToggle={() => setOpen((o) => ({ ...o, [s.key]: !o[s.key] }))}
-          isAdmin={isAdmin}
           onEdit={setEditing}
           onRemove={setRemoving}
         />
@@ -85,14 +84,12 @@ function Section({
   section,
   open,
   onToggle,
-  isAdmin,
   onEdit,
   onRemove,
 }: {
   section: DirSection;
   open: boolean;
   onToggle: () => void;
-  isAdmin: boolean;
   onEdit: (p: DirPerson) => void;
   onRemove: (p: DirPerson) => void;
 }) {
@@ -157,8 +154,8 @@ function Section({
                     <p className="truncate text-sm font-700 text-ink">{p.name}</p>
                     <p className="truncate text-xs font-600 text-ink/50">{p.subtitle}</p>
                   </div>
-                  {/* Acciones de admin: editar / quitar */}
-                  {isAdmin && p.membershipId ? (
+                  {/* Acciones de admin/coordinador (solo si puede gestionar a esta persona) */}
+                  {p.canManage && p.membershipId ? (
                     <div className="flex shrink-0 items-center gap-0.5">
                       <button
                         type="button"
