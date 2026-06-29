@@ -56,6 +56,47 @@ export async function getRequests(): Promise<RequestItem[]> {
   }));
 }
 
+export interface RequestComment {
+  id: string;
+  authorName: string;
+  authorRole: string | null;
+  body: string;
+  createdAt: string;
+  mine: boolean;
+}
+
+/** Hilo de comentarios de una solicitud (colegio ↔ familia). */
+export async function getRequestComments(requestId: string): Promise<RequestComment[]> {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return [];
+  }
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase.rpc("request_comments_feed", { p_request: requestId });
+    if (error || !data) return [];
+    return (
+      data as {
+        id: string;
+        author_name: string | null;
+        author_role: string | null;
+        body: string;
+        created_at: string;
+        mine: boolean;
+      }[]
+    ).map((c) => ({
+      id: c.id,
+      authorName: c.author_name ?? "—",
+      authorRole: c.author_role,
+      body: c.body,
+      createdAt: c.created_at,
+      mine: c.mine,
+    }));
+  } catch (e) {
+    rethrowNextControl(e);
+    return [];
+  }
+}
+
 export interface MyChild {
   studentId: string;
   fullName: string;

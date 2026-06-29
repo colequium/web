@@ -419,7 +419,7 @@ export const DEMO_CONVERSATIONS: Conversation[] = [
  * de salida, comprobante de pago. Estados: enviado/aprobado/rechazado/resuelto.
  */
 export type RequestType = "absence" | "exit" | "payment";
-export type RequestStatus = "submitted" | "approved" | "rejected" | "resolved";
+export type RequestStatus = "submitted" | "received" | "approved" | "rejected" | "resolved";
 
 export interface RequestTypeMeta {
   type: RequestType;

@@ -21,7 +21,7 @@ export default async function TramitesPage() {
           {canCreate ? t("req.subtitle.guardian") : t("req.subtitle.staff")}
         </p>
       </div>
-      <RequestsView items={items} canCreate={canCreate} children={children} />
+      <RequestsView items={items} canCreate={canCreate} staff={!canCreate} children={children} />
     </main>
   );
 }

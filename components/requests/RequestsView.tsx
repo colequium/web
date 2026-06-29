@@ -1,8 +1,9 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useRef, useState, useTransition } from "react";
 import { Icon } from "../icons";
 import { SubmitButton } from "../SubmitButton";
+import { Avatar } from "../Avatar";
 import { useLocale } from "../locale-context";
 import {
   REQUEST_TYPES,
@@ -11,8 +12,14 @@ import {
   type RequestItem,
   type RequestType,
 } from "@/lib/domain";
-import type { MyChild } from "@/lib/requests";
-import { createRequest, type RequestState } from "@/app/(app)/requests/actions";
+import type { MyChild, RequestComment } from "@/lib/requests";
+import {
+  createRequest,
+  fetchRequestComments,
+  addRequestComment,
+  setRequestStatus,
+  type RequestState,
+} from "@/app/(app)/requests/actions";
 import {
   ACCENT_ON,
   ACCENT_SOFT_BG,
@@ -25,6 +32,7 @@ const STATUS_META: Record<
   { key: string; color: AccentColor; icon: string }
 > = {
   submitted: { key: "req.status.submitted", color: "sky", icon: "Clock" },
+  received: { key: "req.status.received", color: "brand", icon: "CircleCheck" },
   approved: { key: "req.status.approved", color: "brand", icon: "CircleCheck" },
   rejected: { key: "req.status.rejected", color: "requests", icon: "X" },
   resolved: { key: "req.status.resolved", color: "navy", icon: "CheckCheck" },
@@ -39,16 +47,28 @@ const FILTERS = [
 export function RequestsView({
   items,
   canCreate = true,
+  staff = false,
   children = [],
 }: {
   items?: RequestItem[];
   canCreate?: boolean;
+  staff?: boolean;
   children?: MyChild[];
 }) {
   const { t, locale } = useLocale();
   const [filter, setFilter] = useState<"all" | "pending" | "resolved">("all");
   const [openType, setOpenType] = useState<RequestType | null>(null);
+  const [detail, setDetail] = useState<RequestItem | null>(null);
   const data = items ?? DEMO_REQUESTS;
+
+  // El colegio ve una solicitud de inasistencia como una NOTIFICACIÓN de la
+  // familia; la familia la ve como algo que "informó". Mismo dato, otro encuadre.
+  const rowTitle = (r: RequestItem) => {
+    const typeMeta = REQUEST_TYPES.find((x) => x.type === r.type)!;
+    if (staff && r.type === "absence") return t("req.staff.absenceTitle");
+    if (staff && r.type === "exit") return t("req.staff.exitTitle");
+    return t(typeMeta.titleKey);
+  };
 
   const requests = data.filter((r) => {
     if (filter === "pending") return r.status === "submitted";
@@ -78,30 +98,43 @@ export function RequestsView({
   function RequestRow({ r }: { r: RequestItem }) {
     const typeMeta = REQUEST_TYPES.find((x) => x.type === r.type)!;
     const status = STATUS_META[r.status];
+    // El staff debe atender lo nuevo: resaltamos las que siguen "enviadas".
+    const needsAttention = staff && r.status === "submitted";
     return (
-      <li className="flex items-center gap-3 rounded-[1.5rem] border border-ink/5 bg-white p-4 shadow-card">
-        <span
-          className={`grid h-11 w-11 shrink-0 place-items-center rounded-2xl ${ACCENT_ON[typeMeta.color as AccentColor]}`}
+      <li>
+        <button
+          type="button"
+          onClick={() => setDetail(r)}
+          className={`flex w-full items-center gap-3 rounded-[1.5rem] border bg-white p-4 text-left shadow-card transition-transform hover:-translate-y-0.5 ${
+            needsAttention ? "border-cta/40" : "border-ink/5"
+          }`}
         >
-          <Icon name={typeMeta.icon} className="h-5 w-5" />
-        </span>
-        <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-700 text-ink">
-            {t(typeMeta.titleKey)} · {r.studentName}
-          </p>
-          <p className="truncate text-xs font-600 text-ink/55">{r.summary}</p>
-          <p className="mt-0.5 text-[11px] font-700 text-ink/40">
-            {r.group}
-            {r.eventDate ? ` · ${fmtDate(r.eventDate)}` : ` · ${r.createdAt}`}
-            {r.handledBy ? ` · ${t("req.handledBy")} ${r.handledBy}` : ""}
-          </p>
-        </div>
-        <span
-          className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-700 ${ACCENT_SOFT_BG[status.color]} ${ACCENT_TEXT[status.color]}`}
-        >
-          <Icon name={status.icon} className="h-3.5 w-3.5" />
-          {t(status.key)}
-        </span>
+          <span
+            className={`relative grid h-11 w-11 shrink-0 place-items-center rounded-2xl ${ACCENT_ON[typeMeta.color as AccentColor]}`}
+          >
+            <Icon name={typeMeta.icon} className="h-5 w-5" />
+            {needsAttention ? (
+              <span className="absolute -right-0.5 -top-0.5 h-3 w-3 rounded-full border-2 border-white bg-cta" />
+            ) : null}
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-700 text-ink">
+              {rowTitle(r)} · {r.studentName}
+            </p>
+            <p className="truncate text-xs font-600 text-ink/55">{r.summary}</p>
+            <p className="mt-0.5 text-[11px] font-700 text-ink/40">
+              {r.group}
+              {r.eventDate ? ` · ${fmtDate(r.eventDate)}` : ` · ${r.createdAt}`}
+              {r.handledBy ? ` · ${t("req.handledBy")} ${r.handledBy}` : ""}
+            </p>
+          </div>
+          <span
+            className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-700 ${ACCENT_SOFT_BG[status.color]} ${ACCENT_TEXT[status.color]}`}
+          >
+            <Icon name={status.icon} className="h-3.5 w-3.5" />
+            {t(status.key)}
+          </span>
+        </button>
       </li>
     );
   }
@@ -192,6 +225,169 @@ export function RequestsView({
       {openType ? (
         <RequestForm type={openType} childrenList={children} onClose={() => setOpenType(null)} />
       ) : null}
+
+      {detail ? (
+        <RequestDetail
+          request={detail}
+          staff={staff}
+          title={`${rowTitle(detail)} · ${detail.studentName}`}
+          dateLabel={detail.eventDate ? fmtDate(detail.eventDate) : detail.createdAt}
+          onClose={() => setDetail(null)}
+        />
+      ) : null}
+    </div>
+  );
+}
+
+/** Detalle de una solicitud: datos + (staff) marcar recibido + hilo de comentarios. */
+function RequestDetail({
+  request,
+  staff,
+  title,
+  dateLabel,
+  onClose,
+}: {
+  request: RequestItem;
+  staff: boolean;
+  title: string;
+  dateLabel: string;
+  onClose: () => void;
+}) {
+  const { t, locale } = useLocale();
+  const [comments, setComments] = useState<RequestComment[] | null>(null);
+  const [draft, setDraft] = useState("");
+  const [status, setStatus] = useState<RequestStatus>(request.status);
+  const [pending, start] = useTransition();
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  async function reload() {
+    const c = await fetchRequestComments(request.id);
+    setComments(c);
+    requestAnimationFrame(() => bottomRef.current?.scrollIntoView({ block: "end" }));
+  }
+  useEffect(() => {
+    void reload();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [request.id]);
+
+  function send() {
+    const text = draft.trim();
+    if (!text) return;
+    setDraft("");
+    start(async () => {
+      await addRequestComment(request.id, text);
+      await reload();
+    });
+  }
+
+  function acknowledge() {
+    setStatus("received");
+    start(async () => {
+      await setRequestStatus(request.id, "received");
+    });
+  }
+
+  const statusMeta = STATUS_META[status];
+  const timeFmt = (iso: string) =>
+    new Date(iso).toLocaleString(locale, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-ink/40 p-0 sm:items-center sm:p-4">
+      <button type="button" className="absolute inset-0" aria-label="Cerrar" onClick={onClose} />
+      <div className="relative flex max-h-[88vh] w-full max-w-lg flex-col rounded-t-[1.75rem] border border-ink/10 bg-white shadow-pop sm:rounded-[1.75rem]">
+        {/* Encabezado */}
+        <div className="flex items-start gap-3 border-b border-ink/8 p-5">
+          <div className="min-w-0 flex-1">
+            <h3 className="font-display text-lg font-700 text-ink">{title}</h3>
+            <p className="mt-0.5 text-xs font-700 text-ink/45">
+              {request.group} · {dateLabel}
+              {request.handledBy ? ` · ${t("req.handledBy")} ${request.handledBy}` : ""}
+            </p>
+            {request.summary ? (
+              <p className="mt-2 rounded-2xl bg-mist px-3 py-2 text-sm font-600 text-ink/70">{request.summary}</p>
+            ) : null}
+          </div>
+          <span
+            className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-700 ${ACCENT_SOFT_BG[statusMeta.color]} ${ACCENT_TEXT[statusMeta.color]}`}
+          >
+            <Icon name={statusMeta.icon} className="h-3.5 w-3.5" />
+            {t(statusMeta.key)}
+          </span>
+        </div>
+
+        {/* Acción del colegio: marcar como recibido */}
+        {staff && status === "submitted" ? (
+          <div className="border-b border-ink/8 px-5 py-3">
+            <button
+              type="button"
+              onClick={acknowledge}
+              disabled={pending}
+              className="inline-flex items-center gap-1.5 rounded-full bg-brand px-4 py-2 text-sm font-700 text-white shadow-soft transition-opacity hover:opacity-90 disabled:opacity-60"
+            >
+              <Icon name="CircleCheck" className="h-4 w-4" />
+              {t("req.markReceived")}
+            </button>
+          </div>
+        ) : null}
+
+        {/* Hilo de comentarios */}
+        <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
+          <h4 className="mb-3 text-xs font-700 uppercase tracking-wide text-ink/45">{t("req.comments")}</h4>
+          {comments === null ? (
+            <p className="text-sm font-500 text-ink/40">…</p>
+          ) : comments.length === 0 ? (
+            <p className="text-sm font-500 text-ink/45">{t("req.noComments")}</p>
+          ) : (
+            <ul className="flex flex-col gap-3">
+              {comments.map((c) => (
+                <li key={c.id} className={`flex gap-2.5 ${c.mine ? "flex-row-reverse" : ""}`}>
+                  <Avatar name={c.authorName} color={c.mine ? "brand" : "navy"} size="sm" />
+                  <div className={`min-w-0 max-w-[80%] ${c.mine ? "items-end text-right" : ""} flex flex-col`}>
+                    <span className="text-[11px] font-700 text-ink/45">
+                      {c.authorName}
+                      {c.authorRole === "guardian" ? ` · ${t("req.role.family")}` : ""}
+                    </span>
+                    <span
+                      className={`mt-0.5 inline-block rounded-2xl px-3 py-2 text-sm font-600 ${
+                        c.mine ? "bg-brand text-white" : "bg-mist text-ink/80"
+                      }`}
+                    >
+                      {c.body}
+                    </span>
+                    <span className="mt-0.5 text-[10px] font-600 text-ink/35">{timeFmt(c.createdAt)}</span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+          <div ref={bottomRef} />
+        </div>
+
+        {/* Responder */}
+        <div className="flex items-center gap-2 border-t border-ink/8 p-3">
+          <input
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                send();
+              }
+            }}
+            placeholder={staff ? t("req.replyToFamily") : t("req.commentPh")}
+            className="min-w-0 flex-1 rounded-full bg-mist px-4 py-2.5 text-sm font-600 text-ink outline-none placeholder:text-ink/40 focus:ring-2 focus:ring-brand/30"
+          />
+          <button
+            type="button"
+            onClick={send}
+            disabled={pending || !draft.trim()}
+            className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-cta text-white shadow-soft transition-colors hover:bg-cta-deep disabled:opacity-50"
+            aria-label={t("req.form.send")}
+          >
+            <Icon name="Send" className="h-4 w-4" />
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

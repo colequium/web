@@ -2,6 +2,13 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { getRequestComments, type RequestComment } from "@/lib/requests";
+
+/** Carga el hilo de comentarios de una solicitud (para el detalle en cliente). */
+export async function fetchRequestComments(requestId: string): Promise<RequestComment[]> {
+  if (!requestId) return [];
+  return getRequestComments(requestId);
+}
 
 export type RequestState = { error?: string; ok?: boolean } | null;
 
@@ -50,4 +57,30 @@ export async function createRequest(
   revalidatePath("/pickups");
   revalidatePath("/home");
   return { ok: true };
+}
+
+/** El colegio marca una solicitud como recibida/gestionada (status='received'). */
+export async function setRequestStatus(requestId: string, status: string) {
+  if (!requestId) return;
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("set_request_status", {
+    p_request: requestId,
+    p_status: status,
+  });
+  if (error) console.error("[setRequestStatus] error:", error.message);
+  revalidatePath("/requests");
+  revalidatePath("/pickups");
+}
+
+/** Agrega un comentario al hilo de una solicitud (colegio o familia). */
+export async function addRequestComment(requestId: string, body: string) {
+  const text = body.trim();
+  if (!requestId || !text) return;
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("add_request_comment", {
+    p_request: requestId,
+    p_body: text,
+  });
+  if (error) console.error("[addRequestComment] error:", error.message);
+  revalidatePath("/requests");
 }
