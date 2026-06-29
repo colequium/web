@@ -108,8 +108,8 @@ export function PostCard({ post, index = 0 }: { post: Post; index?: number }) {
 
   return (
     <article
-      className={`animate-rise overflow-hidden rounded-[1.75rem] border border-ink/5 shadow-card ${
-        index % 2 === 1 ? "bg-cream" : "bg-white"
+      className={`animate-rise overflow-hidden rounded-[1.75rem] border shadow-card ${
+        post.unread && !readDone ? "border-cta/20 bg-cream" : "border-ink/5 bg-white"
       }`}
       style={{ animationDelay: `${index * 60}ms` }}
     >
@@ -129,9 +129,14 @@ export function PostCard({ post, index = 0 }: { post: Post; index?: number }) {
             </span>
           ) : null}
           {post.unread && !readDone ? (
-            <span className="shrink-0 rounded-full bg-cta px-2.5 py-1 text-[11px] font-700 uppercase tracking-wide text-white">
+            <button
+              type="button"
+              onClick={read}
+              title="Marcar como leído"
+              className="shrink-0 rounded-full bg-cta px-2.5 py-1 text-[11px] font-700 uppercase tracking-wide text-white transition-colors hover:bg-cta-deep"
+            >
               {t("wall.unread")}
-            </span>
+            </button>
           ) : null}
         </div>
 
