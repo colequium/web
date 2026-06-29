@@ -40,6 +40,12 @@
   --color-warm: #ffd9a8;
   --color-warm-soft: #fff0db;
 
+  /* Acentos de estado (se usan en toda la app: éxito, error, etc.) */
+  --color-leaf: #2e9e6b; /* éxito / activo (verde) */
+  --color-rose: #e5484d; /* error / declinar / eliminar (rojo) */
+  --color-grape: #7c5cd6; /* acento violeta */
+  --color-sun: #f4b740; /* acento ámbar */
+
   /* Radios y sombras (suaves, para look flotante) */
   --radius-4xl: 1.75rem;
   --shadow-card: 0 12px 34px -16px rgba(12, 74, 110, 0.20);
