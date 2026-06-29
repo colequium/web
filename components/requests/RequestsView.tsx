@@ -193,11 +193,11 @@ function RequestForm({
             <Icon name={isExit ? "DoorOpen" : "CalendarX"} className="h-5 w-5" />
           </span>
           <h3 className="font-display text-lg font-700 text-ink">
-            {isExit ? "Autorizar salida" : "Reportar inasistencia"}
+            {isExit ? t("req.form.exitTitle") : t("req.form.absenceTitle")}
           </h3>
         </div>
 
-        <label className="mb-1 block text-xs font-700 text-ink/55">Hijo/a</label>
+        <label className="mb-1 block text-xs font-700 text-ink/55">{t("req.form.child")}</label>
         <select
           name="studentId"
           required
@@ -205,7 +205,7 @@ function RequestForm({
           className="mb-3 w-full rounded-xl bg-mist px-3 py-2.5 text-sm font-600 text-ink outline-none focus:ring-2 focus:ring-brand/30"
         >
           <option value="" disabled>
-            Elige a tu hijo/a…
+            {t("req.form.chooseChild")}
           </option>
           {childrenList.map((c) => (
             <option key={c.studentId} value={c.studentId}>
@@ -215,7 +215,7 @@ function RequestForm({
           ))}
         </select>
 
-        <label className="mb-1 block text-xs font-700 text-ink/55">Fecha</label>
+        <label className="mb-1 block text-xs font-700 text-ink/55">{t("req.form.date")}</label>
         <input
           name="date"
           type="date"
@@ -227,16 +227,16 @@ function RequestForm({
         {isExit ? (
           <div className="mb-3 grid grid-cols-2 gap-2">
             <div>
-              <label className="mb-1 block text-xs font-700 text-ink/55">Quién retira</label>
+              <label className="mb-1 block text-xs font-700 text-ink/55">{t("req.form.who")}</label>
               <input
                 name="pickupName"
                 required
-                placeholder="Nombre y apellido"
+                placeholder={t("req.form.whoPh")}
                 className="w-full rounded-xl bg-mist px-3 py-2.5 text-sm font-600 text-ink outline-none placeholder:text-ink/40 focus:ring-2 focus:ring-brand/30"
               />
             </div>
             <div>
-              <label className="mb-1 block text-xs font-700 text-ink/55">Relación</label>
+              <label className="mb-1 block text-xs font-700 text-ink/55">{t("req.form.relation")}</label>
               <select
                 name="relationship"
                 defaultValue=""
@@ -254,12 +254,12 @@ function RequestForm({
         ) : null}
 
         <label className="mb-1 block text-xs font-700 text-ink/55">
-          Motivo {isExit ? "(opcional)" : "(opcional)"}
+          {t("req.form.reason")}
         </label>
         <textarea
           name="reason"
           rows={2}
-          placeholder={isExit ? "Ej. turno médico" : "Ej. consulta médica"}
+          placeholder={isExit ? t("req.form.reasonPhExit") : t("req.form.reasonPhAbsence")}
           className="mb-4 w-full resize-none rounded-xl bg-mist px-3 py-2.5 text-sm font-600 text-ink outline-none placeholder:text-ink/40 focus:ring-2 focus:ring-brand/30"
         />
 
@@ -275,14 +275,14 @@ function RequestForm({
             onClick={onClose}
             className="rounded-full px-4 py-2.5 text-sm font-700 text-ink/55 transition-colors hover:bg-mist hover:text-ink"
           >
-            Cancelar
+            {t("req.form.cancel")}
           </button>
           <SubmitButton
-            pendingLabel="Enviando…"
+            pendingLabel={t("req.form.sending")}
             className="inline-flex items-center gap-1.5 rounded-full bg-cta px-4 py-2.5 text-sm font-700 text-white shadow-soft transition-colors hover:bg-cta-deep"
           >
             <Icon name="Send" className="h-4 w-4" />
-            Enviar solicitud
+            {t("req.form.send")}
           </SubmitButton>
         </div>
       </form>

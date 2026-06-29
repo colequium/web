@@ -264,12 +264,12 @@ export function PostCard({ post, index = 0 }: { post: Post; index?: number }) {
           >
             <span className="min-w-0">
               <span className="block text-xs font-700 uppercase tracking-wide text-ink/40">
-                {taskDone ? "Completada" : "Acción requerida"}
+                {taskDone ? t("post.completed") : t("post.actionRequired")}
               </span>
               <span className="block text-sm font-700 text-ink">
-                {TASK_LABELS[post.taskAction ?? "complete"].prompt}
+                {t(`post.task.${post.taskAction ?? "complete"}.prompt`)}
                 {post.taskDue ? (
-                  <span className="font-600 text-ink/50"> · antes del {formatDueDate(post.taskDue)}</span>
+                  <span className="font-600 text-ink/50"> · {t("post.before")} {formatDueDate(post.taskDue)}</span>
                 ) : null}
               </span>
             </span>
@@ -283,7 +283,7 @@ export function PostCard({ post, index = 0 }: { post: Post; index?: number }) {
               }`}
             >
               <Icon name={taskDone ? "CircleCheck" : "Check"} className="h-4 w-4" />
-              {taskDone ? "Hecho" : TASK_LABELS[post.taskAction ?? "complete"].cta}
+              {taskDone ? t("post.done") : t(`post.task.${post.taskAction ?? "complete"}.cta`)}
             </button>
           </div>
         ) : null}
@@ -510,13 +510,6 @@ export function PostCard({ post, index = 0 }: { post: Post; index?: number }) {
     </article>
   );
 }
-
-/** Texto del bloque de tarea según la acción pedida. */
-const TASK_LABELS: Record<string, { prompt: string; cta: string }> = {
-  sign: { prompt: "Hay que firmar este aviso", cta: "Firmar" },
-  submit: { prompt: "Hay que entregar algo", cta: "Marcar entregado" },
-  complete: { prompt: "Hay una tarea por completar", cta: "Marcar completada" },
-};
 
 /** Fecha del evento: "mié 9 jul · 18:30". */
 function formatEventDate(iso: string): string {
