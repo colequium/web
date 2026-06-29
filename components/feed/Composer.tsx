@@ -4,6 +4,7 @@ import { useActionState, useEffect, useRef, useState } from "react";
 import { Icon } from "../icons";
 import { Avatar } from "../Avatar";
 import { useIdentity } from "../identity-context";
+import { useLocale } from "../locale-context";
 import { DEMO_USER } from "@/lib/domain";
 import { createPost, type CreatePostState } from "@/app/(app)/feed/actions";
 import type { AudienceOptions } from "@/lib/audiences";
@@ -20,6 +21,7 @@ export function Composer({
   audiences?: AudienceOptions;
 }) {
   const me = useIdentity();
+  const { t } = useLocale();
   const formRef = useRef<HTMLFormElement>(null);
   const [pollMode, setPollMode] = useState(false);
   const [postType, setPostType] = useState<"comunicado" | "invitacion" | "tarea">("comunicado");
@@ -73,7 +75,7 @@ export function Composer({
       onSubmit={(e) => {
         if (!canCommunity && audCount === 0) {
           e.preventDefault();
-          setAudError("Elige al menos un salón o grado para publicar.");
+          setAudError(t("comp.audError"));
           setAudOpen(true);
         }
       }}
@@ -86,10 +88,10 @@ export function Composer({
         <div className="min-w-0 flex-1">
           <div className="mb-2 flex flex-wrap gap-1.5">
             {[
-              { v: "comunicado", l: "Comunicado", icon: "Megaphone" },
-              { v: "invitacion", l: "Invitación", icon: "CalendarDays" },
-              { v: "tarea", l: "Tarea", icon: "ClipboardList" },
-              { v: "encuesta", l: "Encuesta", icon: "BarChart3" },
+              { v: "comunicado", l: t("comp.type.comunicado"), icon: "Megaphone" },
+              { v: "invitacion", l: t("comp.type.invitacion"), icon: "CalendarDays" },
+              { v: "tarea", l: t("comp.type.tarea"), icon: "ClipboardList" },
+              { v: "encuesta", l: t("comp.type.encuesta"), icon: "BarChart3" },
             ].map((o) => {
               const active = o.v === "encuesta" ? pollMode : !pollMode && postType === o.v;
               return (
@@ -123,10 +125,10 @@ export function Composer({
             onChange={(e) => setTitle(e.target.value)}
             placeholder={
               postType === "invitacion"
-                ? "Título de la invitación (opcional)"
+                ? t("comp.titlePh.invitacion")
                 : postType === "tarea"
-                  ? "¿Qué tienen que hacer? (opcional)"
-                  : "Título del aviso (opcional)"
+                  ? t("comp.titlePh.tarea")
+                  : t("comp.titlePh.comunicado")
             }
             className="w-full rounded-xl bg-mist px-4 py-2.5 text-sm font-700 text-ink outline-none placeholder:font-600 placeholder:text-ink/45 focus:ring-2 focus:ring-brand/30"
           />
@@ -135,7 +137,7 @@ export function Composer({
             rows={2}
             value={body}
             onChange={(e) => setBody(e.target.value)}
-            placeholder={pollMode ? "Escribe la pregunta de la encuesta…" : "Comparte un aviso con la comunidad…"}
+            placeholder={pollMode ? t("comp.bodyPh.poll") : t("comp.bodyPh.default")}
             className="mt-2 w-full resize-none rounded-xl bg-mist px-4 py-2.5 text-sm font-600 text-ink outline-none placeholder:text-ink/45 focus:ring-2 focus:ring-brand/30"
           />
 
@@ -145,7 +147,7 @@ export function Composer({
                 <input
                   key={i}
                   name="option"
-                  placeholder={`Opción ${i + 1}`}
+                  placeholder={`${t("comp.option")} ${i + 1}`}
                   className="w-full rounded-xl border border-ink/10 bg-white px-4 py-2 text-sm font-600 text-ink outline-none placeholder:text-ink/40 focus:ring-2 focus:ring-brand/30"
                 />
               ))}
@@ -155,7 +157,7 @@ export function Composer({
                   onClick={() => setOptionCount((c) => c + 1)}
                   className="self-start text-xs font-700 text-brand hover:text-ink"
                 >
-                  + Agregar opción
+                  {t("comp.addOption")}
                 </button>
               ) : null}
             </div>
@@ -167,7 +169,7 @@ export function Composer({
                 <Icon name="MapPin" className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink/40" />
                 <input
                   name="eventLocation"
-                  placeholder="Lugar (ej. Patio central)"
+                  placeholder={t("comp.eventLocationPh")}
                   className="w-full rounded-xl bg-mist py-2.5 pl-9 pr-3 text-sm font-600 text-ink outline-none placeholder:text-ink/45 focus:ring-2 focus:ring-brand/30"
                 />
               </div>
@@ -189,16 +191,16 @@ export function Composer({
                 defaultValue="complete"
                 className="rounded-xl bg-mist px-3 py-2.5 text-sm font-700 text-ink outline-none focus:ring-2 focus:ring-brand/30"
               >
-                <option value="sign">Firmar</option>
-                <option value="submit">Entregar</option>
-                <option value="complete">Completar</option>
+                <option value="sign">{t("comp.task.sign")}</option>
+                <option value="submit">{t("comp.task.submit")}</option>
+                <option value="complete">{t("comp.task.complete")}</option>
               </select>
               <div className="relative">
                 <Icon name="Clock" className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink/40" />
                 <input
                   name="taskDue"
                   type="date"
-                  title="Fecha límite (opcional)"
+                  title={t("comp.taskDueTitle")}
                   className="w-full rounded-xl bg-mist py-2.5 pl-9 pr-3 text-sm font-600 text-ink outline-none focus:ring-2 focus:ring-brand/30"
                 />
               </div>
@@ -218,13 +220,13 @@ export function Composer({
 
       {audOpen ? (
         <div className="mt-3 rounded-2xl border border-ink/10 bg-mist/40 p-3" onChange={() => refreshAud(formRef.current)}>
-          <p className="mb-1.5 text-[11px] font-700 uppercase tracking-wide text-ink/40">Enviar a</p>
+          <p className="mb-1.5 text-[11px] font-700 uppercase tracking-wide text-ink/40">{t("comp.sendTo")}</p>
           <div className="flex flex-wrap gap-1.5">
             {[
-              { v: "all", l: "Todos" },
-              { v: "teacher", l: "Docentes" },
-              { v: "guardian", l: "Padres" },
-              { v: "both", l: "Docentes y padres" },
+              { v: "all", l: t("comp.aud.all") },
+              { v: "teacher", l: t("comp.aud.teacher") },
+              { v: "guardian", l: t("comp.aud.guardian") },
+              { v: "both", l: t("comp.aud.both") },
             ].map((o) => (
               <label key={o.v} className="cursor-pointer">
                 <input type="radio" name="audienceRole" value={o.v} defaultChecked={o.v === "all"} className="peer sr-only" />
@@ -236,9 +238,9 @@ export function Composer({
           </div>
 
           <p className="mb-1.5 mt-3 text-[11px] font-700 uppercase tracking-wide text-ink/40">
-            Destinos{" "}
+            {t("comp.destinations")}{" "}
             <span className="font-500 normal-case text-ink/35">
-              · {canCommunity ? "vacío = toda la comunidad" : "elige al menos un salón o grado"}
+              · {canCommunity ? t("comp.destEmpty") : t("comp.destPick")}
             </span>
           </p>
           {audError ? (
@@ -254,9 +256,9 @@ export function Composer({
               </label>
             ) : null}
             {[
-              { title: "Niveles", opts: audiences?.levels ?? [] },
-              { title: "Grados", opts: audiences?.grades ?? [] },
-              { title: "Salones", opts: audiences?.groups ?? [] },
+              { title: t("comp.levels"), opts: audiences?.levels ?? [] },
+              { title: t("comp.grades"), opts: audiences?.grades ?? [] },
+              { title: t("comp.groups"), opts: audiences?.groups ?? [] },
             ]
               .filter((s) => s.opts.length)
               .map((s) => (
@@ -305,7 +307,7 @@ export function Composer({
             }}
             className="text-xs font-700 text-ink/40 hover:text-rose"
           >
-            Quitar
+            {t("comp.remove")}
           </button>
         </div>
       ) : null}
@@ -315,25 +317,25 @@ export function Composer({
           type="button"
           onClick={() => fileRef.current?.click()}
           aria-pressed={fileNames.length > 0}
-          title="Adjuntar archivo"
+          title={t("comp.attachTitle")}
           className={`flex items-center gap-1.5 rounded-xl px-2.5 py-2 text-xs font-700 transition-colors ${
             fileNames.length > 0 ? "bg-brand/10 text-brand" : "text-ink/45 hover:bg-mist hover:text-ink"
           }`}
         >
           <Icon name="Paperclip" className="h-[16px] w-[16px]" />
-          <span className="hidden sm:inline">Adjuntar</span>
+          <span className="hidden sm:inline">{t("comp.attach")}</span>
         </button>
         <button
           type="button"
           onClick={() => setCommentsOff((v) => !v)}
           aria-pressed={commentsOff}
-          title={commentsOff ? "Comentarios desactivados" : "Comentarios activados"}
+          title={commentsOff ? t("comp.commentsOffTitle") : t("comp.commentsOnTitle")}
           className={`flex items-center gap-1.5 rounded-xl px-2.5 py-2 text-xs font-700 transition-colors ${
             commentsOff ? "bg-rose/10 text-rose" : "text-ink/45 hover:bg-mist hover:text-ink"
           }`}
         >
           <Icon name={commentsOff ? "MessageCircleOff" : "MessageCircle"} className="h-[16px] w-[16px]" />
-          <span className="hidden sm:inline">{commentsOff ? "Sin comentarios" : "Comentarios"}</span>
+          <span className="hidden sm:inline">{commentsOff ? t("comp.noComments") : t("comp.comments")}</span>
         </button>
         <button
           type="button"
@@ -342,7 +344,7 @@ export function Composer({
           className="flex min-w-0 flex-1 items-center gap-1.5 rounded-xl bg-mist px-3 py-2 text-xs font-700 text-ink outline-none focus:ring-2 focus:ring-brand/30 sm:max-w-xs"
         >
           <Icon name="Users" className="h-[15px] w-[15px] text-ink/50" />
-          <span className="truncate">{audCount > 0 ? `${audCount} destino${audCount > 1 ? "s" : ""}` : canCommunity ? "Toda la comunidad" : "Elige destinos"}</span>
+          <span className="truncate">{audCount > 0 ? `${audCount} ${audCount > 1 ? t("comp.destMany") : t("comp.destOne")}` : canCommunity ? t("comp.allCommunity") : t("comp.pickDest")}</span>
           <Icon name="ChevronDown" className="ml-auto h-4 w-4 text-ink/40" />
         </button>
         <button
@@ -351,7 +353,7 @@ export function Composer({
           className="ml-auto flex items-center gap-1.5 rounded-2xl bg-cta px-4 py-2.5 text-sm font-700 text-white shadow-soft transition-colors hover:bg-cta-deep disabled:opacity-60"
         >
           <Icon name="Send" className="h-4 w-4" />
-          {pending ? "Publicando…" : "Publicar"}
+          {pending ? t("comp.publishing") : t("comp.publish")}
         </button>
       </div>
     </form>
