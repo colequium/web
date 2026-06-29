@@ -5,7 +5,7 @@ import { NextResponse, type NextRequest } from "next/server";
 const PROTECTED = [
   "/home", "/feed", "/calendar", "/messages", "/requests",
   "/documents", "/transport", "/community", "/profile", "/settings",
-  "/pickups", "/payments",
+  "/pickups", "/payments", "/tasks",
 ];
 
 /**

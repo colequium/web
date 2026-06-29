@@ -71,12 +71,12 @@ insert into levels (id, community_id, name, position) values
 on conflict (id) do nothing;
 
 insert into grades (id, community_id, level_id, name, position) values
-  ('d1000000-0000-0000-0000-000000000001', '$COMM', 'e1000000-0000-0000-0000-000000000001', '1° (secundaria)', 0)
+  ('d1000000-0000-0000-0000-000000000001', '$COMM', 'e1000000-0000-0000-0000-000000000001', '7°', 0)
 on conflict (id) do nothing;
 
 insert into groups (id, community_id, grade_id, name, position) values
-  ('c1000000-0000-0000-0000-000000000001', '$COMM', 'd1000000-0000-0000-0000-000000000001', '1°A (secundaria)', 0),
-  ('c1000000-0000-0000-0000-000000000002', '$COMM', 'd1000000-0000-0000-0000-000000000001', '1°B (secundaria)', 1)
+  ('c1000000-0000-0000-0000-000000000001', '$COMM', 'd1000000-0000-0000-0000-000000000001', '7°A', 0),
+  ('c1000000-0000-0000-0000-000000000002', '$COMM', 'd1000000-0000-0000-0000-000000000001', '7°B', 1)
 on conflict (id) do nothing;
 
 -- ════════════════ 2) Membresías + roles de los nuevos usuarios ═══════════
@@ -140,13 +140,13 @@ insert into _st(full_name, gid, fam) values
   ('Camila Suárez','22222222-0000-0000-0000-000000000003',null),
   ('Lautaro Gil','22222222-0000-0000-0000-000000000003',null),
   ('Victoria Ponce','22222222-0000-0000-0000-000000000003',null),
-  -- 1°A Sec (c1…01)
+  -- 7°A (c1…01)
   ('Camila Díaz','c1000000-0000-0000-0000-000000000001','familia1seca@laslomas.demo'),
   ('Ignacio Bravo','c1000000-0000-0000-0000-000000000001',null),
   ('Julieta Campos','c1000000-0000-0000-0000-000000000001',null),
   ('Matías Reyes','c1000000-0000-0000-0000-000000000001',null),
   ('Delfina Acosta','c1000000-0000-0000-0000-000000000001',null),
-  -- 1°B Sec (c1…02)
+  -- 7°B (c1…02)
   ('Joaquín Silva','c1000000-0000-0000-0000-000000000002','familia1secb@laslomas.demo'),
   ('Abril Medina','c1000000-0000-0000-0000-000000000002',null),
   ('Bautista León','c1000000-0000-0000-0000-000000000002',null),

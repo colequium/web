@@ -126,7 +126,7 @@ export function RightRail({
         <ul className="flex flex-col gap-2">
           {railTasks.map((task) => (
             <li key={task.id}>
-              <Link href="/feed" className="flex items-start gap-3 rounded-2xl p-1.5 transition-colors hover:bg-mist">
+              <Link href="/tasks" className="flex items-start gap-3 rounded-2xl p-1.5 transition-colors hover:bg-mist">
                 <span
                   className={`mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-md border-2 ${
                     task.done

@@ -71,7 +71,7 @@ export function HomeView({
   const summary = [
     { label: t("home.summary.unread"), value: unreadPosts, icon: "Megaphone", color: "news" as AccentColor, href: "/feed" },
     { label: t("home.summary.events"), value: eventsThisWeek, icon: "CalendarDays", color: "brand" as AccentColor, href: "/calendar" },
-    { label: t("home.summary.tasks"), value: pendingTasks, icon: "ClipboardList", color: "requests" as AccentColor, href: "/feed" },
+    { label: t("home.summary.tasks"), value: pendingTasks, icon: "CircleCheck" as const, color: "requests" as AccentColor, href: "/tasks" },
     { label: t("home.summary.messages"), value: unreadMessages, icon: "MessagesSquare", color: "sky" as AccentColor, href: "/messages" },
   ].filter((s) => !(me?.isStudent && STUDENT_HIDDEN.includes(s.href)));
 

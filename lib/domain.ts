@@ -162,6 +162,7 @@ export const NAV_ITEMS: NavItemDef[] = [
   { key: "nav.wall", href: "/feed", icon: "Megaphone" },
   { key: "nav.calendar", href: "/calendar", icon: "CalendarDays" },
   { key: "nav.conversations", href: "/messages", icon: "MessagesSquare" },
+  { key: "nav.tasks", href: "/tasks", icon: "CircleCheck" },
   { key: "nav.requests", href: "/requests", icon: "ClipboardList" },
   { key: "nav.payments", href: "/payments", icon: "CreditCard" },
   { key: "nav.exits", href: "/pickups", icon: "DoorOpen", staffOnly: true },
