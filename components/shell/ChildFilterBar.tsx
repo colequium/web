@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { Icon } from "../icons";
+import { useLocale } from "../locale-context";
 import { setChildFilter } from "@/app/(app)/child-filter-actions";
 import type { MyCourse } from "@/lib/domain";
 
@@ -16,6 +17,7 @@ export function ChildFilterBar({
   courses: MyCourse[];
   active: MyCourse | null;
 }) {
+  const { t } = useLocale();
   const [open, setOpen] = useState(false);
   const [pending, start] = useTransition();
 
@@ -39,7 +41,7 @@ export function ChildFilterBar({
         <>
           <span className="inline-flex items-center gap-1.5 text-sm font-700 text-cta-deep">
             <Icon name="Users" className="h-4 w-4 text-cta" />
-            Viendo solo a {active.personName ?? active.groupName}
+            {t("filter.viewingOnly")} {active.personName ?? active.groupName}
             <span className="font-600 text-cta-deep/60">· {active.groupName}</span>
           </span>
           <button
@@ -49,7 +51,7 @@ export function ChildFilterBar({
             className="ml-auto inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-700 text-cta-deep transition-colors hover:bg-cta/15 disabled:opacity-50"
           >
             <Icon name="X" className="h-3.5 w-3.5" />
-            Quitar filtro
+            {t("filter.clear")}
           </button>
         </>
       ) : (
@@ -63,7 +65,7 @@ export function ChildFilterBar({
             className="inline-flex items-center gap-1.5 rounded-full border border-ink/12 bg-white px-3 py-1.5 text-xs font-700 text-ink/70 transition-colors hover:border-brand/40 hover:text-ink disabled:opacity-50"
           >
             <Icon name="Users" className="h-3.5 w-3.5 text-ink/50" />
-            Ver por hijo
+            {t("filter.byChild")}
             <Icon name="ChevronDown" className="h-3.5 w-3.5 text-ink/40" />
           </button>
           {open ? (

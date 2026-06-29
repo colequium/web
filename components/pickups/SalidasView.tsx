@@ -3,22 +3,24 @@
 import { useMemo, useState } from "react";
 import { Icon } from "@/components/icons";
 import { Avatar } from "@/components/Avatar";
+import { useLocale } from "@/components/locale-context";
 import type { SalidaStudent } from "@/lib/pickups";
+
+/** Normaliza para buscar sin acentos ni mayúsculas (María ≈ maria). */
+function norm(s: string): string {
+  return s
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "");
+}
 
 /**
  * Salidas. Por defecto solo muestra los alumnos con un cambio para hoy
  * (inasistencia o autorización temporal). El buscador permite encontrar a
  * cualquier alumno y ver quién puede retirarlo (de siempre + solo hoy).
  */
-/** Normaliza para buscar sin acentos ni mayúsculas (María ≈ maria). */
-function norm(s: string): string {
-  return s
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
-}
-
 export function SalidasView({ students }: { students: SalidaStudent[] }) {
+  const { t } = useLocale();
   const [query, setQuery] = useState("");
   const q = norm(query.trim());
 
@@ -46,21 +48,16 @@ export function SalidasView({ students }: { students: SalidaStudent[] }) {
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Buscar un alumno para ver quién puede retirarlo…"
+          placeholder={t("exits.search")}
           className="w-full rounded-2xl border border-ink/10 bg-white py-3 pl-10 pr-4 text-sm font-600 text-ink outline-none placeholder:font-500 placeholder:text-ink/40 focus:ring-2 focus:ring-brand/30"
         />
       </div>
 
       {results !== null ? (
-        // Modo búsqueda: cualquier alumno con todos sus autorizados.
         results.length === 0 ? (
-          <EmptyState
-            icon="Search"
-            title="No encontramos a ese alumno"
-            text="Revisa el nombre o prueba con menos letras."
-          />
+          <EmptyState icon="Search" title={t("exits.notFoundTitle")} text={t("exits.notFoundText")} />
         ) : (
-          <Section title={`Resultados (${results.length})`}>
+          <Section title={`${t("exits.results")} (${results.length})`}>
             <div className="grid gap-3 sm:grid-cols-2">
               {results.map((s) => (
                 <StudentCard key={s.name} s={s} />
@@ -69,15 +66,9 @@ export function SalidasView({ students }: { students: SalidaStudent[] }) {
           </Section>
         )
       ) : changed.length === 0 ? (
-        // Sin cambios hoy.
-        <EmptyState
-          icon="CircleCheck"
-          title="Hoy no hay cambios"
-          text="Todos los alumnos salen con sus autorizados de siempre. Usa el buscador para ver quién puede retirar a cualquier alumno."
-        />
+        <EmptyState icon="CircleCheck" title={t("exits.noChangesTitle")} text={t("exits.noChangesText")} />
       ) : (
-        // Modo por defecto: solo los cambios de hoy.
-        <Section title={`Cambios para hoy (${changed.length})`}>
+        <Section title={`${t("exits.changesToday")} (${changed.length})`}>
           <div className="grid gap-3 sm:grid-cols-2">
             {changed.map((s) => (
               <StudentCard key={s.name} s={s} highlightTemporary />
@@ -117,6 +108,7 @@ function StudentCard({
   s: SalidaStudent;
   highlightTemporary?: boolean;
 }) {
+  const { t } = useLocale();
   // En "cambios de hoy" mostramos primero la autorización temporal.
   const pickups = highlightTemporary
     ? [...s.pickups].sort((a, b) => (a.kind === "temporary" ? -1 : 0) - (b.kind === "temporary" ? -1 : 0))
@@ -127,7 +119,7 @@ function StudentCard({
       {s.absentToday ? (
         <div className="flex items-center gap-1.5 bg-rose/10 px-4 py-2 text-xs font-700 text-rose">
           <Icon name="CalendarX" className="h-4 w-4" />
-          No asistió al colegio hoy
+          {t("exits.absent")}
         </div>
       ) : null}
       <div className="p-4">
@@ -140,10 +132,10 @@ function StudentCard({
         </div>
 
         <p className="mb-2 mt-4 text-[11px] font-700 uppercase tracking-wide text-ink/40">
-          Pueden retirarlo
+          {t("exits.canPickup")}
         </p>
         {pickups.length === 0 ? (
-          <p className="text-xs font-600 text-ink/40">Sin autorizados cargados.</p>
+          <p className="text-xs font-600 text-ink/40">{t("exits.noAuthorized")}</p>
         ) : (
           <ul className="flex flex-col gap-2">
             {pickups.map((p, i) => (
@@ -155,11 +147,11 @@ function StudentCard({
                 </span>
                 {p.kind === "temporary" ? (
                   <span className="shrink-0 rounded-full bg-cta/10 px-2.5 py-1 text-[11px] font-700 text-cta">
-                    Solo hoy
+                    {t("exits.onlyToday")}
                   </span>
                 ) : (
                   <span className="shrink-0 rounded-full bg-leaf/15 px-2.5 py-1 text-[11px] font-700 text-leaf">
-                    Siempre
+                    {t("exits.always")}
                   </span>
                 )}
               </li>

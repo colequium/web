@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPostById } from "@/lib/posts";
+import { getServerT } from "@/lib/i18n-server";
 import { PostCard } from "@/components/feed/PostCard";
 import { Icon } from "@/components/icons";
 
@@ -11,7 +12,7 @@ export default async function AvisoDetallePage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const post = await getPostById(id);
+  const [post, t] = await Promise.all([getPostById(id), getServerT()]);
   if (!post) notFound();
 
   return (
@@ -21,7 +22,7 @@ export default async function AvisoDetallePage({
         className="mb-4 inline-flex items-center gap-1.5 text-sm font-700 text-ink/55 transition-colors hover:text-ink"
       >
         <Icon name="ChevronLeft" className="h-4 w-4" />
-        Volver
+        {t("common.back")}
       </Link>
       <PostCard post={post} index={0} />
     </main>

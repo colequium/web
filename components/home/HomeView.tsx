@@ -71,7 +71,7 @@ export function HomeView({
   const summary = [
     { label: t("home.summary.unread"), value: unreadPosts, icon: "Megaphone", color: "news" as AccentColor, href: "/feed" },
     { label: t("home.summary.events"), value: eventsThisWeek, icon: "CalendarDays", color: "brand" as AccentColor, href: "/calendar" },
-    { label: "Tareas pendientes", value: pendingTasks, icon: "ClipboardList", color: "requests" as AccentColor, href: "/feed" },
+    { label: t("home.summary.tasks"), value: pendingTasks, icon: "ClipboardList", color: "requests" as AccentColor, href: "/feed" },
     { label: t("home.summary.messages"), value: unreadMessages, icon: "MessagesSquare", color: "sky" as AccentColor, href: "/messages" },
   ].filter((s) => !(me?.isStudent && STUDENT_HIDDEN.includes(s.href)));
 
@@ -150,7 +150,7 @@ export function HomeView({
         </div>
         {upcomingEvents.length === 0 ? (
           <p className="py-4 text-center text-sm font-500 text-ink/45">
-            No hay eventos próximos.
+            {t("home.noUpcoming")}.
           </p>
         ) : (
           <ul className="flex flex-col gap-2.5">

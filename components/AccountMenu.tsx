@@ -39,7 +39,7 @@ export function AccountMenu() {
         <Avatar name={me?.name ?? DEMO_USER.name} color="navy" />
         <span className="hidden leading-tight lg:block">
           <span className="block text-sm font-700 text-ink">{me?.name ?? DEMO_USER.name}</span>
-          <span className="block text-xs font-500 text-ink/50">{me?.roleLabel ?? "Miembro"}</span>
+          <span className="block text-xs font-500 text-ink/50">{me?.roleLabel ?? t("account.member")}</span>
         </span>
         <Icon name="ChevronDown" className="hidden h-4 w-4 text-ink/40 lg:block" />
       </button>
@@ -57,19 +57,19 @@ export function AccountMenu() {
               <div className="min-w-0 leading-tight">
                 <p className="truncate text-sm font-700 text-ink">{me?.name ?? DEMO_USER.name}</p>
                 <p className="truncate text-xs font-600 text-ink/50">
-                  {me?.roleLabel ?? "Miembro"}
+                  {me?.roleLabel ?? t("account.member")}
                 </p>
               </div>
             </div>
 
             <div className="my-1 border-t border-ink/5" />
 
-            <MenuLink href="/profile" icon="Settings" label="Mi perfil" onClick={() => setOpen(false)} />
+            <MenuLink href="/profile" icon="Settings" label={t("account.profile")} onClick={() => setOpen(false)} />
             {me?.isAdmin ? (
               <MenuLink
                 href="/settings"
                 icon="ShieldCheck"
-                label="Configuración del colegio"
+                label={t("account.settings")}
                 onClick={() => setOpen(false)}
               />
             ) : null}
@@ -77,9 +77,7 @@ export function AccountMenu() {
             {sections.length > 0 ? (
               <>
                 <div className="my-1 border-t border-ink/5" />
-                <p className="px-2.5 pb-1 pt-1.5 text-[11px] font-700 uppercase tracking-wide text-ink/35">
-                  Secciones
-                </p>
+                <p className="px-2.5 pb-1 pt-1.5 text-[11px] font-700 uppercase tracking-wide text-ink/35">{t("account.sections")}</p>
                 {sections.map((i) => (
                   <MenuLink
                     key={i.href}
@@ -99,8 +97,7 @@ export function AccountMenu() {
                 role="menuitem"
                 className="flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-left text-sm font-700 text-rose transition-colors hover:bg-rose/10"
               >
-                <Icon name="LogOut" className="h-[18px] w-[18px]" />
-                Cerrar sesión
+                <Icon name="LogOut" className="h-[18px] w-[18px]" />{t("account.logout")}
               </button>
             </form>
           </div>

@@ -112,6 +112,40 @@ const es: Dict = {
   "term.student.grade": "grado",
   "term.guardian.generic": "adulto responsable",
   "term.request.absence": "inasistencia",
+  // Salidas
+  "exits.title": "Salidas",
+  "exits.subtitle": "Quién puede retirar a cada alumno hoy. Mostramos solo los cambios del día; usa el buscador para consultar a cualquier alumno.",
+  "exits.search": "Buscar un alumno para ver quién puede retirarlo…",
+  "exits.results": "Resultados",
+  "exits.notFoundTitle": "No encontramos a ese alumno",
+  "exits.notFoundText": "Revisa el nombre o prueba con menos letras.",
+  "exits.noChangesTitle": "Hoy no hay cambios",
+  "exits.noChangesText": "Todos los alumnos salen con sus autorizados de siempre. Usa el buscador para ver quién puede retirar a cualquier alumno.",
+  "exits.changesToday": "Cambios para hoy",
+  "exits.absent": "No asistió al colegio hoy",
+  "exits.canPickup": "Pueden retirarlo",
+  "exits.noAuthorized": "Sin autorizados cargados.",
+  "exits.onlyToday": "Solo hoy",
+  "exits.always": "Siempre",
+  "exits.emptyTitle": "Todavía no hay alumnos para mostrar",
+  "exits.emptyText": "Cuando haya alumnos inscritos en tus grupos, vas a ver aquí quién puede retirarlos.",
+  // Filtro por hijo / curso
+  "filter.byChild": "Ver por hijo",
+  "filter.viewingOnly": "Viendo solo a",
+  "filter.clear": "Quitar filtro",
+  "filter.byCourse": "Filtrar por curso",
+  "filter.schoolWideNote": "Los eventos de toda la escuela se muestran siempre.",
+  "filter.noOneInCourse": "Nadie en este curso.",
+  // Menú de cuenta
+  "account.profile": "Mi perfil",
+  "account.settings": "Configuración del colegio",
+  "account.sections": "Secciones",
+  "account.logout": "Cerrar sesión",
+  "account.member": "Miembro",
+  // Varios
+  "common.back": "Volver",
+  "home.summary.tasks": "Tareas pendientes",
+  "home.noUpcoming": "No hay eventos próximos",
 };
 
 const esMX: Dict = {
@@ -209,6 +243,40 @@ const ptBR: Dict = {
   "term.student.grade": "série",
   "term.guardian.generic": "responsável",
   "term.request.absence": "falta",
+  // Saídas
+  "exits.title": "Saídas",
+  "exits.subtitle": "Quem pode retirar cada aluno hoje. Mostramos só as mudanças do dia; use a busca para consultar qualquer aluno.",
+  "exits.search": "Buscar um aluno para ver quem pode retirá-lo…",
+  "exits.results": "Resultados",
+  "exits.notFoundTitle": "Não encontramos esse aluno",
+  "exits.notFoundText": "Confira o nome ou tente com menos letras.",
+  "exits.noChangesTitle": "Hoje não há mudanças",
+  "exits.noChangesText": "Todos os alunos saem com seus autorizados de sempre. Use a busca para ver quem pode retirar qualquer aluno.",
+  "exits.changesToday": "Mudanças para hoje",
+  "exits.absent": "Não veio à escola hoje",
+  "exits.canPickup": "Podem retirá-lo",
+  "exits.noAuthorized": "Sem autorizados cadastrados.",
+  "exits.onlyToday": "Só hoje",
+  "exits.always": "Sempre",
+  "exits.emptyTitle": "Ainda não há alunos para mostrar",
+  "exits.emptyText": "Quando houver alunos matriculados nas suas turmas, você verá aqui quem pode retirá-los.",
+  // Filtro por filho / turma
+  "filter.byChild": "Ver por filho",
+  "filter.viewingOnly": "Vendo apenas",
+  "filter.clear": "Remover filtro",
+  "filter.byCourse": "Filtrar por turma",
+  "filter.schoolWideNote": "Os eventos de toda a escola aparecem sempre.",
+  "filter.noOneInCourse": "Ninguém nesta turma.",
+  // Menu da conta
+  "account.profile": "Meu perfil",
+  "account.settings": "Configurações da escola",
+  "account.sections": "Seções",
+  "account.logout": "Sair",
+  "account.member": "Membro",
+  // Diversos
+  "common.back": "Voltar",
+  "home.summary.tasks": "Tarefas pendentes",
+  "home.noUpcoming": "Não há eventos próximos",
 };
 
 const en: Dict = {
@@ -288,6 +356,40 @@ const en: Dict = {
   "term.student.grade": "grade",
   "term.guardian.generic": "guardian",
   "term.request.absence": "absence",
+  // Pickups
+  "exits.title": "Pickups",
+  "exits.subtitle": "Who can pick up each student today. We only show today's changes; use the search to look up any student.",
+  "exits.search": "Search a student to see who can pick them up…",
+  "exits.results": "Results",
+  "exits.notFoundTitle": "We couldn't find that student",
+  "exits.notFoundText": "Check the name or try fewer letters.",
+  "exits.noChangesTitle": "No changes today",
+  "exits.noChangesText": "All students leave with their usual authorized adults. Use the search to see who can pick up any student.",
+  "exits.changesToday": "Changes for today",
+  "exits.absent": "Absent today",
+  "exits.canPickup": "Can pick up",
+  "exits.noAuthorized": "No authorized pickups.",
+  "exits.onlyToday": "Today only",
+  "exits.always": "Always",
+  "exits.emptyTitle": "No students to show yet",
+  "exits.emptyText": "Once there are students enrolled in your groups, you'll see who can pick them up here.",
+  // Filter by child / course
+  "filter.byChild": "View by child",
+  "filter.viewingOnly": "Viewing only",
+  "filter.clear": "Clear filter",
+  "filter.byCourse": "Filter by course",
+  "filter.schoolWideNote": "School-wide events always show.",
+  "filter.noOneInCourse": "No one in this course.",
+  // Account menu
+  "account.profile": "My profile",
+  "account.settings": "School settings",
+  "account.sections": "Sections",
+  "account.logout": "Log out",
+  "account.member": "Member",
+  // Misc
+  "common.back": "Back",
+  "home.summary.tasks": "Pending tasks",
+  "home.noUpcoming": "No upcoming events",
 };
 
 const DICTS: Record<Locale, Dict> = {
