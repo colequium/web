@@ -53,3 +53,27 @@ export async function getRequests(): Promise<RequestItem[]> {
     handledBy: r.handled_by ?? undefined,
   }));
 }
+
+export interface MyChild {
+  studentId: string;
+  fullName: string;
+  groupName: string | null;
+}
+
+/** Hijos del usuario (para elegir al crear una solicitud). */
+export async function getMyChildren(): Promise<MyChild[]> {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return [];
+  }
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase.rpc("my_children");
+    if (error || !data) return [];
+    return (data as { student_id: string; full_name: string; group_name: string | null }[]).map(
+      (r) => ({ studentId: r.student_id, fullName: r.full_name, groupName: r.group_name }),
+    );
+  } catch (e) {
+    rethrowNextControl(e);
+    return [];
+  }
+}

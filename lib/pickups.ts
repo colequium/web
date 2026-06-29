@@ -28,14 +28,8 @@ function relLabel(r: string | null): string {
   return REL_LABEL[r.toLowerCase()] ?? r;
 }
 
-// Overlay DEMO (hasta tener modelo de asistencia + autorización temporal):
-// una autorización temporal y una inasistencia, sobre alumnos reales.
-const DEMO_TEMPORARY: Record<string, Pickup[]> = {
-  "Tomás Méndez": [{ name: "Jorge Méndez", relationship: "Abuelo", kind: "temporary" }],
-};
-const DEMO_ABSENT = new Set<string>(["Lucía Fernández"]);
-
-/** Alumnos en el alcance del usuario con sus autorizados para retirar. */
+/** Alumnos en el alcance del usuario con sus autorizados para retirar.
+ *  Las inasistencias / salidas de HOY salen de las solicitudes reales. */
 export async function getSalidas(): Promise<SalidaStudent[]> {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     return [];
@@ -56,17 +50,23 @@ export async function getSalidas(): Promise<SalidaStudent[]> {
     student_name: string;
     group_name: string;
     pickups: { name: string | null; relationship: string | null }[] | null;
+    absent_today: boolean;
+    temporary: { name: string | null; relationship: string | null }[] | null;
   }[]).map((s) => {
     const permanent: Pickup[] = (s.pickups ?? []).map((p) => ({
       name: p.name ?? "—",
       relationship: relLabel(p.relationship),
       kind: "permanent" as const,
     }));
-    const temporary = DEMO_TEMPORARY[s.student_name] ?? [];
+    const temporary: Pickup[] = (s.temporary ?? []).map((p) => ({
+      name: p.name ?? "—",
+      relationship: p.relationship ? relLabel(p.relationship) : "Autorizado/a hoy",
+      kind: "temporary" as const,
+    }));
     return {
       name: s.student_name,
       group: s.group_name,
-      absentToday: DEMO_ABSENT.has(s.student_name),
+      absentToday: s.absent_today,
       pickups: [...permanent, ...temporary],
     } satisfies SalidaStudent;
   });

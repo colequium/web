@@ -1,14 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { Icon } from "../icons";
+import { SubmitButton } from "../SubmitButton";
 import { useLocale } from "../locale-context";
 import {
   REQUEST_TYPES,
   DEMO_REQUESTS,
   type RequestStatus,
   type RequestItem,
+  type RequestType,
 } from "@/lib/domain";
+import type { MyChild } from "@/lib/requests";
+import { createRequest, type RequestState } from "@/app/(app)/requests/actions";
 import {
   ACCENT_ON,
   ACCENT_SOFT_BG,
@@ -32,9 +36,18 @@ const FILTERS = [
   { id: "resolved", key: "req.filter.resolved" },
 ] as const;
 
-export function RequestsView({ items, canCreate = true }: { items?: RequestItem[]; canCreate?: boolean }) {
+export function RequestsView({
+  items,
+  canCreate = true,
+  children = [],
+}: {
+  items?: RequestItem[];
+  canCreate?: boolean;
+  children?: MyChild[];
+}) {
   const { t } = useLocale();
   const [filter, setFilter] = useState<"all" | "pending" | "resolved">("all");
+  const [openType, setOpenType] = useState<RequestType | null>(null);
   const data = items ?? DEMO_REQUESTS;
 
   const requests = data.filter((r) => {
@@ -56,6 +69,7 @@ export function RequestsView({ items, canCreate = true }: { items?: RequestItem[
             <button
               key={rt.type}
               type="button"
+              onClick={() => setOpenType(rt.type)}
               className="group flex items-center gap-3 rounded-[1.5rem] border border-ink/5 bg-white p-4 text-left shadow-card transition-transform hover:-translate-y-0.5"
             >
               <span
@@ -137,6 +151,141 @@ export function RequestsView({ items, canCreate = true }: { items?: RequestItem[
           })}
         </ul>
       </section>
+
+      {openType ? (
+        <RequestForm type={openType} childrenList={children} onClose={() => setOpenType(null)} />
+      ) : null}
+    </div>
+  );
+}
+
+const REL_OPTIONS = ["Mamá", "Papá", "Abuelo/a", "Tío/a", "Tutor/a", "Otro"];
+
+function RequestForm({
+  type,
+  childrenList,
+  onClose,
+}: {
+  type: RequestType;
+  childrenList: MyChild[];
+  onClose: () => void;
+}) {
+  const { t } = useLocale();
+  const [state, action] = useActionState<RequestState, FormData>(createRequest, null);
+  const isExit = type === "exit";
+  const today = new Date().toISOString().slice(0, 10);
+
+  useEffect(() => {
+    if (state?.ok) onClose();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state]);
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-ink/40 p-0 sm:items-center sm:p-4">
+      <button type="button" className="absolute inset-0" aria-label="Cerrar" onClick={onClose} />
+      <form
+        action={action}
+        className="relative w-full max-w-md rounded-t-[1.75rem] border border-ink/10 bg-white p-5 shadow-pop sm:rounded-[1.75rem]"
+      >
+        <input type="hidden" name="type" value={type} />
+        <div className="mb-4 flex items-center gap-2">
+          <span className="grid h-9 w-9 place-items-center rounded-2xl bg-requests/10 text-requests">
+            <Icon name={isExit ? "DoorOpen" : "CalendarX"} className="h-5 w-5" />
+          </span>
+          <h3 className="font-display text-lg font-700 text-ink">
+            {isExit ? "Autorizar salida" : "Reportar inasistencia"}
+          </h3>
+        </div>
+
+        <label className="mb-1 block text-xs font-700 text-ink/55">Hijo/a</label>
+        <select
+          name="studentId"
+          required
+          defaultValue={childrenList.length === 1 ? childrenList[0].studentId : ""}
+          className="mb-3 w-full rounded-xl bg-mist px-3 py-2.5 text-sm font-600 text-ink outline-none focus:ring-2 focus:ring-brand/30"
+        >
+          <option value="" disabled>
+            Elige a tu hijo/a…
+          </option>
+          {childrenList.map((c) => (
+            <option key={c.studentId} value={c.studentId}>
+              {c.fullName}
+              {c.groupName ? ` (${c.groupName})` : ""}
+            </option>
+          ))}
+        </select>
+
+        <label className="mb-1 block text-xs font-700 text-ink/55">Fecha</label>
+        <input
+          name="date"
+          type="date"
+          required
+          defaultValue={today}
+          className="mb-3 w-full rounded-xl bg-mist px-3 py-2.5 text-sm font-600 text-ink outline-none focus:ring-2 focus:ring-brand/30"
+        />
+
+        {isExit ? (
+          <div className="mb-3 grid grid-cols-2 gap-2">
+            <div>
+              <label className="mb-1 block text-xs font-700 text-ink/55">Quién retira</label>
+              <input
+                name="pickupName"
+                required
+                placeholder="Nombre y apellido"
+                className="w-full rounded-xl bg-mist px-3 py-2.5 text-sm font-600 text-ink outline-none placeholder:text-ink/40 focus:ring-2 focus:ring-brand/30"
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-xs font-700 text-ink/55">Relación</label>
+              <select
+                name="relationship"
+                defaultValue=""
+                className="w-full rounded-xl bg-mist px-3 py-2.5 text-sm font-600 text-ink outline-none focus:ring-2 focus:ring-brand/30"
+              >
+                <option value="">—</option>
+                {REL_OPTIONS.map((r) => (
+                  <option key={r} value={r}>
+                    {r}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        ) : null}
+
+        <label className="mb-1 block text-xs font-700 text-ink/55">
+          Motivo {isExit ? "(opcional)" : "(opcional)"}
+        </label>
+        <textarea
+          name="reason"
+          rows={2}
+          placeholder={isExit ? "Ej. turno médico" : "Ej. consulta médica"}
+          className="mb-4 w-full resize-none rounded-xl bg-mist px-3 py-2.5 text-sm font-600 text-ink outline-none placeholder:text-ink/40 focus:ring-2 focus:ring-brand/30"
+        />
+
+        {state?.error ? (
+          <p role="alert" className="mb-3 text-xs font-700 text-rose">
+            {state.error}
+          </p>
+        ) : null}
+
+        <div className="flex items-center justify-end gap-2">
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-full px-4 py-2.5 text-sm font-700 text-ink/55 transition-colors hover:bg-mist hover:text-ink"
+          >
+            Cancelar
+          </button>
+          <SubmitButton
+            pendingLabel="Enviando…"
+            className="inline-flex items-center gap-1.5 rounded-full bg-cta px-4 py-2.5 text-sm font-700 text-white shadow-soft transition-colors hover:bg-cta-deep"
+          >
+            <Icon name="Send" className="h-4 w-4" />
+            Enviar solicitud
+          </SubmitButton>
+        </div>
+      </form>
     </div>
   );
 }
