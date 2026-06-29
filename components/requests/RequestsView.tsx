@@ -392,7 +392,8 @@ function RequestDetail({
   );
 }
 
-const REL_OPTIONS = ["Mamá", "Papá", "Abuelo/a", "Tío/a", "Tutor/a", "Otro"];
+// El valor enviado es la etiqueta traducida (lo que la familia eligió en su idioma).
+const REL_OPTION_KEYS = ["rel.mother", "rel.father", "rel.grandparent", "rel.uncle", "rel.guardian", "rel.other"];
 
 function RequestForm({
   type,
@@ -527,9 +528,9 @@ function RequestForm({
                 className="w-full rounded-xl bg-mist px-3 py-2.5 text-sm font-600 text-ink outline-none focus:ring-2 focus:ring-brand/30"
               >
                 <option value="">—</option>
-                {REL_OPTIONS.map((r) => (
-                  <option key={r} value={r}>
-                    {r}
+                {REL_OPTION_KEYS.map((k) => (
+                  <option key={k} value={t(k)}>
+                    {t(k)}
                   </option>
                 ))}
               </select>
