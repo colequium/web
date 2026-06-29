@@ -38,24 +38,20 @@ export function HomeView({
   events: eventsReal,
   unreadMessages: unreadMessagesReal,
   pendingRequests: pendingRequestsReal,
+  pendingTasks: pendingTasksReal,
 }: {
   unreadPosts?: number;
   events?: import("@/lib/domain").CalEvent[];
   unreadMessages?: number;
   pendingRequests?: number;
+  pendingTasks?: number;
 }) {
   const { t, locale } = useLocale();
   const me = useIdentity();
   const firstName = me?.firstName ?? DEMO_USER.name.split(" ")[0];
-  // Renombrado por rol de "Trámites" (Tareas / Pendientes).
+  // Renombrado por rol de "Trámites" (Tareas / Pendientes) en los accesos.
   const reqLabel = t(requestsNavKey(me?.roleKey ?? null));
   const qlabel = (q: { key: string }) => (q.key === "nav.requests" ? reqLabel : t(q.key));
-  const reqSummaryLabel =
-    me?.roleKey === "guardian"
-      ? "Pendientes"
-      : me?.isAdmin || me?.roleKey === "teacher"
-        ? "Tareas pendientes"
-        : t("home.summary.requests");
 
   const dateLabel = new Date(
     DEMO_TODAY.year,
@@ -68,15 +64,14 @@ export function HomeView({
   const eventsThisWeek = calEvents.filter(
     (e) => e.kind === "event" && e.day >= 8 && e.day <= 14,
   ).length;
-  const pendingRequests =
-    pendingRequestsReal ?? DEMO_REQUESTS.filter((r) => r.status === "submitted").length;
   const unreadMessages =
     unreadMessagesReal ?? DEMO_CONVERSATIONS.reduce((s, c) => s + c.unread, 0);
+  const pendingTasks = pendingTasksReal ?? 0;
 
   const summary = [
     { label: t("home.summary.unread"), value: unreadPosts, icon: "Megaphone", color: "news" as AccentColor, href: "/feed" },
     { label: t("home.summary.events"), value: eventsThisWeek, icon: "CalendarDays", color: "brand" as AccentColor, href: "/calendar" },
-    { label: reqSummaryLabel, value: pendingRequests, icon: "ClipboardList", color: "requests" as AccentColor, href: "/requests" },
+    { label: "Tareas pendientes", value: pendingTasks, icon: "ClipboardList", color: "requests" as AccentColor, href: "/feed" },
     { label: t("home.summary.messages"), value: unreadMessages, icon: "MessagesSquare", color: "sky" as AccentColor, href: "/messages" },
   ].filter((s) => !(me?.isStudent && STUDENT_HIDDEN.includes(s.href)));
 

@@ -126,7 +126,7 @@ export function MuroView({
 
         {/* Rail derecho (desktop) */}
         <aside className="hidden lg:block">
-          <div className="sticky top-24">
+          <div className="sticky top-24 max-h-[calc(100dvh-7rem)] overflow-y-auto overscroll-contain pb-4 [scrollbar-width:thin]">
             <RightRail events={railEvents} tasks={railTasks} />
           </div>
         </aside>

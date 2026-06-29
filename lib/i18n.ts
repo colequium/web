@@ -27,7 +27,7 @@ type Dict = Record<string, string>;
 const es: Dict = {
   // Navegación
   "nav.home": "Inicio",
-  "nav.wall": "Novedades",
+  "nav.wall": "Avisos",
   "nav.calendar": "Calendario",
   "nav.conversations": "Mensajes",
   "nav.requests": "Trámites",
@@ -39,7 +39,7 @@ const es: Dict = {
   "nav.transport": "Transporte",
   "nav.people": "Comunidad",
   // Novedades (ex-Muro)
-  "wall.title": "Novedades",
+  "wall.title": "Avisos",
   "wall.subtitle": "Avisos y novedades de la comunidad",
   "wall.composer": "Compartir un aviso con la comunidad…",
   "wall.filter.all": "Todos",
@@ -131,7 +131,7 @@ const esAR: Dict = {
 
 const ptBR: Dict = {
   "nav.home": "Início",
-  "nav.wall": "Novidades",
+  "nav.wall": "Avisos",
   "nav.calendar": "Calendário",
   "nav.conversations": "Mensagens",
   "nav.requests": "Solicitações",
@@ -142,7 +142,7 @@ const ptBR: Dict = {
   "nav.exits": "Saídas",
   "nav.transport": "Transporte",
   "nav.people": "Comunidade",
-  "wall.title": "Novidades",
+  "wall.title": "Avisos",
   "wall.subtitle": "Avisos e novidades da comunidade",
   "wall.composer": "Compartilhar um aviso com a comunidade…",
   "wall.filter.all": "Todos",
@@ -210,7 +210,7 @@ const ptBR: Dict = {
 
 const en: Dict = {
   "nav.home": "Home",
-  "nav.wall": "News",
+  "nav.wall": "Announcements",
   "nav.calendar": "Calendar",
   "nav.conversations": "Messages",
   "nav.requests": "Requests",
@@ -221,7 +221,7 @@ const en: Dict = {
   "nav.exits": "Pickups",
   "nav.transport": "Transport",
   "nav.people": "Community",
-  "wall.title": "News",
+  "wall.title": "Announcements",
   "wall.subtitle": "Community announcements & news",
   "wall.composer": "Share an announcement with the community…",
   "wall.filter.all": "All",
