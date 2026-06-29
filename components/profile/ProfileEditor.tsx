@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { Icon } from "@/components/icons";
 import { LOCALES } from "@/lib/i18n";
+import { useLocale } from "@/components/locale-context";
 import { updateProfile, setUiLocale, type ProfileState } from "@/app/(app)/profile/actions";
 
 export function ProfileEditor({
@@ -12,6 +13,7 @@ export function ProfileEditor({
   fullName: string;
   uiLocale: string | null;
 }) {
+  const { t } = useLocale();
   const [state, formAction, pending] = useActionState<ProfileState, FormData>(
     updateProfile,
     null,
@@ -21,9 +23,9 @@ export function ProfileEditor({
     <div className="flex flex-col gap-4">
       {/* Nombre */}
       <form action={formAction} className="rounded-[1.5rem] border border-ink/8 bg-white p-5 shadow-card">
-        <h2 className="mb-3 font-display text-base font-700 text-ink">Tus datos</h2>
+        <h2 className="mb-3 font-display text-base font-700 text-ink">{t("profile.data")}</h2>
         <label htmlFor="fullName" className="mb-1.5 block text-sm font-700 text-ink">
-          Nombre y apellido
+          {t("profile.fullName")}
         </label>
         <div className="flex flex-wrap items-center gap-2">
           <input
@@ -38,7 +40,7 @@ export function ProfileEditor({
             disabled={pending}
             className="rounded-xl bg-ink px-4 py-2.5 text-sm font-700 text-white transition-colors hover:bg-navy-deep disabled:opacity-60"
           >
-            {pending ? "Guardando…" : "Guardar"}
+            {pending ? t("profile.saving") : t("profile.save")}
           </button>
         </div>
         {state?.ok ? (
@@ -50,9 +52,9 @@ export function ProfileEditor({
 
       {/* Idioma preferido */}
       <form action={setUiLocale} className="rounded-[1.5rem] border border-ink/8 bg-white p-5 shadow-card">
-        <h2 className="mb-1 font-display text-base font-700 text-ink">Idioma</h2>
+        <h2 className="mb-1 font-display text-base font-700 text-ink">{t("profile.language")}</h2>
         <p className="mb-3 text-xs font-500 text-ink/50">
-          El idioma con el que abres Colequium. Lo puedes cambiar cuando quieras.
+          {t("profile.languageNote")}
         </p>
         <div className="flex flex-wrap items-center gap-2">
           <select
@@ -70,7 +72,7 @@ export function ProfileEditor({
             type="submit"
             className="inline-flex items-center gap-1.5 rounded-xl bg-ink px-4 py-2.5 text-sm font-700 text-white transition-colors hover:bg-navy-deep"
           >
-            <Icon name="Check" className="h-4 w-4" /> Guardar
+            <Icon name="Check" className="h-4 w-4" /> {t("profile.save")}
           </button>
         </div>
       </form>

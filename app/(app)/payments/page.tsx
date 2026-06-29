@@ -1,5 +1,6 @@
 import { Icon } from "@/components/icons";
 import { blockStudents } from "@/lib/identity";
+import { getServerT } from "@/lib/i18n-server";
 
 // Mock para la demo. En producción: cada mes se genera un cargo por alumno
 // (tabla `payment_charges`) y el tutor sube el comprobante (Storage) → el
@@ -20,14 +21,15 @@ const STATUS: Record<string, { label: string; cls: string }> = {
 
 export default async function PagosPage() {
   await blockStudents();
+  const t = await getServerT();
   const next = CHARGES.find((c) => c.status === "pending");
 
   return (
     <main className="mx-auto w-full max-w-3xl px-4 py-6 sm:px-6 lg:px-8">
       <div className="mb-5">
-        <h1 className="font-display text-2xl font-700 text-ink">Pagos</h1>
+        <h1 className="font-display text-2xl font-700 text-ink">{t("pay.title")}</h1>
         <p className="text-sm font-500 text-ink/55">
-          Comprobantes de cuota mensual · {STUDENT}
+          {t("pay.subtitle")} · {STUDENT}
         </p>
       </div>
 

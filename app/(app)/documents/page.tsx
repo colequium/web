@@ -1,19 +1,15 @@
 import { Icon } from "@/components/icons";
 import { getDocuments } from "@/lib/documents";
+import { getServerT } from "@/lib/i18n-server";
 
 export default async function DocumentosPage() {
-  const folders = await getDocuments();
-  const total = folders.reduce((n, f) => n + f.docs.length, 0);
+  const [folders, t] = await Promise.all([getDocuments(), getServerT()]);
 
   return (
     <main className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-6 lg:px-8">
       <div className="mb-5">
-        <h1 className="font-display text-2xl font-700 text-ink">Documentos</h1>
-        <p className="text-sm font-500 text-ink/55">
-          {total > 0
-            ? "Circulares, reglamentos y archivos del colegio."
-            : "Circulares, reglamentos y archivos del colegio."}
-        </p>
+        <h1 className="font-display text-2xl font-700 text-ink">{t("docs.title")}</h1>
+        <p className="text-sm font-500 text-ink/55">{t("docs.subtitle")}</p>
       </div>
 
       {folders.length === 0 ? (
@@ -21,9 +17,9 @@ export default async function DocumentosPage() {
           <span className="mx-auto mb-3 grid h-12 w-12 place-items-center rounded-2xl bg-mist text-ink/40">
             <Icon name="FolderClosed" className="h-6 w-6" />
           </span>
-          <p className="font-display text-base font-700 text-ink">Todavía no hay documentos</p>
+          <p className="font-display text-base font-700 text-ink">{t("docs.empty")}</p>
           <p className="mt-1 text-sm font-500 text-ink/55">
-            Cuando el colegio publique circulares o reglamentos, aparecen aquí.
+            {t("docs.subtitle")}
           </p>
         </div>
       ) : (

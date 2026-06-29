@@ -12,7 +12,7 @@ import { DEMO_SCHOOL } from "@/lib/domain";
 
 /** Topbar del shell interno (estilo Alliance): marca móvil + buscador + idioma + notif + perfil. */
 export function AppTopbar() {
-  const { locale, setLocale } = useLocale();
+  const { locale, setLocale, t } = useLocale();
   const me = useIdentity();
   const [open, setOpen] = useState(false);
   const current = LOCALES.find((l) => l.code === locale);
@@ -32,7 +32,7 @@ export function AppTopbar() {
         <Icon name="Search" className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-ink/35" />
         <input
           type="search"
-          placeholder="Buscar en la comunidad…"
+          placeholder={t("search.placeholder")}
           className="w-full rounded-full bg-[#f1f5fa] py-2.5 pl-11 pr-4 text-sm font-500 text-ink outline-none placeholder:text-ink/40 focus:ring-2 focus:ring-brand/30"
         />
       </div>

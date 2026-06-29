@@ -31,22 +31,15 @@ export function DayAgenda({
 
   return (
     <section className="rounded-[1.75rem] border border-ink/5 bg-white p-5 shadow-card">
-      <div className="mb-4 flex items-center justify-between gap-2">
-        <div className="min-w-0">
-          <h2 className="font-display text-base font-700 text-ink">
-            {t("cal.agenda")}
-          </h2>
-          <p className="truncate text-sm font-600 text-ink/55 first-letter:uppercase">
-            {dateLabel}
-          </p>
-        </div>
-        <button
-          type="button"
-          className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-cta text-white shadow-soft transition-colors hover:bg-cta-deep"
-          aria-label={t("cal.newEvent")}
-        >
-          <Icon name="Plus" className="h-5 w-5" />
-        </button>
+      <div className="mb-4 min-w-0">
+        {/* El botón de "crear recordatorio" se reintroducirá cuando exista la
+            funcionalidad (con selector de hijo). Por ahora no se muestra. */}
+        <h2 className="font-display text-base font-700 text-ink">
+          {t("cal.agenda")}
+        </h2>
+        <p className="truncate text-sm font-600 text-ink/55 first-letter:uppercase">
+          {dateLabel}
+        </p>
       </div>
 
       {events.length === 0 ? (

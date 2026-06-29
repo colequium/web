@@ -1,5 +1,6 @@
 import { Icon } from "@/components/icons";
 import { Avatar } from "@/components/Avatar";
+import { getServerT } from "@/lib/i18n-server";
 
 // Ubicación de demostración (sin tiempo real). En producción la posición llega
 // del GPS del chofer y el marcador se mueve. Acá usamos un mapa embebido sin
@@ -26,12 +27,13 @@ const ROUTE = {
   ],
 } as const;
 
-export default function TransportePage() {
+export default async function TransportePage() {
+  const t = await getServerT();
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
       <div className="mb-5 flex items-center justify-between gap-3">
         <div>
-          <h1 className="font-display text-2xl font-700 text-ink">Transporte</h1>
+          <h1 className="font-display text-2xl font-700 text-ink">{t("transport.title")}</h1>
           <p className="text-sm font-500 text-ink/55">{ROUTE.name}</p>
         </div>
         <span className="inline-flex items-center gap-2 rounded-full bg-leaf/15 px-3 py-1.5 text-xs font-700 text-leaf">
@@ -39,7 +41,7 @@ export default function TransportePage() {
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-leaf opacity-75" />
             <span className="relative inline-flex h-2 w-2 rounded-full bg-leaf" />
           </span>
-          En viaje
+          {t("transport.inTransit")}
         </span>
       </div>
 
@@ -75,7 +77,7 @@ export default function TransportePage() {
         <div className="flex flex-col gap-4">
           {/* Próxima parada */}
           <section className="rounded-[1.75rem] border border-ink/5 bg-gradient-to-br from-navy to-navy-deep p-5 text-white shadow-card">
-            <p className="text-xs font-600 uppercase tracking-wide text-white/60">Próxima parada</p>
+            <p className="text-xs font-600 uppercase tracking-wide text-white/60">{t("transport.nextStop")}</p>
             <p className="mt-1 font-display text-xl font-700">{ROUTE.nextStop}</p>
             <div className="mt-3 flex items-center gap-4 text-sm font-600">
               <span className="inline-flex items-center gap-1.5">

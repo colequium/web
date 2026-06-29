@@ -1,15 +1,16 @@
 import { Avatar } from "@/components/Avatar";
 import { Icon } from "@/components/icons";
 import { getIdentity } from "@/lib/identity";
+import { getServerT } from "@/lib/i18n-server";
 import { createClient } from "@/lib/supabase/server";
 import { logout } from "@/app/(auth)/login/actions";
 import { ProfileEditor } from "@/components/profile/ProfileEditor";
 
 export default async function PerfilPage() {
-  const me = await getIdentity();
+  const [me, t] = await Promise.all([getIdentity(), getServerT()]);
 
-  const name = me?.name ?? "Invitado";
-  const role = me?.roleLabel || "—";
+  const name = me?.name ?? t("profile.guest");
+  const role = me?.roleKey ? t(`role.${me.roleKey}`) : "—";
   const school = me?.schoolName ?? "—";
   const email = me?.email ?? "—";
 
@@ -38,8 +39,8 @@ export default async function PerfilPage() {
   return (
     <main className="mx-auto w-full max-w-3xl px-4 py-6 sm:px-6 lg:px-8">
       <div className="mb-5">
-        <h1 className="font-display text-2xl font-700 text-ink">Mi perfil</h1>
-        <p className="text-sm font-500 text-ink/55">Tus datos en {school}.</p>
+        <h1 className="font-display text-2xl font-700 text-ink">{t("profile.title")}</h1>
+        <p className="text-sm font-500 text-ink/55">{t("profile.subtitlePrefix")} {school}.</p>
       </div>
 
       <div className="flex flex-col gap-4">
@@ -58,8 +59,8 @@ export default async function PerfilPage() {
             </div>
           </div>
           <dl className="divide-y divide-ink/8">
-            <Row icon="ShieldCheck" label="Rol" value={role} />
-            <Row icon="Mail" label="Correo" value={email} />
+            <Row icon="ShieldCheck" label={t("profile.role")} value={role} />
+            <Row icon="Mail" label={t("profile.email")} value={email} />
           </dl>
         </section>
 
@@ -68,9 +69,9 @@ export default async function PerfilPage() {
 
         {/* Mis comunidades */}
         <section className="rounded-[1.5rem] border border-ink/8 bg-white p-5 shadow-card">
-          <h2 className="mb-1 font-display text-base font-700 text-ink">Mis comunidades</h2>
+          <h2 className="mb-1 font-display text-base font-700 text-ink">{t("profile.communities")}</h2>
           <p className="mb-3 text-xs font-500 text-ink/50">
-            Los colegios a los que perteneces.
+            {t("profile.communitiesNote")}
           </p>
           <div className="flex flex-col gap-2">
             {communities.map((c, i) => (
@@ -83,14 +84,14 @@ export default async function PerfilPage() {
                 </span>
                 <span className="flex-1 text-sm font-700 text-ink">{c.name}</span>
                 <span className="rounded-full bg-leaf/15 px-2.5 py-1 text-xs font-700 text-leaf">
-                  Activo
+                  {t("profile.active")}
                 </span>
               </div>
             ))}
           </div>
           {communities.length === 1 ? (
             <p className="mt-3 text-xs font-500 text-ink/40">
-              Cuando pertenezcas a más de un colegio, podrás cambiar entre ellos desde aquí.
+              {t("profile.multiSchoolNote")}
             </p>
           ) : null}
         </section>
@@ -102,7 +103,7 @@ export default async function PerfilPage() {
             className="inline-flex items-center gap-2 rounded-full border border-rose/30 px-4 py-2.5 text-sm font-700 text-rose transition-colors hover:bg-rose/10"
           >
             <Icon name="LogOut" className="h-4 w-4" />
-            Cerrar sesión
+            {t("account.logout")}
           </button>
         </form>
       </div>

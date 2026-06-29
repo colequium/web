@@ -88,7 +88,7 @@ export function RailSidebar({ unreadMessages = 0 }: { unreadMessages?: number })
         {me?.isAdmin ? (
           <Link
             href="/settings"
-            title="Configuración"
+            title={t("account.settings")}
             aria-current={pathname.startsWith("/settings") ? "page" : undefined}
             className={`${ROW} ${
               pathname.startsWith("/settings")
@@ -99,16 +99,16 @@ export function RailSidebar({ unreadMessages = 0 }: { unreadMessages?: number })
             <span className={ICONBOX}>
               <Icon name="ShieldCheck" className="h-[22px] w-[22px]" />
             </span>
-            <span className={LABEL}>Configuración</span>
+            <span className={LABEL}>{t("account.settings")}</span>
           </Link>
         ) : null}
 
         <form action={logout}>
-          <button type="submit" title="Cerrar sesión" className={`${ROW} w-full text-ink/45 hover:bg-rose/10 hover:text-rose`}>
+          <button type="submit" title={t("account.logout")} className={`${ROW} w-full text-ink/45 hover:bg-rose/10 hover:text-rose`}>
             <span className={ICONBOX}>
               <Icon name="LogOut" className="h-[22px] w-[22px]" />
             </span>
-            <span className={LABEL}>Cerrar sesión</span>
+            <span className={LABEL}>{t("account.logout")}</span>
           </button>
         </form>
 
