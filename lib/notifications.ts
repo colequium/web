@@ -37,7 +37,7 @@ export async function getNotifications(): Promise<NotificationsResult> {
       kind: "post",
       title: p.title || "Nuevo aviso",
       subtitle: `${p.author_name ?? "Colegio"} · ${p.audience_label ?? ""}`.trim(),
-      href: "/muro",
+      href: "/feed",
     }));
 
     // Próximos eventos del mes demo (junio 2026): día >= 19.
@@ -52,7 +52,7 @@ export async function getNotifications(): Promise<NotificationsResult> {
       kind: "event",
       title: e.title,
       subtitle: `${e.day} ${MONTHS[5]} · ${e.audience_label ?? ""}`.trim(),
-      href: "/calendario",
+      href: "/calendar",
     }));
 
     return { items: [...postItems, ...eventItems], unread: unreadPosts.length };

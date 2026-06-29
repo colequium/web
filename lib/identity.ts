@@ -105,12 +105,12 @@ export async function getIdentity(): Promise<Identity | null> {
 export async function requireAdmin(): Promise<Identity> {
   const me = await getIdentity();
   if (!me) redirect("/login");
-  if (!me.isAdmin) redirect("/inicio");
+  if (!me.isAdmin) redirect("/home");
   return me;
 }
 
 /** Bloquea a los alumnos de las secciones que no les corresponden. */
 export async function blockStudents() {
   const me = await getIdentity();
-  if (me?.isStudent) redirect("/inicio");
+  if (me?.isStudent) redirect("/home");
 }

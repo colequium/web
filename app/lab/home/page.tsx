@@ -194,7 +194,7 @@ export default function LabHome() {
           <Reveal className="relative order-2 lg:order-1">
             <div className="aspect-[6/5] w-full overflow-hidden rounded-[2.5rem] shadow-card">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/comunidad.webp" alt="Estudiantes de la comunidad escolar" className="h-full w-full object-cover" />
+              <img src="/community.webp" alt="Estudiantes de la comunidad escolar" className="h-full w-full object-cover" />
             </div>
             <div className="absolute -right-4 -top-4 rounded-2xl bg-cta px-5 py-4 text-white shadow-pop">
               <p className="text-2xl font-700">+30 años</p>

@@ -19,7 +19,7 @@ export async function login(_prev: LoginState, formData: FormData): Promise<Logi
   if (error) {
     return { error: "Correo o contraseña incorrectos." };
   }
-  redirect("/inicio");
+  redirect("/home");
 }
 
 export async function logout() {

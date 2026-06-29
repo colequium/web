@@ -67,10 +67,10 @@ export function AccountMenu() {
 
             <div className="my-1 border-t border-ink/5" />
 
-            <MenuLink href="/perfil" icon="Settings" label="Mi perfil" onClick={() => setOpen(false)} />
+            <MenuLink href="/profile" icon="Settings" label="Mi perfil" onClick={() => setOpen(false)} />
             {me?.isAdmin ? (
               <MenuLink
-                href="/configuracion"
+                href="/settings"
                 icon="ShieldCheck"
                 label="Configuración del colegio"
                 onClick={() => setOpen(false)}

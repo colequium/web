@@ -25,5 +25,5 @@ export async function setNewPassword(
   const { error } = await supabase.auth.updateUser({ password });
   if (error) return { error: "No pudimos guardar la contraseña. Inténtalo de nuevo." };
 
-  redirect("/inicio");
+  redirect("/home");
 }

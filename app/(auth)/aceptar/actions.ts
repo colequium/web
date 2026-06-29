@@ -28,5 +28,5 @@ export async function setPassword(
   // Materializa membresía + rol + vínculos de las invitaciones pendientes.
   await supabase.rpc("claim_invitations");
 
-  redirect("/inicio");
+  redirect("/home");
 }

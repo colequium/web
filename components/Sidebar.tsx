@@ -19,7 +19,7 @@ export function Sidebar() {
   return (
     <aside className="sticky top-4 hidden h-[calc(100dvh-2rem)] w-[260px] shrink-0 flex-col rounded-[2rem] bg-gradient-to-b from-navy to-navy-deep px-4 py-5 text-white shadow-card lg:flex">
       {/* Marca del colegio (NO la marca del producto, una vez logueado) */}
-      <Link href="/muro" className="mb-7 flex items-center gap-3 px-2">
+      <Link href="/feed" className="mb-7 flex items-center gap-3 px-2">
         <span className="grid h-11 w-11 place-items-center rounded-2xl bg-gradient-to-br from-brand to-brand-soft shadow-soft">
           <Icon name="Sparkles" className="h-5 w-5 text-white" />
         </span>

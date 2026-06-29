@@ -22,7 +22,7 @@ export function RailSidebar() {
 
   return (
     <aside className="sticky top-0 hidden h-dvh w-[84px] shrink-0 flex-col items-center border-r border-ink/8 bg-white py-5 lg:flex">
-      <Link href="/inicio" title="Inicio">
+      <Link href="/home" title="Inicio">
         <BrandIcon className="h-11 w-11" />
       </Link>
 
@@ -72,11 +72,11 @@ export function RailSidebar() {
 
       {me?.isAdmin ? (
         <Link
-          href="/configuracion"
+          href="/settings"
           title="Configuración"
-          aria-current={pathname.startsWith("/configuracion") ? "page" : undefined}
+          aria-current={pathname.startsWith("/settings") ? "page" : undefined}
           className={`group relative mt-3 grid h-12 w-12 place-items-center rounded-2xl transition-colors ${
-            pathname.startsWith("/configuracion")
+            pathname.startsWith("/settings")
               ? "bg-brand text-white shadow-soft"
               : "text-ink/40 hover:bg-mist hover:text-ink"
           }`}
@@ -101,7 +101,7 @@ export function RailSidebar() {
         </button>
       </form>
 
-      <Link href="/perfil" className="mt-1" title={userName}>
+      <Link href="/profile" className="mt-1" title={userName}>
         <Avatar name={userName} color="navy" size="lg" />
       </Link>
     </aside>

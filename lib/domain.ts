@@ -146,7 +146,7 @@ export const DEMO_USER: CurrentUser = {
 };
 
 /** Rutas que el rol alumno NO ve (vista acotada). */
-export const STUDENT_HIDDEN = ["/conversaciones", "/tramites", "/comunidad"];
+export const STUDENT_HIDDEN = ["/messages", "/requests", "/community"];
 
 /**
  * La sección "Trámites" se llama distinto según el rol para que quede claro:
@@ -166,16 +166,16 @@ export function requestsNavKey(roleKey: RoleKey | null): string {
 }
 
 export const NAV_ITEMS: NavItemDef[] = [
-  { key: "nav.home", href: "/inicio", icon: "LayoutGrid" },
-  { key: "nav.wall", href: "/muro", icon: "Megaphone", badge: 3 },
-  { key: "nav.calendar", href: "/calendario", icon: "CalendarDays" },
-  { key: "nav.conversations", href: "/conversaciones", icon: "MessagesSquare", badge: 5 },
-  { key: "nav.requests", href: "/tramites", icon: "ClipboardList" },
-  { key: "nav.payments", href: "/pagos", icon: "CreditCard" },
-  { key: "nav.exits", href: "/salidas", icon: "DoorOpen", staffOnly: true },
-  { key: "nav.documents", href: "/documentos", icon: "FolderClosed" },
-  { key: "nav.transport", href: "/transporte", icon: "Bus" },
-  { key: "nav.people", href: "/comunidad", icon: "Users" },
+  { key: "nav.home", href: "/home", icon: "LayoutGrid" },
+  { key: "nav.wall", href: "/feed", icon: "Megaphone" },
+  { key: "nav.calendar", href: "/calendar", icon: "CalendarDays" },
+  { key: "nav.conversations", href: "/messages", icon: "MessagesSquare" },
+  { key: "nav.requests", href: "/requests", icon: "ClipboardList" },
+  { key: "nav.payments", href: "/payments", icon: "CreditCard" },
+  { key: "nav.exits", href: "/pickups", icon: "DoorOpen", staffOnly: true },
+  { key: "nav.documents", href: "/documents", icon: "FolderClosed" },
+  { key: "nav.transport", href: "/transport", icon: "Bus" },
+  { key: "nav.people", href: "/community", icon: "Users" },
 ];
 
 export const DEMO_POSTS: Post[] = [
