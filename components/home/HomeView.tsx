@@ -156,11 +156,9 @@ export function HomeView({
           <ul className="flex flex-col gap-2.5">
             {upcomingEvents.map((e) => {
               const color = calendarColor(e.calendarId);
-              return (
-                <li
-                  key={e.id}
-                  className={`flex items-center gap-3 rounded-2xl border border-l-4 border-ink/5 bg-white p-3 ${ACCENT_BORDER_L[color]}`}
-                >
+              const cls = `flex items-center gap-3 rounded-2xl border border-l-4 border-ink/5 bg-white p-3 ${ACCENT_BORDER_L[color]}`;
+              const inner = (
+                <>
                   <span className="flex w-11 shrink-0 flex-col items-center leading-none">
                     <span className="font-display text-lg font-700 text-ink">{e.day}</span>
                     <span className="text-[10px] font-700 uppercase text-ink/45">
@@ -173,6 +171,20 @@ export function HomeView({
                       {e.allDay ? t("cal.allDay") : e.time} · {e.audienceLabel}
                     </span>
                   </span>
+                  {e.isPost ? (
+                    <Icon name="ChevronRight" className="h-4 w-4 shrink-0 text-ink/30" />
+                  ) : null}
+                </>
+              );
+              return (
+                <li key={e.id}>
+                  {e.isPost ? (
+                    <Link href={`/aviso/${e.id}`} className={`${cls} transition-colors hover:bg-mist`}>
+                      {inner}
+                    </Link>
+                  ) : (
+                    <div className={cls}>{inner}</div>
+                  )}
                 </li>
               );
             })}

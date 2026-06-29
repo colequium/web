@@ -1,10 +1,11 @@
 "use client";
 
+import Link from "next/link";
 import { Icon } from "../icons";
 import { useLocale } from "../locale-context";
 import { type CalEvent } from "@/lib/domain";
-import { ACCENT_BORDER_L, ACCENT_SOFT_BG, ACCENT_TEXT } from "../colors";
-import { calendarColor, calendarName } from "./utils";
+import { ACCENT_BORDER_L } from "../colors";
+import { calendarColor } from "./utils";
 
 export function DayAgenda({
   year,
@@ -101,37 +102,46 @@ export function DayAgenda({
                   </div>
                 )}
 
-                {/* Contenido */}
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-1.5">
-                    <p
-                      className={`text-sm font-700 ${
-                        isTask && done ? "text-ink/40 line-through" : "text-ink"
-                      }`}
-                    >
-                      {e.title}
-                    </p>
-                    {e.unread ? (
-                      <span className="h-2 w-2 shrink-0 rounded-full bg-cta" />
-                    ) : null}
-                  </div>
-                  <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
-                    <span
-                      className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-700 ${ACCENT_SOFT_BG[color]} ${ACCENT_TEXT[color]}`}
-                    >
-                      {calendarName(e.calendarId)}
-                    </span>
-                    <span className="inline-flex items-center gap-1 text-[11px] font-700 text-ink/45">
-                      <Icon name="Users" className="h-3 w-3" />
-                      {e.audienceLabel}
-                    </span>
-                    {isTask ? (
-                      <span className="text-[11px] font-700 uppercase text-ink/35">
-                        · {t("cal.task")}
-                      </span>
-                    ) : null}
-                  </div>
-                </div>
+                {/* Contenido (clickeable al detalle si es una novedad de Avisos) */}
+                {(() => {
+                  const inner = (
+                    <>
+                      <div className="flex items-center gap-1.5">
+                        <p
+                          className={`text-sm font-700 ${
+                            isTask && done ? "text-ink/40 line-through" : "text-ink"
+                          }`}
+                        >
+                          {e.title}
+                        </p>
+                        {e.unread ? (
+                          <span className="h-2 w-2 shrink-0 rounded-full bg-cta" />
+                        ) : null}
+                        {e.isPost ? (
+                          <Icon name="ChevronRight" className="ml-auto h-4 w-4 shrink-0 text-ink/30" />
+                        ) : null}
+                      </div>
+                      <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                        <span className="inline-flex items-center gap-1 text-[11px] font-700 text-ink/45">
+                          <Icon name="Users" className="h-3 w-3" />
+                          {e.audienceLabel}
+                        </span>
+                        {isTask ? (
+                          <span className="text-[11px] font-700 uppercase text-ink/35">
+                            · {t("cal.task")}
+                          </span>
+                        ) : null}
+                      </div>
+                    </>
+                  );
+                  return e.isPost ? (
+                    <Link href={`/aviso/${e.id}`} className="min-w-0 flex-1">
+                      {inner}
+                    </Link>
+                  ) : (
+                    <div className="min-w-0 flex-1">{inner}</div>
+                  );
+                })()}
               </li>
             );
           })}

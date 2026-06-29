@@ -14,6 +14,7 @@ interface CalRow {
   kind: string;
   group_id: string | null;
   done: boolean;
+  is_post: boolean;
 }
 
 /** Eventos + tareas del calendario visibles para el usuario (filtrados por rol). */
@@ -45,6 +46,7 @@ export async function getCalendar(): Promise<CalEvent[]> {
     kind: r.kind === "task" ? "task" : "event",
     groupId: r.group_id ?? undefined,
     done: r.done,
+    isPost: r.is_post,
   }));
 }
 

@@ -281,6 +281,7 @@ export interface CalEvent {
   unread?: boolean;
   groupId?: string; // salón al que apunta (para filtrar por curso); null = de toda la escuela
   done?: boolean; // tarea ya marcada como hecha por mí
+  isPost?: boolean; // es una novedad publicada en Avisos → tiene detalle clickeable
 }
 
 /** Un curso del usuario (hijo y su salón, o salón asignado del docente). */

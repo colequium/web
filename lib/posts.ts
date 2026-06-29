@@ -153,6 +153,12 @@ export async function getFeed(
   return posts;
 }
 
+/** Una sola novedad por id (con RLS), para la página de detalle /aviso/[id]. */
+export async function getPostById(id: string): Promise<Post | null> {
+  const posts = await getFeed(200, 0, null);
+  return posts.find((p) => p.id === id) ?? null;
+}
+
 /** Carga los adjuntos (firmando URLs temporales) y los pega a cada post. */
 async function attachFiles(posts: Post[]): Promise<void> {
   if (posts.length === 0) return;
