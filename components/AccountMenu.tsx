@@ -14,18 +14,15 @@ import {
   requestsNavKey,
 } from "@/lib/domain";
 
-/** Secciones que ya están en la barra inferior móvil (no las repetimos aquí). */
-const BOTTOM_NAV = ["nav.home", "nav.wall", "nav.calendar", "nav.conversations", "nav.requests"];
-
-/** Menú de cuenta (avatar arriba a la derecha): perfil, config, secciones extra y salir. */
+/** Menú de cuenta (avatar arriba a la derecha): perfil, config, el menú completo y salir. */
 export function AccountMenu() {
   const { t } = useLocale();
   const me = useIdentity();
   const [open, setOpen] = useState(false);
 
   const isStaff = !!me && (me.isAdmin || me.roleKey === "teacher");
-  // Las secciones que no entran en la barra inferior móvil.
-  const extra = NAV_ITEMS.filter((i) => !BOTTOM_NAV.includes(i.key))
+  // TODAS las secciones (no solo las que faltan en la barra móvil): el menú completo.
+  const sections = NAV_ITEMS
     .filter((i) => !(i.staffOnly && !isStaff))
     .filter((i) => !(me?.isStudent && STUDENT_HIDDEN.includes(i.href)));
 
@@ -77,13 +74,13 @@ export function AccountMenu() {
               />
             ) : null}
 
-            {extra.length > 0 ? (
+            {sections.length > 0 ? (
               <>
                 <div className="my-1 border-t border-ink/5" />
                 <p className="px-2.5 pb-1 pt-1.5 text-[11px] font-700 uppercase tracking-wide text-ink/35">
-                  Más secciones
+                  Secciones
                 </p>
-                {extra.map((i) => (
+                {sections.map((i) => (
                   <MenuLink
                     key={i.href}
                     href={i.href}
