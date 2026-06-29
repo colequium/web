@@ -226,9 +226,9 @@ export function PostCard({ post, index = 0 }: { post: Post; index?: number }) {
             {/* RSVP: confirmación de asistencia */}
             <div className="mt-1 flex w-full flex-wrap items-center gap-1.5 border-t border-brand/10 pt-2.5">
               {([
-                { v: "yes", l: "Voy", icon: "Check" },
-                { v: "maybe", l: "Tal vez", icon: "CircleCheck" },
-                { v: "no", l: "No voy", icon: "X" },
+                { v: "yes", l: t("post.rsvp.yes"), icon: "Check" },
+                { v: "maybe", l: t("post.rsvp.maybe"), icon: "CircleCheck" },
+                { v: "no", l: t("post.rsvp.no"), icon: "X" },
               ] as const).map((o) => (
                 <button
                   key={o.v}
@@ -248,7 +248,7 @@ export function PostCard({ post, index = 0 }: { post: Post; index?: number }) {
               ))}
               {yesCount > 0 ? (
                 <span className="ml-auto text-xs font-700 text-ink/45">
-                  {yesCount} {yesCount === 1 ? "confirmado" : "confirmados"}
+                  {yesCount} {yesCount === 1 ? t("post.rsvp.confirmedOne") : t("post.rsvp.confirmedMany")}
                 </span>
               ) : null}
             </div>
@@ -381,7 +381,7 @@ export function PostCard({ post, index = 0 }: { post: Post; index?: number }) {
 
           <span
             className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-700 text-ink/45"
-            title={`${post.views ?? 0} ${(post.views ?? 0) === 1 ? "persona vio" : "personas vieron"} esta novedad`}
+            title={`${post.views ?? 0} ${(post.views ?? 0) === 1 ? t("post.viewedOne") : t("post.viewedMany")}`}
           >
             <Icon name="Eye" className="h-[18px] w-[18px]" />
             {post.views ?? 0}
@@ -434,7 +434,7 @@ export function PostCard({ post, index = 0 }: { post: Post; index?: number }) {
                           onClick={() => setReplyTo((v) => (v === c.id ? null : c.id))}
                           className="mt-1 pl-3 text-[11px] font-700 text-brand transition-colors hover:text-ink"
                         >
-                          Responder
+                          {t("post.reply")}
                         </button>
                       </div>
                     </div>
@@ -467,13 +467,13 @@ export function PostCard({ post, index = 0 }: { post: Post; index?: number }) {
                           name="body"
                           required
                           autoFocus
-                          placeholder={`Responde a ${c.authorName}…`}
+                          placeholder={`${t("post.replyTo")} ${c.authorName}…`}
                           className="min-w-0 flex-1 rounded-full bg-mist px-4 py-2 text-sm font-500 text-ink outline-none placeholder:text-ink/40 focus:ring-2 focus:ring-brand/30"
                         />
                         <SubmitButton
                           spinnerOnly
                           className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-ink text-white transition-colors hover:bg-navy-deep"
-                          aria-label="Responder"
+                          aria-label={t("post.reply")}
                         >
                           <Icon name="Send" className="h-4 w-4" />
                         </SubmitButton>
@@ -490,7 +490,7 @@ export function PostCard({ post, index = 0 }: { post: Post; index?: number }) {
               <input
                 name="body"
                 required
-                placeholder="Escribe un comentario…"
+                placeholder={t("post.commentPh")}
                 className="min-w-0 flex-1 rounded-full bg-mist px-4 py-2 text-sm font-500 text-ink outline-none placeholder:text-ink/40 focus:ring-2 focus:ring-brand/30"
               />
               <SubmitButton

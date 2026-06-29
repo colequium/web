@@ -46,7 +46,7 @@ export function RightRail({
       {/* Momentos (galería de imágenes de la comunidad) */}
       <section className="rounded-[1.75rem] border border-ink/5 bg-white p-5 shadow-card">
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="font-display text-base font-700 text-ink">Momentos</h2>
+          <h2 className="font-display text-base font-700 text-ink">{t("rail.moments")}</h2>
         </div>
         <div className="grid grid-cols-2 gap-2.5">
           {momentos.map((m) => (

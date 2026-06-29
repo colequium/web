@@ -174,6 +174,17 @@ const es: Dict = {
   "post.task.complete.cta": "Marcar completada",
   "post.done": "Hecho",
   "post.before": "antes del",
+  "post.rsvp.yes": "Voy",
+  "post.rsvp.maybe": "Tal vez",
+  "post.rsvp.no": "No voy",
+  "post.rsvp.confirmedOne": "confirmado",
+  "post.rsvp.confirmedMany": "confirmados",
+  "post.viewedOne": "persona vio esta novedad",
+  "post.viewedMany": "personas vieron esta novedad",
+  "post.reply": "Responder",
+  "post.replyTo": "Responde a",
+  "post.commentPh": "Escribe un comentario…",
+  "rail.moments": "Momentos",
 };
 
 const esMX: Dict = {
@@ -331,6 +342,17 @@ const ptBR: Dict = {
   "post.task.complete.cta": "Marcar concluída",
   "post.done": "Feito",
   "post.before": "até",
+  "post.rsvp.yes": "Vou",
+  "post.rsvp.maybe": "Talvez",
+  "post.rsvp.no": "Não vou",
+  "post.rsvp.confirmedOne": "confirmado",
+  "post.rsvp.confirmedMany": "confirmados",
+  "post.viewedOne": "pessoa viu este aviso",
+  "post.viewedMany": "pessoas viram este aviso",
+  "post.reply": "Responder",
+  "post.replyTo": "Responder a",
+  "post.commentPh": "Escreva um comentário…",
+  "rail.moments": "Momentos",
 };
 
 const en: Dict = {
@@ -470,6 +492,17 @@ const en: Dict = {
   "post.task.complete.cta": "Mark complete",
   "post.done": "Done",
   "post.before": "by",
+  "post.rsvp.yes": "Going",
+  "post.rsvp.maybe": "Maybe",
+  "post.rsvp.no": "Not going",
+  "post.rsvp.confirmedOne": "going",
+  "post.rsvp.confirmedMany": "going",
+  "post.viewedOne": "person viewed this notice",
+  "post.viewedMany": "people viewed this notice",
+  "post.reply": "Reply",
+  "post.replyTo": "Reply to",
+  "post.commentPh": "Write a comment…",
+  "rail.moments": "Moments",
 };
 
 const DICTS: Record<Locale, Dict> = {
