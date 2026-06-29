@@ -38,13 +38,9 @@ export async function getDocuments(): Promise<DocFolder[]> {
     ]);
     if (!folders || !docs) return [];
 
-    // URLs firmadas (1 h) en batch.
-    const paths = docs.map((d) => d.file_url).filter(Boolean) as string[];
-    const signed = paths.length
-      ? (await supabase.storage.from("documents").createSignedUrls(paths, 60 * 60)).data ?? []
-      : [];
-    const urlByPath = new Map(signed.map((s) => [s.path, s.signedUrl]));
-
+    // Servimos el archivo a través de una ruta propia (/documents/file/[id]) en
+    // lugar de exponer la URL firmada de Supabase: así, al abrir un documento, la
+    // dirección dice Colequium y no el dominio de almacenamiento.
     return folders
       .map((f) => ({
         name: f.name as string,
@@ -54,7 +50,7 @@ export async function getDocuments(): Promise<DocFolder[]> {
             id: d.id as string,
             title: (d.title as string) ?? "Documento",
             dateLabel: dateLabel(d.created_at as string),
-            url: d.file_url ? urlByPath.get(d.file_url as string) ?? null : null,
+            url: d.file_url ? `/documents/file/${d.id as string}` : null,
           })),
       }))
       .filter((f) => f.docs.length > 0);
