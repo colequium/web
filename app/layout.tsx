@@ -21,7 +21,7 @@ const caveat = Caveat({
 });
 
 const DESCRIPTION =
-  "La comunidad escolar, conectada en un solo lugar. Avisos, calendario, mensajes y trámites entre el colegio, las familias y los docentes. Para LatAm y Brasil.";
+  "La comunidad escolar, conectada en un solo lugar. Avisos, calendario, mensajes y solicitudes entre el colegio, las familias y los docentes. Para LatAm y Brasil.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://colequium.com"),

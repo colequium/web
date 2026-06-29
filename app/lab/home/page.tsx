@@ -61,11 +61,11 @@ function PillCTA({ href, children, tone = "cta" }: { href: string; children: Rea
 }
 
 const FEATURES: { img?: string; icon?: string; title: string; text: string }[] = [
-  { img: "/features/1-inicio.webp", title: "Inicio", text: "Un resumen de todo: avisos sin leer, eventos de la semana y trámites pendientes, apenas entras." },
+  { img: "/features/1-inicio.webp", title: "Inicio", text: "Un resumen de todo: avisos sin leer, eventos de la semana y solicitudes pendientes, apenas entras." },
   { img: "/features/2-comunicados.webp", title: "Novedades", text: "Avisos del colegio con foto, me gusta y comentarios, segmentados por curso." },
   { img: "/features/3-calendario.webp", title: "Calendario", text: "Exámenes, eventos y salidas en un calendario claro y compartido." },
   { img: "/features/4-mensajes.webp", title: "Mensajes", text: "Conversaciones entre familias y docentes, siempre dentro de cada salón." },
-  { img: "/features/5-tramites.webp", title: "Trámites", text: "Inasistencias, autorizaciones y comprobantes, sin papeles." },
+  { img: "/features/5-tramites.webp", title: "Solicitudes", text: "Inasistencias, autorizaciones y comprobantes, sin papeles." },
   { img: "/features/6-documentos.webp", title: "Documentos", text: "Circulares, reglamentos y archivos del colegio, ordenados y a un clic." },
   { img: "/features/7-transporte.webp", title: "Transporte", text: "Sigue el transporte escolar en el mapa, con avisos de subida y bajada." },
   { img: "/features/8-traduccion.webp", title: "Traducción", text: "Cada familia lee los avisos en su idioma, con un solo toque." },
@@ -73,7 +73,7 @@ const FEATURES: { img?: string; icon?: string; title: string; text: string }[] =
 ];
 const PLANES = [
   { name: "Demo", price: "$0", per: "para probar", feats: ["Hasta 1 salón", "Novedades y calendario", "Soporte por correo"] },
-  { name: "Escuela", price: "$1", per: "por alumno / mes", feats: ["Salones ilimitados", "Mensajes y trámites", "Traducción automática", "Soporte prioritario"], best: true },
+  { name: "Escuela", price: "$1", per: "por alumno / mes", feats: ["Salones ilimitados", "Mensajes y solicitudes", "Traducción automática", "Soporte prioritario"], best: true },
   { name: "Institución", price: "A medida", per: "varios colegios", feats: ["Todo lo de Escuela", "Transporte en vivo", "Pagos y comprobantes", "Gestor dedicado"] },
 ];
 const POSTS = BLOG_POSTS;
@@ -119,7 +119,7 @@ export default function LabHome() {
               en un solo lugar
             </h1>
             <p className="mt-5 max-w-lg text-lg font-400 leading-relaxed text-white/70">
-              Novedades, calendario, mensajes y trámites entre el colegio, las
+              Novedades, calendario, mensajes y solicitudes entre el colegio, las
               familias y los docentes. Claro, ordenado y en el idioma de cada país.
             </p>
             <div className="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
@@ -210,7 +210,7 @@ export default function LabHome() {
               información importante siempre a mano.
             </p>
             <ul className="mt-7 flex flex-col gap-4">
-              {["Una sola app para avisos, calendario, mensajes y trámites", "Cada familia ve solo lo de sus hijos, con privacidad por diseño", "Lista para crecer a varios países e idiomas"].map((t) => (
+              {["Una sola app para avisos, calendario, mensajes y solicitudes", "Cada familia ve solo lo de sus hijos, con privacidad por diseño", "Lista para crecer a varios países e idiomas"].map((t) => (
                 <li key={t} className="flex items-start gap-3 font-500 text-ink/75">
                   <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-brand text-white"><Icon name="Check" className="h-3.5 w-3.5" /></span>{t}
                 </li>

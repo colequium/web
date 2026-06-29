@@ -28,7 +28,7 @@ const NAV = [
   { icon: "Megaphone", label: "Novedades" },
   { icon: "CalendarDays", label: "Calendario" },
   { icon: "MessagesSquare", label: "Mensajes" },
-  { icon: "ClipboardList", label: "Trámites" },
+  { icon: "ClipboardList", label: "Solicitudes" },
   { icon: "FolderClosed", label: "Documentos" },
   { icon: "Bus", label: "Transporte" },
   { icon: "Users", label: "Comunidad" },

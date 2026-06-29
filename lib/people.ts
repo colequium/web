@@ -11,6 +11,8 @@ export interface Person {
   context: string | null;
   /** Cursos asociados (para filtrar por salón): staff o familia. */
   groups: string[];
+  /** Materia del docente, si tiene ("Música" → "Docente de Música"). */
+  subject: string | null;
 }
 
 interface PersonRow {
@@ -20,13 +22,17 @@ interface PersonRow {
   role_kind: string | null;
   context: string | null;
   groups: string[] | null;
+  subject: string | null;
 }
 
 /** Subtítulo a mostrar bajo el nombre: de quién es (familia) o cargo + alcance. */
 export function personSubtitle(p: Person): string {
+  // Docente con materia → "Docente de Música".
+  const label =
+    p.roleKey === "teacher" && p.subject ? `${p.roleLabel} de ${p.subject}` : p.roleLabel;
   if (p.roleKey === "guardian" && p.context) return p.context;
-  if (p.context) return `${p.roleLabel} · ${p.context}`;
-  return p.roleLabel;
+  if (p.context) return `${label} · ${p.context}`;
+  return label;
 }
 
 /** Personas de la comunidad visibles para el usuario (según su rol). */
@@ -55,6 +61,7 @@ export async function getPeople(): Promise<Person[]> {
       roleLabel: key ? ROLE_LABELS[key] : "Miembro",
       context: r.context,
       groups: r.groups ?? [],
+      subject: r.subject ?? null,
     };
   });
 }

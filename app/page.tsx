@@ -5,5 +5,5 @@ export { default } from "./lab/home/page";
 export const metadata = {
   title: "Colequium — La comunidad escolar, conectada",
   description:
-    "Novedades, calendario, mensajes y trámites entre el colegio, las familias y los docentes.",
+    "Novedades, calendario, mensajes y solicitudes entre el colegio, las familias y los docentes.",
 };

@@ -24,7 +24,7 @@ export default function AuthLayout({
             La comunidad escolar, conectada en un solo lugar.
           </h2>
           <p className="mt-3 text-white/70">
-            Avisos, calendario, mensajes y trámites entre el colegio, las
+            Avisos, calendario, mensajes y solicitudes entre el colegio, las
             familias y los docentes. Claro, ordenado y en tu idioma.
           </p>
         </div>
