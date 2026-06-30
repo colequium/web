@@ -4,6 +4,12 @@
 /node_modules
 /.pnp
 .pnp.*
+
+# capacitor: proyectos nativos generados (regenerables con cap add) + credenciales push
+/ios
+/android
+google-services.json
+GoogleService-Info.plist
 .yarn/*
 !.yarn/patches
 !.yarn/plugins

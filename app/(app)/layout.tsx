@@ -1,5 +1,6 @@
 import { LocaleProvider } from "@/components/locale-context";
 import { IdentityProvider } from "@/components/identity-context";
+import { NativePush } from "@/components/NativePush";
 import { RailSidebar } from "@/components/shell/RailSidebar";
 import { AppTopbar } from "@/components/shell/AppTopbar";
 import { cookies } from "next/headers";
@@ -38,6 +39,7 @@ export default async function AppLayout({
   return (
     <LocaleProvider initial={initialLocale}>
       <IdentityProvider value={identity}>
+        <NativePush />
         <div className="flex min-h-dvh bg-[#f1f5fa]">
           <RailSidebar unreadMessages={unreadMessages} />
           <div className="flex min-w-0 flex-1 flex-col">
