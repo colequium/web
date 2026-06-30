@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { sendPushToUsers } from "@/lib/push/send";
 import { getPeople, personSubtitle } from "@/lib/people";
 import { ROLE_COLOR } from "@/lib/posts";
 import type { RoleKey } from "@/lib/domain";
@@ -59,6 +60,37 @@ export async function getRecipients(): Promise<RecipientGroup[]> {
   })).filter((g) => g.people.length > 0);
 }
 
+/** Push a los OTROS participantes de la conversación (categoría "mensaje"). */
+async function notifyNewMessage(supabase: Supa, conversationId: string, body: string) {
+  try {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return;
+    const { data: prof } = await supabase
+      .from("users")
+      .select("full_name")
+      .eq("id", user.id)
+      .maybeSingle();
+    const sender = (prof?.full_name as string) || "Nuevo mensaje";
+    const { data: recips } = await supabase.rpc("conversation_recipient_user_ids", {
+      p_conv: conversationId,
+    });
+    const ids = ((recips as unknown[]) ?? []).map((x) =>
+      typeof x === "string" ? x : (Object.values(x as object)[0] as string),
+    );
+    if (ids.length) {
+      await sendPushToUsers(
+        ids,
+        { title: sender, body: body.slice(0, 140), data: { url: "/messages" } },
+        "mensaje",
+      );
+    }
+  } catch (e) {
+    console.error("[push mensaje]", e);
+  }
+}
+
 export type StartState = { error?: string; conversationId?: string } | null;
 
 /** Inicia una conversación con un destinatario (vía RPC, valida comunidad). */
@@ -82,6 +114,7 @@ export async function startConversation(
   });
   if (error) return { error: "No se pudo iniciar la conversación." };
 
+  await notifyNewMessage(supabase, data as string, body);
   revalidatePath("/messages");
   return { conversationId: data as string };
 }
@@ -111,7 +144,11 @@ export async function sendMessage(conversationId: string, body: string) {
   const { error } = await supabase
     .from("messages")
     .insert({ conversation_id: conversationId, sender_membership_id: m.id, body: text });
-  if (error) console.error("[sendMessage] insert error:", error.message);
+  if (error) {
+    console.error("[sendMessage] insert error:", error.message);
+    return;
+  }
+  await notifyNewMessage(supabase, conversationId, text);
   revalidatePath("/messages");
 }
 

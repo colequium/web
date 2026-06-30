@@ -3,7 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { sendExpoPush } from "@/lib/push";
+import { sendPushToUsers } from "@/lib/push/send";
+import { categoryForPostType } from "@/lib/notifications/prefs";
 import { translateNotice, type Translated } from "@/lib/translate";
 import { getFeed, FEED_PAGE_SIZE } from "@/lib/posts";
 import { getActiveChildGroup } from "@/lib/child-filter";
@@ -291,15 +292,26 @@ export async function createPost(
     }
   }
 
-  // Push notifications: solo si se publica ahora. Si está programado, la
-  // notificación debería salir recién en su fecha (lo dejamos para el scheduler).
+  // Push notifications (FCM): solo si se publica ahora. Si está programado, la
+  // notificación debería salir recién en su fecha (queda para el scheduler).
   if (new Date(publishedAt).getTime() <= Date.now()) {
-    const { data: tokens } = await supabase.rpc("recipient_tokens", { p_post: post.id });
-    await sendExpoPush(
-      ((tokens as { token: string }[]) ?? []).map((t) => t.token),
-      title || "Nuevo aviso",
-      body.slice(0, 140),
-    );
+    try {
+      const { data: recips } = await supabase.rpc("post_recipient_user_ids", { p_post: post.id });
+      const ids = ((recips as unknown[]) ?? []).map((x) =>
+        typeof x === "string" ? x : (Object.values(x as object)[0] as string),
+      );
+      if (ids.length) {
+        const fallback =
+          dbType === "task" ? "Nueva tarea" : dbType === "event" ? "Nuevo evento" : "Nuevo aviso";
+        await sendPushToUsers(
+          ids,
+          { title: title || fallback, body: body.slice(0, 140), data: { url: `/aviso/${post.id}` } },
+          categoryForPostType(postType),
+        );
+      }
+    } catch (e) {
+      console.error("[push aviso]", e);
+    }
   }
 
   revalidatePath("/feed");
