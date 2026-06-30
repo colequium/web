@@ -1,11 +1,13 @@
 import { createClient } from "@/lib/supabase/server";
 import { rethrowNextControl } from "@/lib/supabase/safe";
+import { getActiveChildGroup } from "@/lib/child-filter";
 import type { RequestItem, RequestType, RequestStatus } from "@/lib/domain";
 
 interface RequestRow {
   id: string;
   type: string;
   student_name: string | null;
+  group_id: string | null;
   group_name: string | null;
   summary: string | null;
   status: string;
@@ -43,17 +45,22 @@ export async function getRequests(): Promise<RequestItem[]> {
     return [];
   }
 
-  return (data as RequestRow[]).map((r) => ({
+  const items: RequestItem[] = (data as RequestRow[]).map((r) => ({
     id: r.id,
     type: r.type as RequestType,
     studentName: r.student_name ?? "—",
     group: r.group_name ?? "",
+    groupId: r.group_id ?? undefined,
     summary: r.summary ?? "",
     createdAt: relative(r.created_at),
     status: r.status as RequestStatus,
     handledBy: r.handled_by ?? undefined,
     eventDate: r.event_date ?? undefined,
   }));
+
+  // Filtro global "Ver por hijo": si hay un salón activo, solo ese hijo.
+  const active = await getActiveChildGroup();
+  return active ? items.filter((i) => i.groupId === active) : items;
 }
 
 export interface RequestComment {

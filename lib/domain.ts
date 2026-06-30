@@ -454,6 +454,7 @@ export interface RequestItem {
   type: RequestType;
   studentName: string;
   group: string;
+  groupId?: string; // salón del alumno (para el filtro "Ver por hijo")
   summary: string;
   createdAt: string;
   status: RequestStatus;
