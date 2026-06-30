@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { SESSION_COOKIE_OPTIONS } from "./cookies";
 
 /** Rutas internas que requieren sesión. */
 const PROTECTED = [
@@ -26,6 +27,7 @@ export async function updateSession(request: NextRequest) {
   // sesión (la ruta protegida la cubre igual el server component al leer null).
   try {
     const supabase = createServerClient(url, key, {
+      cookieOptions: SESSION_COOKIE_OPTIONS,
       cookies: {
         getAll() {
           return request.cookies.getAll();
