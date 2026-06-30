@@ -1,24 +1,26 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Icon } from "./icons";
 
 /**
- * Ícono de marca: manzana blanca sobre un badge naranja. Reutilizable como
- * lockup junto al wordmark y como marca suelta (rail, topbar, app icon).
+ * Ícono de marca: la manzana de Colequium (mismo asset que el ícono de la app).
+ * Reutilizable como lockup junto al wordmark y como marca suelta (rail, topbar).
+ * `iconClassName` se mantiene por compatibilidad con llamadas previas (ignorado).
  */
 export function BrandIcon({
   className = "h-10 w-10",
-  iconClassName = "h-5 w-5",
 }: {
   className?: string;
   iconClassName?: string;
 }) {
   return (
-    <span
-      className={`grid shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-[#ffa424] to-[#f57c00] text-white shadow-soft ${className}`}
-    >
-      <Icon name="Apple" className={iconClassName} strokeWidth={2.6} />
-    </span>
+    <Image
+      src="/brand-mark.png"
+      alt=""
+      width={96}
+      height={96}
+      priority
+      className={`shrink-0 rounded-2xl shadow-soft ${className}`}
+    />
   );
 }
 
