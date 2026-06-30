@@ -104,7 +104,10 @@ export default function LoginPage() {
 
       <p className="mt-8 text-center text-sm font-500 text-ink/50">
         ¿Tu colegio todavía no usa Colequium?{" "}
-        <a href="#" className="font-700 text-brand hover:text-ink">
+        <a
+          href="mailto:hola@colequium.com?subject=Quiero%20Colequium%20en%20mi%20colegio"
+          className="font-700 text-brand hover:text-ink"
+        >
           Escríbenos
         </a>
       </p>
