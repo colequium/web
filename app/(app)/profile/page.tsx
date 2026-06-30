@@ -7,6 +7,7 @@ import { logout } from "@/app/(auth)/login/actions";
 import { ProfileEditor } from "@/components/profile/ProfileEditor";
 import { FamilyInvite, type FamilyChild } from "@/components/profile/FamilyInvite";
 import { NotificationPrefs } from "@/components/profile/NotificationPrefs";
+import { DeleteAccount } from "@/components/profile/DeleteAccount";
 import { NOTIF_CATEGORIES, isPushEnabled, type NotifCategory } from "@/lib/notifications/prefs";
 
 export default async function PerfilPage() {
@@ -96,6 +97,9 @@ export default async function PerfilPage() {
 
         {/* Mi familia: invitar a otro tutor (solo tutores) */}
         {isGuardian ? <FamilyInvite kids={children} /> : null}
+
+        {/* Zona de peligro: eliminar cuenta (requisito de las tiendas) */}
+        {me ? <DeleteAccount /> : null}
 
         {/* Mis comunidades */}
         <section className="rounded-[1.5rem] border border-ink/8 bg-white p-5 shadow-card">

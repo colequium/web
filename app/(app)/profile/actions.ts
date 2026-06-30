@@ -1,10 +1,50 @@
 "use server";
 
+import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { sendInvite } from "@/lib/invites";
 
 export type ProfileState = { ok?: boolean; error?: string } | null;
+
+export type DeleteState = { error?: string } | null;
+
+/** Palabras de confirmación aceptadas (una por idioma). */
+const DELETE_WORDS = ["ELIMINAR", "EXCLUIR", "DELETE"];
+
+/**
+ * Borra la cuenta del usuario actual (requisito de App Store / Play: el usuario
+ * debe poder eliminar su cuenta desde la app, sin soporte). Borrar el usuario de
+ * auth cascadea todo lo personal; el contenido institucional queda anonimizado
+ * (author → NULL). Acción irreversible: la UI pide triple confirmación.
+ */
+export async function deleteMyAccount(
+  _prev: DeleteState,
+  formData: FormData,
+): Promise<DeleteState> {
+  const confirm = String(formData.get("confirm") || "").trim().toUpperCase();
+  if (!DELETE_WORDS.includes(confirm)) {
+    return { error: "Escribe la palabra de confirmación para continuar." };
+  }
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "No pudimos identificar tu cuenta." };
+
+  const admin = createAdminClient();
+  if (!admin) return { error: "No se pudo procesar la eliminación. Intenta más tarde." };
+
+  const { error } = await admin.auth.admin.deleteUser(user.id);
+  if (error) {
+    console.error("[deleteMyAccount] error:", error.message);
+    return { error: "No se pudo eliminar la cuenta. Intenta de nuevo." };
+  }
+
+  await supabase.auth.signOut();
+  redirect("/login");
+}
 
 /** Edita el nombre completo del usuario. */
 export async function updateProfile(
