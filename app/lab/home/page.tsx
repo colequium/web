@@ -358,7 +358,19 @@ export default function LabHome() {
             <div key={col.h}>
               <h3 className="text-sm font-700 text-white">{col.h}</h3>
               <ul className="mt-4 flex flex-col gap-2.5 text-sm font-400 text-white/55">
-                {col.items.map((it) => <li key={it}><a href="#" className="transition-colors hover:text-white">{it}</a></li>)}
+                {col.items.map((it) => {
+                  const href =
+                    ({
+                      Privacidad: "/privacidad",
+                      Términos: "/terminos",
+                      Contacto: "mailto:hola@colequium.com",
+                    } as Record<string, string>)[it] ?? "#";
+                  return (
+                    <li key={it}>
+                      <a href={href} className="transition-colors hover:text-white">{it}</a>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           ))}
