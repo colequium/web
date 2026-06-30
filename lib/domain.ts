@@ -93,6 +93,7 @@ export interface Post {
   bookmarked: boolean;
   unread: boolean;
   pinned?: boolean;
+  canModerate?: boolean; // el usuario puede borrar este post (autor/admin/staff de su sección)
 }
 
 export interface NavItemDef {

@@ -108,7 +108,7 @@ export async function getFeed(
     return [];
   }
 
-  const posts = (data as FeedRow[]).map((r) => {
+  const posts: Post[] = (data as FeedRow[]).map((r) => {
     const target = (r.audience_target ?? "community") as AudienceTarget;
     const look = COVER[target] ?? COVER.community;
     return {
@@ -155,6 +155,24 @@ export async function getFeed(
   });
 
   await attachFiles(posts);
+
+  // Marcar qué posts puede moderar (borrar) el usuario actual.
+  try {
+    const ids = posts.map((p) => p.id);
+    if (ids.length) {
+      const supabase = await createClient();
+      const { data: mod } = await supabase.rpc("my_moderatable_posts", { p_ids: ids });
+      const set = new Set(
+        ((mod as unknown[]) ?? []).map((x) =>
+          typeof x === "string" ? x : (Object.values(x as object)[0] as string),
+        ),
+      );
+      for (const p of posts) p.canModerate = set.has(p.id);
+    }
+  } catch (e) {
+    rethrowNextControl(e);
+  }
+
   return posts;
 }
 

@@ -18,6 +18,7 @@ import {
   translatePost,
   toggleTask,
   setRsvp,
+  deletePost,
   type PostComment,
   type CommentState,
 } from "@/app/(app)/feed/actions";
@@ -66,6 +67,8 @@ export function PostCard({
   const [, startLike] = useTransition();
   const [saved, setSaved] = useState(post.bookmarked);
   const [, startSave] = useTransition();
+  const [removed, setRemoved] = useState(false);
+  const [, startDelete] = useTransition();
   const [expanded, setExpanded] = useState(false);
   // Imágenes del aviso (portada + adjuntos imagen) → miniatura a la derecha y
   // lightbox propio (sin abrir la URL de Supabase en otra pestaña).
@@ -151,6 +154,14 @@ export function PostCard({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cState]);
 
+  function onDelete() {
+    if (!window.confirm(t("post.delete.confirm"))) return;
+    setRemoved(true); // optimista: la tarjeta desaparece
+    startDelete(() => deletePost(post.id));
+  }
+
+  if (removed) return null;
+
   return (
     <article
       className={`animate-rise overflow-hidden rounded-[1.75rem] border shadow-card ${
@@ -179,6 +190,17 @@ export function PostCard({
             <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-cta/10 text-cta">
               <Icon name="Pin" className="h-4 w-4" />
             </span>
+          ) : null}
+          {post.canModerate ? (
+            <button
+              type="button"
+              onClick={onDelete}
+              title={t("post.delete")}
+              aria-label={t("post.delete")}
+              className="grid h-8 w-8 shrink-0 place-items-center rounded-full text-ink/35 transition-colors hover:bg-rose/10 hover:text-rose"
+            >
+              <Icon name="Trash2" className="h-4 w-4" />
+            </button>
           ) : null}
           {post.unread && !readDone ? (
             <button

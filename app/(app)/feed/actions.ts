@@ -320,6 +320,20 @@ export async function createPost(
   return { ok: true };
 }
 
+/**
+ * Borra una publicación (moderación). La RLS (can_moderate_post) decide: solo el
+ * autor, un admin del colegio o el staff de la sección del post pueden borrarlo;
+ * para el resto no afecta filas.
+ */
+export async function deletePost(postId: string) {
+  if (!postId) return;
+  const supabase = await createClient();
+  await supabase.from("posts").delete().eq("id", postId);
+  revalidatePath("/feed");
+  revalidatePath("/home");
+  revalidatePath("/calendar");
+}
+
 /** Guarda o quita un post de "Guardados". */
 export async function toggleBookmark(postId: string) {
   const supabase = await createClient();
