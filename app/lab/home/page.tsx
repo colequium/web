@@ -6,6 +6,7 @@ import { HeroMessages } from "@/components/landing/HeroMessages";
 import { MobileMenu } from "@/components/landing/MobileMenu";
 import { Wordmark } from "@/components/Wordmark";
 import { BLOG_POSTS } from "@/lib/blog";
+import { SHOW_PRICING } from "@/lib/site-flags";
 
 /* ── Marca (manzana naranja + wordmark cursivo) ── */
 function Brand({ dark = false }: { dark?: boolean }) {
@@ -87,7 +88,7 @@ export default function LabHome() {
           <Brand />
           <ul className="hidden items-center gap-8 text-sm font-600 text-ink/70 md:flex">
             <li><a href="#funciones" className="transition-colors hover:text-brand">Funciones</a></li>
-            <li><a href="#planes" className="transition-colors hover:text-brand">Planes</a></li>
+            {SHOW_PRICING ? <li><a href="#planes" className="transition-colors hover:text-brand">Planes</a></li> : null}
             <li><a href="#recursos" className="transition-colors hover:text-brand">Recursos</a></li>
             <li><a href="#contacto" className="transition-colors hover:text-brand">Contacto</a></li>
           </ul>
@@ -220,7 +221,8 @@ export default function LabHome() {
         </div>
       </section>
 
-      {/* ===== Planes ===== */}
+      {/* ===== Planes (oculto hasta definir pricing: SHOW_PRICING) ===== */}
+      {SHOW_PRICING ? (
       <section id="planes" className="bg-mist py-20 sm:py-28">
         <div className="mx-auto max-w-6xl px-5">
           <Reveal className="mx-auto max-w-2xl text-center">
@@ -257,6 +259,7 @@ export default function LabHome() {
           </div>
         </div>
       </section>
+      ) : null}
 
       {/* ===== Credibilidad (experiencia del equipo) ===== */}
       <section className="bg-white py-20 sm:py-28">
@@ -354,7 +357,7 @@ export default function LabHome() {
             </p>
           </div>
           {[
-            { h: "Producto", items: ["Funciones", "Planes", "Novedades", "Seguridad"] },
+            { h: "Producto", items: ["Funciones", "Planes", "Novedades", "Seguridad"].filter((x) => SHOW_PRICING || x !== "Planes") },
             { h: "Empresa", items: ["Sobre Colequium", "Recursos", "Contacto", "Trabaja con nosotros"] },
             { h: "Legal", items: ["Privacidad", "Términos", "Datos de menores"] },
           ].map((col) => (
