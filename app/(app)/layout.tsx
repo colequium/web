@@ -8,7 +8,7 @@ import { MobileNav } from "@/components/shell/MobileNav";
 import { ChildFilterBar } from "@/components/shell/ChildFilterBar";
 import { AllClearCelebration } from "@/components/shell/AllClearCelebration";
 import { getIdentity } from "@/lib/identity";
-import { getChildFilter, getActiveChildGroup } from "@/lib/child-filter";
+import { getChildFilter } from "@/lib/child-filter";
 import { getUnreadMessageCount } from "@/lib/conversations";
 import { getHomeCounts } from "@/lib/posts";
 import { LOCALES, LOCALE_COOKIE, type Locale } from "@/lib/i18n";
@@ -23,16 +23,16 @@ export default async function AppLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const activeChild = await getActiveChildGroup();
   const [identity, childFilter, cookieStore, unreadMessages, counts] = await Promise.all([
     getIdentity(),
     getChildFilter(),
     cookies(),
     getUnreadMessageCount(),
-    getHomeCounts(activeChild),
+    getHomeCounts(null), // SIN filtro por hijo: "al día como padre" (todos los hijos)
   ]);
-  // "Todo al día": avisos + tareas + mensajes en cero. Alimenta la celebración
-  // global (inbox-cero), que salta en la transición desde cualquier pantalla.
+  // "Todo al día": avisos + tareas + mensajes en cero, sobre TODA la familia (no el
+  // hijo filtrado). Alimenta la celebración global; así seleccionar un hijo no la
+  // dispara y solo salta cuando el padre queda realmente al día en todo.
   const allClear =
     counts.unreadPosts === 0 && counts.pendingTasks === 0 && unreadMessages === 0;
   const codes = LOCALES.map((l) => l.code) as string[];
