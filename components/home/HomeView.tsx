@@ -37,13 +37,11 @@ export function HomeView({
   unreadPosts: unreadPostsReal,
   events: eventsReal,
   unreadMessages: unreadMessagesReal,
-  pendingRequests: pendingRequestsReal,
   pendingTasks: pendingTasksReal,
 }: {
   unreadPosts?: number;
   events?: import("@/lib/domain").CalEvent[];
   unreadMessages?: number;
-  pendingRequests?: number;
   pendingTasks?: number;
 }) {
   const { t, locale } = useLocale();

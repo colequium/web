@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { rethrowNextControl } from "@/lib/supabase/safe";
 import type { CalEvent } from "@/lib/domain";
@@ -57,8 +58,9 @@ export async function getCalendar(): Promise<CalEvent[]> {
   });
 }
 
-/** Cursos del usuario (hijos+salón para familias; salones asignados para docentes). */
-export async function getMyCourses(): Promise<import("@/lib/domain").MyCourse[]> {
+/** Cursos del usuario (hijos+salón para familias; salones asignados para docentes).
+ *  cache(): lo usa el layout (getChildFilter) y varias páginas → una ida por request. */
+export const getMyCourses = cache(async (): Promise<import("@/lib/domain").MyCourse[]> => {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     return [];
   }
@@ -73,4 +75,4 @@ export async function getMyCourses(): Promise<import("@/lib/domain").MyCourse[]>
     rethrowNextControl(e);
     return [];
   }
-}
+});

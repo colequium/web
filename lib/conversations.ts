@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { rethrowNextControl } from "@/lib/supabase/safe";
 import { ROLE_COLOR } from "@/lib/posts";
@@ -71,8 +72,9 @@ export async function getConversations(): Promise<Conversation[]> {
   });
 }
 
-/** Total de mensajes sin leer (para el puntito en la navegación de Mensajes). */
-export async function getUnreadMessageCount(): Promise<number> {
+/** Total de mensajes sin leer (para el puntito en la navegación de Mensajes).
+ *  cache(): se usa en el layout y en el Inicio → una sola ida por request. */
+export const getUnreadMessageCount = cache(async (): Promise<number> => {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     return 0;
   }
@@ -85,4 +87,4 @@ export async function getUnreadMessageCount(): Promise<number> {
     rethrowNextControl(e);
     return 0;
   }
-}
+});

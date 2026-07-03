@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { rethrowNextControl } from "@/lib/supabase/safe";
@@ -15,6 +16,7 @@ export interface Identity {
   roleLabel: string;
   schoolName: string;
   schoolShort: string;
+  communityId: string | null;
   isAdmin: boolean;
   isStudent: boolean;
   uiLocale: string | null;
@@ -26,7 +28,10 @@ function one<T>(rel: T | T[] | null | undefined): T | undefined {
 }
 
 /** Resuelve la identidad del usuario actual. `null` si no hay sesión. */
-export async function getIdentity(): Promise<Identity | null> {
+// cache(): dedup por request. getIdentity se llama en el layout y otra vez en
+// varias páginas; sin esto se re-ejecutaban sus consultas en cada lugar. Así se
+// resuelve una sola vez por navegación.
+export const getIdentity = cache(async (): Promise<Identity | null> => {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     return null; // sin env → modo demo (fallback al mock)
   }
@@ -37,25 +42,24 @@ export async function getIdentity(): Promise<Identity | null> {
   } = await supabase.auth.getUser();
   if (!user) return null;
 
-  const { data: profile } = await supabase
-    .from("users")
-    .select("full_name, email, ui_locale")
-    .eq("id", user.id)
-    .maybeSingle();
-
-  let { data: membership } = await supabase
-    .from("memberships")
-    .select("id, communities(name, short_name)")
-    .eq("user_id", user.id)
-    .limit(1)
-    .maybeSingle();
+  // Perfil y membresía no dependen entre sí → en paralelo (una ida menos).
+  const [{ data: profile }, membershipRes] = await Promise.all([
+    supabase.from("users").select("full_name, email, ui_locale").eq("id", user.id).maybeSingle(),
+    supabase
+      .from("memberships")
+      .select("id, community_id, communities(name, short_name)")
+      .eq("user_id", user.id)
+      .limit(1)
+      .maybeSingle(),
+  ]);
+  let membership = membershipRes.data;
 
   // Sin comunidad pero con sesión: puede haber invitaciones pendientes sin reclamar.
   if (!membership) {
     await supabase.rpc("claim_invitations");
     const reload = await supabase
       .from("memberships")
-      .select("id, communities(name, short_name)")
+      .select("id, community_id, communities(name, short_name)")
       .eq("user_id", user.id)
       .limit(1)
       .maybeSingle();
@@ -90,6 +94,7 @@ export async function getIdentity(): Promise<Identity | null> {
     roleLabel: roleKey ? ROLE_LABELS[roleKey] : "",
     schoolName: community?.name ?? "Colegio",
     schoolShort: community?.short_name ?? "Colegio",
+    communityId: (membership?.community_id as string | undefined) ?? null,
     isAdmin: !!roleKey && ADMIN_ROLES.includes(roleKey),
     isStudent: roleKey === "student",
     uiLocale: (profile?.ui_locale as string) ?? null,
@@ -99,7 +104,7 @@ export async function getIdentity(): Promise<Identity | null> {
     console.error("[getIdentity] error, devuelvo null (modo demo):", e);
     return null;
   }
-}
+});
 
 /** Exige rol de administrador del colegio; si no, redirige. Para layouts/páginas server. */
 export async function requireAdmin(): Promise<Identity> {
