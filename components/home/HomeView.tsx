@@ -22,6 +22,7 @@ import {
   requestsNavKey,
 } from "@/lib/domain";
 import { calendarColor } from "../calendar/utils";
+import { HomeCelebration } from "./HomeCelebration";
 
 // Un color e ícono FIJOS por sección (mismos en todos lados; el ícono identifica).
 const QUICK = [
@@ -75,11 +76,15 @@ export function HomeView({
   const pendingTasks = pendingTasksReal ?? 0;
 
   const summary = [
-    { label: t("home.summary.unread"), value: unreadPosts, icon: "Megaphone", color: "news" as AccentColor, href: "/feed" },
-    { label: t("home.summary.events"), value: eventsThisWeek, icon: "CalendarDays", color: "brand" as AccentColor, href: "/calendar" },
-    { label: t("home.summary.tasks"), value: pendingTasks, icon: "CircleCheck" as const, color: "requests" as AccentColor, href: "/tasks" },
-    { label: t("home.summary.messages"), value: unreadMessages, icon: "MessagesSquare", color: "sky" as AccentColor, href: "/messages" },
+    { label: t("home.summary.unread"), doneLabel: t("home.done.unread"), value: unreadPosts, completable: true, icon: "Megaphone", color: "news" as AccentColor, href: "/feed" },
+    { label: t("home.summary.events"), doneLabel: "", value: eventsThisWeek, completable: false, icon: "CalendarDays", color: "brand" as AccentColor, href: "/calendar" },
+    { label: t("home.summary.tasks"), doneLabel: t("home.done.tasks"), value: pendingTasks, completable: true, icon: "CircleCheck" as const, color: "requests" as AccentColor, href: "/tasks" },
+    { label: t("home.summary.messages"), doneLabel: t("home.done.messages"), value: unreadMessages, completable: true, icon: "MessagesSquare", color: "sky" as AccentColor, href: "/messages" },
   ].filter((s) => !(me?.isStudent && STUDENT_HIDDEN.includes(s.href)));
+
+  // "Todo al día": las 3 tarjetas completables (avisos, tareas, mensajes) en 0.
+  const allClear = summary.every((s) => !s.completable || s.value === 0)
+    && summary.some((s) => s.completable);
 
   // Próximos eventos: de hoy en adelante (por fecha real), ordenados, hasta 5.
   const upcomingEvents = calEvents
@@ -104,6 +109,7 @@ export function HomeView({
 
   return (
     <div className="flex flex-col gap-6">
+      <HomeCelebration allClear={allClear} />
       {/* Banner de saludo */}
       <section className="relative overflow-hidden rounded-[1.75rem] bg-gradient-to-br from-navy to-navy-deep p-6 text-white shadow-card sm:p-7">
         <div className="absolute inset-0 opacity-[0.10] [background:radial-gradient(circle_at_1px_1px,white_1px,transparent_0)] [background-size:20px_20px]" />
@@ -116,34 +122,49 @@ export function HomeView({
             {t("home.greeting")}, {firstName} 👋
           </h2>
           <p className="mt-1 max-w-md text-sm font-600 text-white/70">
-            {t("home.subtitle")}
+            {allClear ? t("home.allClear") : t("home.subtitle")}
           </p>
         </div>
       </section>
 
       {/* Tarjetas resumen */}
       <section className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        {summary.map((s) => (
+        {summary.map((s) => {
+          const done = s.completable && s.value === 0;
+          return (
           <Link
             key={s.label}
             href={s.href}
-            className="flex items-center gap-3 rounded-[1.5rem] border border-ink/5 bg-white p-4 shadow-card transition-transform hover:-translate-y-0.5"
+            className={`flex items-center gap-3 rounded-[1.5rem] border p-4 shadow-card transition-transform hover:-translate-y-0.5 ${
+              done ? "border-leaf/30 bg-leaf/5" : "border-ink/5 bg-white"
+            }`}
           >
             <span
-              className={`grid h-11 w-11 shrink-0 place-items-center rounded-2xl ${ACCENT_SOFT_BG[s.color]} ${ACCENT_TEXT[s.color]}`}
+              className={`grid h-11 w-11 shrink-0 place-items-center rounded-2xl ${
+                done ? "bg-leaf/15 text-leaf" : `${ACCENT_SOFT_BG[s.color]} ${ACCENT_TEXT[s.color]}`
+              }`}
             >
-              <Icon name={s.icon} className="h-5 w-5" />
+              <Icon name={done ? "CircleCheck" : s.icon} className="h-5 w-5" />
             </span>
             <span className="min-w-0">
-              <span className="block font-display text-2xl font-700 leading-none text-ink">
-                {s.value}
-              </span>
-              <span className="mt-1 block text-xs font-700 text-ink/55">
-                {s.label}
-              </span>
+              {done ? (
+                <span className="block font-display text-base font-700 leading-tight text-leaf">
+                  {s.doneLabel}
+                </span>
+              ) : (
+                <>
+                  <span className="block font-display text-2xl font-700 leading-none text-ink">
+                    {s.value}
+                  </span>
+                  <span className="mt-1 block text-xs font-700 text-ink/55">
+                    {s.label}
+                  </span>
+                </>
+              )}
             </span>
           </Link>
-        ))}
+          );
+        })}
       </section>
 
       {/* Próximos eventos */}
