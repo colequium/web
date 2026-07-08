@@ -9,7 +9,7 @@ import { SHOW_PRICING } from "@/lib/site-flags";
 // Anclas absolutas (/#...) para que funcionen también fuera de la landing.
 const ITEMS = [
   { href: "/por-que-colequium", label: "¿Por qué?" },
-  { href: "/#funciones", label: "Funciones" },
+  { href: "/ventajas", label: "Ventajas" },
   { href: "/#planes", label: "Planes" },
   { href: "/#recursos", label: "Recursos" },
   { href: "/#contacto", label: "Contacto" },

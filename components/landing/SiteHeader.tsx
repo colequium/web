@@ -18,7 +18,11 @@ export function SiteHeader() {
               ¿Por qué?
             </Link>
           </li>
-          <li><a href="/#funciones" className="transition-colors hover:text-brand">Funciones</a></li>
+          <li>
+            <Link href="/ventajas" className="transition-colors hover:text-brand">
+              Ventajas
+            </Link>
+          </li>
           {SHOW_PRICING ? <li><a href="/#planes" className="transition-colors hover:text-brand">Planes</a></li> : null}
           <li><a href="/#recursos" className="transition-colors hover:text-brand">Recursos</a></li>
           <li><a href="/#contacto" className="transition-colors hover:text-brand">Contacto</a></li>

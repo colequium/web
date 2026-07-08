@@ -7,6 +7,7 @@ import { SiteHeader } from "@/components/landing/SiteHeader";
 import { SiteFooter } from "@/components/landing/SiteFooter";
 import { PillCTA } from "@/components/landing/PillCTA";
 import { BLOG_POSTS } from "@/lib/blog";
+import { FEATURES } from "@/lib/features";
 import { SHOW_PRICING } from "@/lib/site-flags";
 
 /* ── Placeholder de imagen 100% local (gradiente + patrón + icono). ── */
@@ -39,17 +40,6 @@ function Ph({
   );
 }
 
-const FEATURES: { img?: string; icon?: string; title: string; text: string }[] = [
-  { img: "/features/1-inicio.webp", title: "Inicio", text: "Un resumen de todo: avisos sin leer, eventos de la semana y solicitudes pendientes, apenas entras." },
-  { img: "/features/2-comunicados.webp", title: "Novedades", text: "Avisos del colegio con foto, me gusta y comentarios, segmentados por curso." },
-  { img: "/features/3-calendario.webp", title: "Calendario", text: "Exámenes, eventos y salidas en un calendario claro y compartido." },
-  { img: "/features/4-mensajes.webp", title: "Mensajes", text: "Conversaciones entre familias y docentes, siempre dentro de cada salón." },
-  { img: "/features/5-tramites.webp", title: "Solicitudes", text: "Inasistencias, autorizaciones y comprobantes, sin papeles." },
-  { img: "/features/6-documentos.webp", title: "Documentos", text: "Circulares, reglamentos y archivos del colegio, ordenados y a un clic." },
-  { img: "/features/7-transporte.webp", title: "Transporte", text: "Sigue el transporte escolar en el mapa, con avisos de subida y bajada." },
-  { img: "/features/8-traduccion.webp", title: "Traducción", text: "Cada familia lee los avisos en su idioma, con un solo toque." },
-  { img: "/features/9-pagos.webp", title: "Pagos", text: "El comprobante de la cuota de cada mes, y las familias suben su pago." },
-];
 const PLANES = [
   { name: "Demo", price: "$0", per: "para probar", feats: ["Hasta 1 salón", "Novedades y calendario", "Soporte por correo"] },
   { name: "Escuela", price: "$1", per: "por alumno / mes", feats: ["Salones ilimitados", "Mensajes y solicitudes", "Traducción automática", "Soporte prioritario"], best: true },
@@ -89,7 +79,7 @@ export default function LabHome() {
               <PillCTA href="#contacto">Empieza hoy</PillCTA>
               <a href="#funciones" className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-700 text-white/90 transition-colors hover:text-white">
                 <span className="grid h-9 w-9 place-items-center rounded-full bg-white/10"><Icon name="ChevronRight" className="h-4 w-4" /></span>
-                Ver funciones
+                Ver ventajas
               </a>
             </div>
             <div className="mt-9 flex items-center gap-3">
@@ -115,13 +105,17 @@ export default function LabHome() {
         </div>
       </section>
 
-      {/* ===== Funciones (6) ===== */}
+      {/* ===== Ventajas (9 módulos) ===== */}
       <section id="funciones" className="bg-white py-20 sm:py-28">
         <div className="mx-auto max-w-6xl px-5">
           <Reveal className="mx-auto max-w-2xl text-center">
-            <span className="rounded-full bg-brand/10 px-4 py-1.5 text-sm font-700 text-brand">Funciones</span>
+            <span className="rounded-full bg-brand/10 px-4 py-1.5 text-sm font-700 text-brand">Ventajas</span>
             <h2 className="mt-4 text-3xl font-700 tracking-tight text-ink sm:text-4xl">Todo lo del colegio, en una sola app</h2>
-            <p className="mt-3 font-400 text-ink/60">Seis módulos que reemplazan los grupos de chat, los papeles y los mails perdidos.</p>
+            <p className="mt-3 font-400 text-ink/60">Nueve módulos que reemplazan los grupos de chat, los papeles y los mails perdidos.</p>
+            <Link href="/ventajas" className="mt-5 inline-flex items-center gap-1.5 rounded-full border border-ink/15 bg-white px-4 py-2 text-sm font-700 text-ink transition-colors hover:border-brand/40 hover:text-brand">
+              Ver ventajas por audiencia
+              <Icon name="ArrowRight" className="h-4 w-4" />
+            </Link>
           </Reveal>
           <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {FEATURES.map((f, i) => (

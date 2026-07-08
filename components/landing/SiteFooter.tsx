@@ -4,7 +4,7 @@ import { SHOW_PRICING } from "@/lib/site-flags";
 
 const HREFS: Record<string, string> = {
   "¿Por qué Colequium": "/por-que-colequium",
-  Funciones: "/#funciones",
+  Ventajas: "/ventajas",
   Planes: "/#planes",
   Recursos: "/#recursos",
   Novedades: "/blog",
@@ -18,7 +18,7 @@ export function SiteFooter() {
   const cols = [
     {
       h: "Producto",
-      items: ["¿Por qué Colequium", "Funciones", "Planes", "Novedades"].filter(
+      items: ["¿Por qué Colequium", "Ventajas", "Planes", "Novedades"].filter(
         (x) => SHOW_PRICING || x !== "Planes",
       ),
     },
