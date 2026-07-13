@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/identity";
 import { ROLE_LABELS, type RoleKey } from "@/lib/domain";
+import { getStructure } from "@/lib/structure";
 import { InviteForm } from "@/components/settings/InviteForm";
 import { revokeInvitation, resendInvitation } from "./actions";
 import { Icon } from "@/components/icons";
@@ -14,18 +15,24 @@ export default async function PersonasPage() {
   await requireAdmin();
   const supabase = await createClient();
 
-  const [{ data: invites }, { data: groups }, { data: students }] = await Promise.all([
+  const [{ data: invites }, { data: students }, structure] = await Promise.all([
     supabase
       .from("invitations")
       .select("id, email, full_name, role_key, status, created_at")
       .eq("status", "pending")
       .order("created_at", { ascending: false }),
-    supabase.from("groups").select("id, name").order("name"),
     supabase.from("students").select("id, full_name").order("full_name"),
+    getStructure(),
   ]);
 
   const roleOptions = INVITABLE.map((r) => ({ value: r, label: ROLE_LABELS[r] }));
-  const groupOptions = (groups ?? []).map((g) => ({ value: g.id as string, label: g.name as string }));
+  // Etiqueta con la sección adelante para no confundir "1°" de Primaria con el de
+  // Secundaria: "Primaria - 1°". Ya viene ordenado por sección y número.
+  const groupOptions = structure.levels.flatMap((lv) =>
+    lv.grades.flatMap((g) =>
+      g.groups.map((gr) => ({ value: gr.id, label: `${lv.name} - ${gr.name}` })),
+    ),
+  );
   const studentOptions = (students ?? []).map((s) => ({
     value: s.id as string,
     label: s.full_name as string,
