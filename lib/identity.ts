@@ -17,6 +17,8 @@ export interface Identity {
   schoolName: string;
   schoolShort: string;
   communityId: string | null;
+  /** "Cargo a mostrar" (ej. "Coordinador de Inglés"); si está, prevalece sobre el rol. */
+  title: string | null;
   isAdmin: boolean;
   isStudent: boolean;
   uiLocale: string | null;
@@ -47,7 +49,7 @@ export const getIdentity = cache(async (): Promise<Identity | null> => {
     supabase.from("users").select("full_name, email, ui_locale").eq("id", user.id).maybeSingle(),
     supabase
       .from("memberships")
-      .select("id, community_id, communities(name, short_name)")
+      .select("id, community_id, title, communities(name, short_name)")
       .eq("user_id", user.id)
       .limit(1)
       .maybeSingle(),
@@ -59,7 +61,7 @@ export const getIdentity = cache(async (): Promise<Identity | null> => {
     await supabase.rpc("claim_invitations");
     const reload = await supabase
       .from("memberships")
-      .select("id, community_id, communities(name, short_name)")
+      .select("id, community_id, title, communities(name, short_name)")
       .eq("user_id", user.id)
       .limit(1)
       .maybeSingle();
@@ -95,6 +97,7 @@ export const getIdentity = cache(async (): Promise<Identity | null> => {
     schoolName: community?.name ?? "Colegio",
     schoolShort: community?.short_name ?? "Colegio",
     communityId: (membership?.community_id as string | undefined) ?? null,
+    title: (membership?.title as string | undefined) ?? null,
     isAdmin: !!roleKey && ADMIN_ROLES.includes(roleKey),
     isStudent: roleKey === "student",
     uiLocale: (profile?.ui_locale as string) ?? null,

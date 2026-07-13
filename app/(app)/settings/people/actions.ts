@@ -6,11 +6,6 @@ import { sendInvite } from "@/lib/invites";
 
 type Supa = Awaited<ReturnType<typeof createClient>>;
 
-const STAFF_ROLES = [
-  "principal", "manager", "board", "department_head",
-  "coordinator", "support_staff", "teacher", "service_inbox", "driver",
-];
-
 export type InviteState =
   | { ok?: boolean; emailed?: boolean; link?: string; error?: string }
   | null;
@@ -40,6 +35,21 @@ async function adminCtx(supabase: Supa) {
   };
 }
 
+type Scope = { type: "level" | "group"; id: string };
+
+function parseScopes(raw: string): Scope[] {
+  try {
+    const p = JSON.parse(raw || "[]");
+    if (!Array.isArray(p)) return [];
+    return p.filter(
+      (s): s is Scope =>
+        s && (s.type === "level" || s.type === "group") && typeof s.id === "string" && s.id.length > 0,
+    );
+  } catch {
+    return [];
+  }
+}
+
 export async function inviteMember(
   _prev: InviteState,
   formData: FormData,
@@ -47,27 +57,25 @@ export async function inviteMember(
   const email = String(formData.get("email") || "").trim().toLowerCase();
   const fullName = String(formData.get("fullName") || "").trim();
   const roleKey = String(formData.get("roleKey") || "").trim();
-  const groupId = String(formData.get("groupId") || "") || null;
+  const title = String(formData.get("title") || "").trim() || null;
   const studentId = String(formData.get("studentId") || "") || null;
   const relationship = String(formData.get("relationship") || "").trim() || null;
+  const scopes = parseScopes(String(formData.get("scopes") || "[]"));
   if (!email || !roleKey) return { error: "Completa el correo y el rol." };
 
   const supabase = await createClient();
   const ctx = await adminCtx(supabase);
   if (!ctx) return { error: "No pudimos identificar tu colegio." };
 
-  const isStaff = STAFF_ROLES.includes(roleKey);
   const { error } = await supabase.from("invitations").insert({
     community_id: ctx.communityId,
     email,
     full_name: fullName || null,
     role_key: roleKey,
-    scope_type: groupId ? "group" : null,
-    scope_id: groupId,
+    scopes: scopes.length ? scopes : null,
+    title,
     student_id: roleKey === "guardian" ? studentId : null,
     relationship: roleKey === "guardian" ? relationship : null,
-    staff_group_id: isStaff ? groupId : null,
-    staff_assignment_role: isStaff && groupId ? "subject_teacher" : null,
     invited_by: ctx.membershipId,
   });
   if (error) return { error: "No se pudo crear la invitación (¿permisos?)." };
@@ -76,6 +84,22 @@ export async function inviteMember(
   revalidatePath("/settings/people");
   if (!res.ok) return { error: res.error ?? "No se pudo enviar la invitación." };
   return { ok: true, emailed: res.emailed, link: res.link };
+}
+
+/** Edita el cargo + alcances de un miembro que ya aceptó (vía RPC con chequeo admin). */
+export async function updateMember(formData: FormData) {
+  const membershipId = String(formData.get("membershipId") || "");
+  const title = String(formData.get("title") || "").trim() || null;
+  const scopes = parseScopes(String(formData.get("scopes") || "[]"));
+  if (!membershipId) return;
+  const supabase = await createClient();
+  await supabase.rpc("set_member_scope", {
+    p_membership: membershipId,
+    p_title: title,
+    p_level_ids: scopes.filter((s) => s.type === "level").map((s) => s.id),
+    p_group_ids: scopes.filter((s) => s.type === "group").map((s) => s.id),
+  });
+  revalidatePath("/settings/people");
 }
 
 export async function revokeInvitation(formData: FormData) {

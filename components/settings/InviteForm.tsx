@@ -3,55 +3,49 @@
 import { useActionState, useState } from "react";
 import { Icon } from "@/components/icons";
 import { inviteMember, type InviteState } from "@/app/(app)/settings/people/actions";
+import { ScopePicker, scopeModeForRole } from "@/components/settings/ScopePicker";
+import type { StructureLevel } from "@/lib/structure";
 
 interface Option {
   value: string;
   label: string;
 }
 
+const FIELD =
+  "rounded-xl bg-mist px-3 py-2.5 text-sm font-600 text-ink outline-none placeholder:text-ink/40 focus:ring-2 focus:ring-brand/30";
+
 export function InviteForm({
   roles,
-  groups,
+  levels,
   students,
 }: {
   roles: Option[];
-  groups: Option[];
+  levels: StructureLevel[];
   students: Option[];
 }) {
   const [role, setRole] = useState("");
-  const [state, formAction, pending] = useActionState<InviteState, FormData>(
-    inviteMember,
-    null,
-  );
+  const [scope, setScope] = useState<string[]>([]);
+  const [state, formAction, pending] = useActionState<InviteState, FormData>(inviteMember, null);
+
   const isGuardian = role === "guardian";
+  const mode = scopeModeForRole(role);
+  // scopes → [{type, id}] para la invitación (level para secciones, group para salones).
+  const scopeType = mode === "sections" ? "level" : "group";
+  const scopesJson = JSON.stringify(scope.map((id) => ({ type: scopeType, id })));
+
+  function onRole(v: string) {
+    setRole(v);
+    setScope([]); // el alcance depende del rol
+  }
 
   return (
-    <form
-      action={formAction}
-      className="rounded-[1.5rem] border border-ink/8 bg-white p-5 shadow-card"
-    >
+    <form action={formAction} className="rounded-[1.5rem] border border-ink/8 bg-white p-5 shadow-card">
       <h2 className="mb-3 font-display text-base font-700 text-ink">Invitar a alguien</h2>
 
       <div className="grid gap-3 sm:grid-cols-2">
-        <input
-          name="email"
-          type="email"
-          required
-          placeholder="Correo"
-          className="rounded-xl bg-mist px-3 py-2.5 text-sm font-600 text-ink outline-none placeholder:text-ink/40 focus:ring-2 focus:ring-brand/30"
-        />
-        <input
-          name="fullName"
-          placeholder="Nombre y apellido"
-          className="rounded-xl bg-mist px-3 py-2.5 text-sm font-600 text-ink outline-none placeholder:text-ink/40 focus:ring-2 focus:ring-brand/30"
-        />
-        <select
-          name="roleKey"
-          required
-          value={role}
-          onChange={(e) => setRole(e.target.value)}
-          className="rounded-xl bg-mist px-3 py-2.5 text-sm font-600 text-ink outline-none focus:ring-2 focus:ring-brand/30"
-        >
+        <input name="email" type="email" required placeholder="Correo" className={FIELD} />
+        <input name="fullName" placeholder="Nombre y apellido" className={FIELD} />
+        <select name="roleKey" required value={role} onChange={(e) => onRole(e.target.value)} className={FIELD}>
           <option value="">Rol…</option>
           {roles.map((r) => (
             <option key={r.value} value={r.value}>
@@ -59,39 +53,37 @@ export function InviteForm({
             </option>
           ))}
         </select>
-        <select
-          name="groupId"
-          className="rounded-xl bg-mist px-3 py-2.5 text-sm font-600 text-ink outline-none focus:ring-2 focus:ring-brand/30"
-        >
-          <option value="">Salón (opcional)…</option>
-          {groups.map((g) => (
-            <option key={g.value} value={g.value}>
-              {g.label}
-            </option>
-          ))}
-        </select>
-
-        {isGuardian ? (
-          <>
-            <select
-              name="studentId"
-              className="rounded-xl bg-mist px-3 py-2.5 text-sm font-600 text-ink outline-none focus:ring-2 focus:ring-brand/30"
-            >
-              <option value="">Alumno/a vinculado…</option>
-              {students.map((s) => (
-                <option key={s.value} value={s.value}>
-                  {s.label}
-                </option>
-              ))}
-            </select>
-            <input
-              name="relationship"
-              placeholder="Relación (madre, padre, tutor…)"
-              className="rounded-xl bg-mist px-3 py-2.5 text-sm font-600 text-ink outline-none placeholder:text-ink/40 focus:ring-2 focus:ring-brand/30"
-            />
-          </>
+        {!isGuardian && role ? (
+          <input name="title" placeholder="Cargo a mostrar (ej. Coordinador de Inglés)" className={FIELD} />
         ) : null}
       </div>
+
+      {/* Alcance según el rol */}
+      {mode ? (
+        <div className="mt-3">
+          <p className="mb-1.5 text-xs font-700 text-ink/60">
+            {mode === "sections" ? "Secciones a cargo" : "Salones (o una sección entera)"}
+          </p>
+          <ScopePicker levels={levels} mode={mode} value={scope} onChange={setScope} />
+        </div>
+      ) : null}
+
+      {/* Familia: alumno + relación */}
+      {isGuardian ? (
+        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+          <select name="studentId" className={FIELD}>
+            <option value="">Alumno/a vinculado…</option>
+            {students.map((s) => (
+              <option key={s.value} value={s.value}>
+                {s.label}
+              </option>
+            ))}
+          </select>
+          <input name="relationship" placeholder="Relación (madre, padre, tutor…)" className={FIELD} />
+        </div>
+      ) : null}
+
+      <input type="hidden" name="scopes" value={scopesJson} />
 
       {state?.error ? (
         <p role="alert" className="mt-3 text-sm font-700 text-rose">

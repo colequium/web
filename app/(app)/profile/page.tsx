@@ -14,7 +14,7 @@ export default async function PerfilPage() {
   const [me, t] = await Promise.all([getIdentity(), getServerT()]);
 
   const name = me?.name ?? t("profile.guest");
-  const role = me?.roleKey ? t(`role.${me.roleKey}`) : "—";
+  const role = me?.title || (me?.roleKey ? t(`role.${me.roleKey}`) : "—");
   const school = me?.schoolName ?? "—";
   const email = me?.email ?? "—";
 

@@ -20,7 +20,7 @@ export function AccountMenu() {
   const me = useIdentity();
   const [open, setOpen] = useState(false);
   // Rol traducido según idioma (no el label baked en español del server).
-  const roleText = me?.roleKey ? t(`role.${me.roleKey}`) : t("account.member");
+  const roleText = me?.title || (me?.roleKey ? t(`role.${me.roleKey}`) : t("account.member"));
 
   const isStaff = !!me && (me.isAdmin || me.roleKey === "teacher");
   // TODAS las secciones (no solo las que faltan en la barra móvil): el menú completo.
