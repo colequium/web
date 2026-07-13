@@ -91,6 +91,21 @@ export async function getAudienceOptions(roleKey: RoleKey | null = null): Promis
       roleOpts = []; // los destinos por rol son de todo el colegio → no para coordinación
     }
 
+    // Con 1 salón por grado, el grado ya representa a todo el grado (el motor de
+    // audiencias lo resuelve). Ocultamos el salón redundante: un salón se muestra
+    // solo si su grado tiene 2+ salones (para distinguir 1°A / 1°B), o si el grado
+    // no es elegible (p. ej. docente, que solo ve salones).
+    const gradeShown = new Set(grd.map((g) => g.id));
+    const perGrade = new Map<string, number>();
+    for (const g of grp) {
+      const gid = g.grade_id ?? "";
+      perGrade.set(gid, (perGrade.get(gid) ?? 0) + 1);
+    }
+    grp = grp.filter((g) => {
+      const gid = g.grade_id ?? "";
+      return !(gradeShown.has(gid) && (perGrade.get(gid) ?? 0) === 1);
+    });
+
     return {
       community,
       levels: lvl.map((l) => ({ value: `level:${l.id}`, label: l.name })),
