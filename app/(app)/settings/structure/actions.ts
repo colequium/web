@@ -81,9 +81,17 @@ export async function applyPreset(presetId: string) {
         .eq("name", gname)
         .maybeSingle();
       if (!existingGrade) {
-        await supabase
+        const { data: gr } = await supabase
           .from("grades")
-          .insert({ community_id: community, level_id: levelId, name: gname, position: j });
+          .insert({ community_id: community, level_id: levelId, name: gname, position: j })
+          .select("id")
+          .single();
+        // Cada grado nace con un salón por defecto (sin letra, igual al grado).
+        if (gr?.id) {
+          await supabase.from("groups").insert({
+            community_id: community, grade_id: gr.id, name: gname, type: "class", position: 0,
+          });
+        }
       }
     }
   }
@@ -117,9 +125,17 @@ export async function createGrade(formData: FormData) {
     .from("grades")
     .select("id", { count: "exact", head: true })
     .eq("level_id", levelId);
-  await supabase
+  const { data: gr } = await supabase
     .from("grades")
-    .insert({ community_id: community, level_id: levelId, name, position: count ?? 0 });
+    .insert({ community_id: community, level_id: levelId, name, position: count ?? 0 })
+    .select("id")
+    .single();
+  // Por defecto, cada grado nace con un salón (sin letra, igual al grado).
+  if (gr?.id) {
+    await supabase.from("groups").insert({
+      community_id: community, grade_id: gr.id, name, type: "class", position: 0,
+    });
+  }
   revalidate();
 }
 
