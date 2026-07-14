@@ -3,9 +3,8 @@
 import { useState } from "react";
 import { Icon } from "@/components/icons";
 import type { Structure, StructureLevel, StructureGrade } from "@/lib/structure";
-import type { SchoolPreset } from "@/lib/school-presets";
+import { OnboardingWizard } from "./OnboardingWizard";
 import {
-  applyPreset,
   createLevel,
   createGrade,
   createGroup,
@@ -16,11 +15,9 @@ import {
 
 export function StructureManager({
   structure,
-  presets,
   canManageLevels = true,
 }: {
   structure: Structure;
-  presets: SchoolPreset[];
   /** Solo Dirección crea/borra niveles y aplica plantillas. La coordinación gestiona
    *  grados y salones dentro de su nivel, pero no toca los niveles. */
   canManageLevels?: boolean;
@@ -47,7 +44,7 @@ export function StructureManager({
 
       {empty ? (
         canManageLevels ? (
-          <PresetPicker presets={presets} />
+          <OnboardingWizard />
         ) : (
           <div className="rounded-[1.5rem] border border-dashed border-ink/15 bg-white px-5 py-8 text-center text-sm font-600 text-ink/55">
             Todavía no hay grados en tu nivel. La estructura general la define la
@@ -177,34 +174,6 @@ export function StructureManager({
           ) : null}
         </>
       )}
-    </div>
-  );
-}
-
-function PresetPicker({ presets }: { presets: SchoolPreset[] }) {
-  return (
-    <div className="rounded-[1.75rem] border border-ink/8 bg-white p-6 shadow-card sm:p-8">
-      <h2 className="font-display text-lg font-700 text-ink">Arma tu estructura</h2>
-      <p className="mt-1 text-sm font-500 text-ink/60">
-        Elige una plantilla para empezar. Después puedes agregar, quitar o renombrar
-        niveles y grados, y definir los salones de cada grado.
-      </p>
-      <div className="mt-5 grid gap-3 sm:grid-cols-3">
-        {presets.map((p) => (
-          <form key={p.id} action={applyPreset.bind(null, p.id)}>
-            <button
-              type="submit"
-              className="flex h-full w-full flex-col items-start gap-1 rounded-2xl border border-ink/10 bg-white p-4 text-left transition-all hover:-translate-y-0.5 hover:border-brand/50 hover:shadow-card"
-            >
-              <span className="inline-flex items-center gap-1.5 text-sm font-700 text-ink">
-                <Icon name="GraduationCap" className="h-4 w-4 text-brand" />
-                {p.label}
-              </span>
-              <span className="text-xs font-600 text-ink/50">{p.description}</span>
-            </button>
-          </form>
-        ))}
-      </div>
     </div>
   );
 }

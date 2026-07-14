@@ -98,6 +98,98 @@ export async function applyPreset(presetId: string) {
   revalidate();
 }
 
+/** Onboarding guiado: genera la estructura desde una plantilla de país, con las
+ *  secciones elegidas y N salones por sección. 1 salón → sin letra ("1°"); 2+ →
+ *  con letra ("1°A", "1°B"…). Idempotente: no duplica lo que ya exista. */
+export async function applyOnboarding(config: {
+  presetId: string;
+  levels: string[]; // nombres de secciones seleccionadas
+  salones: Record<string, number>; // salones por sección
+}): Promise<void> {
+  const preset = getPreset(config.presetId);
+  if (!preset) return;
+  const supabase = await createClient();
+  const community = await myCommunity(supabase);
+  if (!community) return;
+
+  const { data: year } = await supabase
+    .from("academic_years")
+    .select("id")
+    .eq("is_current", true)
+    .limit(1)
+    .maybeSingle();
+  if (!year) {
+    await supabase.from("academic_years").insert({
+      community_id: community,
+      label: `Ciclo ${new Date().getFullYear()}`,
+      is_current: true,
+    });
+  }
+
+  const selected = preset.levels.filter((lv) => config.levels.includes(lv.name));
+  for (let i = 0; i < selected.length; i++) {
+    const lv = selected[i];
+    let levelId: string | undefined;
+    const { data: exLv } = await supabase
+      .from("levels")
+      .select("id")
+      .eq("community_id", community)
+      .eq("name", lv.name)
+      .maybeSingle();
+    if (exLv) levelId = exLv.id as string;
+    else {
+      const ins = await supabase
+        .from("levels")
+        .insert({ community_id: community, name: lv.name, position: i })
+        .select("id")
+        .single();
+      levelId = ins.data?.id as string | undefined;
+    }
+    if (!levelId) continue;
+
+    const n = Math.max(1, Math.min(12, Math.floor(config.salones[lv.name] ?? 1)));
+    for (let j = 0; j < lv.grades.length; j++) {
+      const gname = lv.grades[j];
+      const { data: exGr } = await supabase
+        .from("grades")
+        .select("id")
+        .eq("community_id", community)
+        .eq("level_id", levelId)
+        .eq("name", gname)
+        .maybeSingle();
+      let gradeId = exGr?.id as string | undefined;
+      if (!gradeId) {
+        const ins = await supabase
+          .from("grades")
+          .insert({ community_id: community, level_id: levelId, name: gname, position: j })
+          .select("id")
+          .single();
+        gradeId = ins.data?.id as string | undefined;
+      }
+      if (!gradeId) continue;
+
+      const { count } = await supabase
+        .from("groups")
+        .select("id", { count: "exact", head: true })
+        .eq("grade_id", gradeId);
+      if ((count ?? 0) > 0) continue; // ya tiene salones → no duplicar
+
+      const rows =
+        n === 1
+          ? [{ community_id: community, grade_id: gradeId, name: gname, type: "class", position: 0 }]
+          : Array.from({ length: n }, (_, k) => ({
+              community_id: community,
+              grade_id: gradeId,
+              name: `${gname}${String.fromCharCode(65 + k)}`,
+              type: "class",
+              position: k,
+            }));
+      await supabase.from("groups").insert(rows);
+    }
+  }
+  revalidate();
+}
+
 export async function createLevel(formData: FormData) {
   const name = String(formData.get("name") || "").trim();
   if (!name) return;

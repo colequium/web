@@ -1,5 +1,4 @@
 import { getStructure } from "@/lib/structure";
-import { SCHOOL_PRESETS } from "@/lib/school-presets";
 import { StructureManager } from "@/components/settings/StructureManager";
 import { getIdentity } from "@/lib/identity";
 import { createClient } from "@/lib/supabase/server";
@@ -23,10 +22,6 @@ export default async function EstructuraPage() {
   }
 
   return (
-    <StructureManager
-      structure={{ ...structure, levels }}
-      presets={SCHOOL_PRESETS}
-      canManageLevels={canManageLevels}
-    />
+    <StructureManager structure={{ ...structure, levels }} canManageLevels={canManageLevels} />
   );
 }
