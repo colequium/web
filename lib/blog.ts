@@ -32,8 +32,8 @@ export const BLOG_POSTS: BlogPost[] = [
     date: "13 jul 2026",
     readMins: 4,
     cover: "/blog/entregar-boletines-sin-mensajes-uno-por-uno.webp",
-    hasCover: false,
-    coverAlt: "Una madre revisa el boletín de su hijo desde el teléfono",
+    hasCover: true,
+    coverAlt: "Pantalla de Colequium para asignar cada boletín a su alumno antes de enviarlo",
     lead: "Fin de trimestre y la misma escena de siempre: alguien de administración abriendo conversación por conversación para adjuntarle a cada familia el boletín de su hijo, con cuidado de no equivocarse de archivo. Es lento, es tedioso y un error se paga caro. Hay una forma mejor.",
     sections: [
       {
