@@ -11,7 +11,7 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-ink/5 bg-white/85 backdrop-blur-md">
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3.5">
-        <Wordmark theme="light" />
+        <Wordmark theme="light" href="/" />
         <ul className="hidden items-center gap-8 text-sm font-600 text-ink/70 md:flex">
           <li>
             <Link href="/por-que-colequium" className="transition-colors hover:text-brand">

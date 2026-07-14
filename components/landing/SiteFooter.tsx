@@ -29,7 +29,7 @@ export function SiteFooter() {
     <footer className="bg-gradient-to-br from-navy to-navy-deep text-white">
       <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 sm:grid-cols-2 lg:grid-cols-4">
         <div className="sm:col-span-2 lg:col-span-1">
-          <Wordmark theme="dark" />
+          <Wordmark theme="dark" href="/" />
           <p className="mt-4 max-w-xs text-sm font-400 text-white/55">
             <span className="font-700 text-white/85">Todo el colegio en una app que da gusto usar.</span>{" "}
             Simple, fácil y completa.
